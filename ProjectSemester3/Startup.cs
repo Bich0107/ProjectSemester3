@@ -26,12 +26,12 @@ namespace ProjectSemester3
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = configuration.GetConnectionString("Defaultconnection");
-            services.AddDbContext<DatabaseContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
-
             services.AddControllersWithViews();
 
             services.AddSession();
+
+            var connectionString = configuration.GetConnectionString("Defaultconnection");
+            services.AddDbContext<DatabaseContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

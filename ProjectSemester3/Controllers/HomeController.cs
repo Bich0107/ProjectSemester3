@@ -9,6 +9,7 @@ namespace ProjectSemester3.Controllers
     [Route("home")]
     public class HomeController : Controller
     {
+        [Route("index")]
         public IActionResult Index()
         {
             return View();
