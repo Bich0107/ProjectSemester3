@@ -149,3 +149,4 @@ C:\Users\Admin\source\repos\Project - Semester 3\ProjectSemester3\ProjectSemeste
 C:\Users\Admin\source\repos\Project - Semester 3\ProjectSemester3\ProjectSemester3\bin\Debug\net5.0\runtimes\win-arm\lib\net5.0\dotnet-aspnet-codegenerator-design.exe
 C:\Users\Admin\source\repos\Project - Semester 3\ProjectSemester3\ProjectSemester3\bin\Debug\net5.0\runtimes\win-arm64\lib\net5.0\dotnet-aspnet-codegenerator-design.exe
 C:\Users\Admin\source\repos\Project - Semester 3\ProjectSemester3\ProjectSemester3\obj\Debug\net5.0\Razor\Views\Home\Index.cshtml.g.cs
+C:\Users\Admin\source\repos\Project - Semester 3\ProjectSemester3\ProjectSemester3\obj\Debug\net5.0\Razor\Areas\Admin\Views\BankAccount\Add.cshtml.g.cs
