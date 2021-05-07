@@ -97,8 +97,6 @@ namespace ProjectSemester3.Models
             {
                 entity.ToTable("Bank");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Address)
                     .IsRequired()
                     .HasMaxLength(250)
@@ -182,7 +180,10 @@ namespace ProjectSemester3.Models
             {
                 entity.ToTable("Currency");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Fullname)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -245,8 +246,6 @@ namespace ProjectSemester3.Models
             {
                 entity.ToTable("Result");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Description)
                     .IsRequired()
                     .HasMaxLength(250)
@@ -256,8 +255,6 @@ namespace ProjectSemester3.Models
             modelBuilder.Entity<Role>(entity =>
             {
                 entity.ToTable("Role");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Name)
                     .IsRequired()

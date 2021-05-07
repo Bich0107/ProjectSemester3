@@ -14,6 +14,7 @@ namespace ProjectSemester3.Models
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Fullname { get; set; }
         public double ExchangeRate { get; set; }
         public bool Default { get; set; }
 
