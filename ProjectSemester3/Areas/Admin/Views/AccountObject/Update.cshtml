@@ -2,12 +2,8 @@
 
 <h3>Update account object testing</h3>
 
-<form method="post" asp-area="admin" asp-controller="accountObject" asp-action="add">
+<form method="post" asp-area="admin" asp-controller="accountObject" asp-action="update">
     <table>
-        <tr>
-            <td>Id</td>
-            <td><input type="text" asp-for="Id" value="@Guid.NewGuid()"/></td>
-        </tr>
         <tr>
             <td>Name</td>
             <td><input type="text" asp-for="Name" /></td>
@@ -67,7 +63,8 @@
             <td><input type="checkbox" asp-for="Locked" /></td>
         </tr>
         <tr>
-            <td><input type="submit" value="Save" asp-area="admin" asp-controller="accountObject" asp-action="add" /></td>
+            <td><input type="hidden" asp-for="Id" /></td>
+            <td><input type="submit" value="Save" asp-area="admin" asp-controller="accountObject" asp-action="update" /></td>
         </tr>
     </table>
 </form>

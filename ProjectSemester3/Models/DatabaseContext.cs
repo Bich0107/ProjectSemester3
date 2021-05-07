@@ -193,8 +193,6 @@ namespace ProjectSemester3.Models
 
             modelBuilder.Entity<Help>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("Help");
 
                 entity.Property(e => e.Address)
@@ -264,8 +262,6 @@ namespace ProjectSemester3.Models
 
             modelBuilder.Entity<Setting>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("Setting");
 
                 entity.Property(e => e.Title)

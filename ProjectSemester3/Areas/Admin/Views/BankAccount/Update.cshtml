@@ -1,0 +1,71 @@
+﻿@model ProjectSemester3.Models.BankAccount
+
+<h3>Update bank account testing</h3>
+
+<form method="post" asp-area="admin" asp-controller="bankAccount" asp-action="update">
+    <table>
+        <tr>
+            <td>User Account Id</td>
+            <td>
+                <select asp-for="UserAccountId">
+                    @{
+                        foreach (var accountObj in ViewBag.accountObjects)
+                        {
+                            <option value="@accountObj.Id">@accountObj.Name</option>
+                        }
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Bank code</td>
+            <td><input type="text" asp-for="BankCode" readonly /></td>
+        </tr>
+        <tr>
+            <td>Created date</td>
+            <td><input type="date" asp-for="CreatedDate" readonly /></td>
+        </tr>
+        <tr>
+            <td>Expiry date</td>
+            <td><input type="date" asp-for="ExpiredDate" /></td>
+        </tr>
+        <tr>
+            <td>Currency</td>
+            <td>
+                <select asp-for="CurrencyId">
+                    @{
+                        foreach (var currency in ViewBag.currencies)
+                        {
+                            <option value="@currency.Id">@currency.Name</option>
+                        }
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Bank</td>
+            <td>
+                <select asp-for="BankId">
+                    @{
+                        foreach (var bank in ViewBag.banks)
+                        {
+                            <option value="@bank.Id">@bank.Name</option>
+                        }
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Balance</td>
+            <td><input type="number" asp-for="Balance" /></td>
+        </tr>
+        <tr>
+            <td>Locked</td>
+            <td><input type="checkbox" asp-for="Locked" /></td>
+        </tr>
+        <tr>
+            <td><input type="hidden" asp-for="Id" /></td>
+            <td><input type="submit" value="Save" asp-area="admin" asp-controller="bankAccount" asp-action="update" /></td>
+        </tr>
+    </table>
+</form>

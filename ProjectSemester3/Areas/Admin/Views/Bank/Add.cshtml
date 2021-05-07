@@ -1,0 +1,27 @@
+﻿@model ProjectSemester3.Models.Bank
+
+<h3>Add bank testing</h3>
+
+<form method="post" asp-area="admin" asp-controller="bank" asp-action="add">
+    <table>
+        <tr>
+            <td>Name</td>
+            <td><input type="text" asp-for="Name" /></td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td><input type="text" asp-for="Description" /></td>
+        </tr>
+        <tr>
+            <td>Address</td>
+            <td><input type="text" asp-for="Address" /></td>
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td><input type="checkbox" asp-for="Status" /></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Save" asp-area="admin" asp-controller="bank" asp-action="add" /></td>
+        </tr>
+    </table>
+</form>
