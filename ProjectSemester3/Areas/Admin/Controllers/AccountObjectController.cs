@@ -15,6 +15,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             db = _db;
         }
 
+        #region Add, update and delete
         [HttpGet]
         [Route("add")]
         public IActionResult Add()
@@ -77,6 +78,9 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             db.AccountObjects.Remove(db.AccountObjects.Find(id));
             db.SaveChanges();
             return View("delete");
-        }
+        } 
+        #endregion
+
+
     }
 }
