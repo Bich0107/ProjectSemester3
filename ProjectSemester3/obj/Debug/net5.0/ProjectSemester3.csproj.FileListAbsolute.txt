@@ -157,3 +157,4 @@ C:\Users\Admin\source\repos\Project - Semester 3\ProjectSemester3\ProjectSemeste
 C:\Users\Admin\source\repos\Project - Semester 3\ProjectSemester3\ProjectSemester3\obj\Debug\net5.0\Razor\Areas\Admin\Views\Currency\Add.cshtml.g.cs
 C:\Users\Admin\source\repos\Project - Semester 3\ProjectSemester3\ProjectSemester3\obj\Debug\net5.0\Razor\Areas\Admin\Views\Currency\Update.cshtml.g.cs
 C:\Users\Admin\source\repos\Project - Semester 3\ProjectSemester3\ProjectSemester3\obj\Debug\net5.0\Razor\Areas\Admin\Views\Help\Update.cshtml.g.cs
+C:\Users\Admin\source\repos\Project - Semester 3\ProjectSemester3\ProjectSemester3\obj\Debug\net5.0\Razor\Views\Login\Login.cshtml.g.cs

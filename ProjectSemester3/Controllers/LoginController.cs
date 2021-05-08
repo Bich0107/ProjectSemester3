@@ -7,19 +7,22 @@ using System.Threading.Tasks;
 
 namespace ProjectSemester3.Controllers
 {
-    [Route("home")]
-    public class HomeController : Controller
+    [Route("login")]
+    public class LoginController : Controller
     {
         private DatabaseContext db;
 
-        public HomeController(DatabaseContext _db)
+        public LoginController(DatabaseContext _db)
         {
             db = _db;
         }
 
-        [Route("index")]
-        public IActionResult Index()
+        [Route("login")]
+        [Route("")]
+        [Route("~/")]
+        public IActionResult Login()
         {
+            ViewBag.title = db.Settings.Find(1).Title;
             return View();
         }
     }
