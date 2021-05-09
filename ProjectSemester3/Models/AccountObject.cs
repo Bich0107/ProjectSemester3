@@ -28,6 +28,7 @@ namespace ProjectSemester3.Models
         public string Password { get; set; }
         public DateTime CreatedDate { get; set; }
         public bool Locked { get; set; }
+        public bool IsAuthentication { get; set; }
 
         public virtual Role Position { get; set; }
         public virtual ICollection<BankAccount> BankAccounts { get; set; }
