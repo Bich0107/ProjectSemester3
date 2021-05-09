@@ -22,7 +22,6 @@ namespace ProjectSemester3.Controllers
         [Route("~/")]
         public IActionResult Login()
         {
-            var hhh = 123;
             ViewBag.title = db.Settings.Find(1).Title;
             return View();
         }
