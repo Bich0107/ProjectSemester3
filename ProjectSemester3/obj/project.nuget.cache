@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "Se958iNNLZ4y97FNVR+7iiewAbOeBPQ9fQpTlfsSZ5YKu+WsV4Id2Mf2UeT0EH4YUN5xVViWjj29jVTsxmPn9Q==",
+  "dgSpecHash": "k4LLQJWfESzXm3Acp6kq+qggOnlNMlgyQhGyI+TaLfnsZMi08v18lPknv1A931ufYwzgtdoIVBO/8q3T2YYiQw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Admin\\source\\repos\\Project - Semester 3\\ProjectSemester3\\ProjectSemester3\\ProjectSemester3.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\bcrypt.net-core\\1.6.0\\bcrypt.net-core.1.6.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\castle.core\\4.4.1\\castle.core.4.4.1.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\googleauthenticatorservice.core\\1.0.2\\googleauthenticatorservice.core.1.0.2.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\5.0.5\\microsoft.aspnetcore.jsonpatch.5.0.5.nupkg.sha512",

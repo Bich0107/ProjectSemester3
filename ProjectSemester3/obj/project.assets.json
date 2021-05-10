@@ -32,6 +32,15 @@
           "lib/netstandard1.5/Castle.Core.dll": {}
         }
       },
+      "GoogleAuthenticatorService.Core/1.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp2.0/GoogleAuthenticatorService.Core.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.0/GoogleAuthenticatorService.Core.dll": {}
+        }
+      },
       "Humanizer.Core/2.8.26": {
         "type": "package",
         "compile": {
@@ -2929,6 +2938,18 @@
         "lib/netstandard1.5/Castle.Core.dll",
         "lib/netstandard1.5/Castle.Core.xml",
         "readme.txt"
+      ]
+    },
+    "GoogleAuthenticatorService.Core/1.0.2": {
+      "sha512": "e4wdg9w91qy8pisV0JStAY0BUQ+sN3g5v3j2D3hCbAaiwKu/Vw3G+AznPWx5u1zSPe12H0U3ZhX1d6DcbQUZjw==",
+      "type": "package",
+      "path": "googleauthenticatorservice.core/1.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "googleauthenticatorservice.core.1.0.2.nupkg.sha512",
+        "googleauthenticatorservice.core.nuspec",
+        "lib/netcoreapp2.0/GoogleAuthenticatorService.Core.dll"
       ]
     },
     "Humanizer.Core/2.8.26": {
@@ -9407,6 +9428,7 @@
   "projectFileDependencyGroups": {
     "net5.0": [
       "BCrypt.Net-Core >= 1.6.0",
+      "GoogleAuthenticatorService.Core >= 1.0.2",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 5.0.5",
       "Microsoft.EntityFrameworkCore >= 5.0.5",
       "Microsoft.EntityFrameworkCore.Proxies >= 5.0.5",
@@ -9468,6 +9490,10 @@
           "BCrypt.Net-Core": {
             "target": "Package",
             "version": "[1.6.0, )"
+          },
+          "GoogleAuthenticatorService.Core": {
+            "target": "Package",
+            "version": "[1.0.2, )"
           },
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
             "target": "Package",

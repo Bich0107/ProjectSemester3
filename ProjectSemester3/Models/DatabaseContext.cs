@@ -29,6 +29,15 @@ namespace ProjectSemester3.Models
         public virtual DbSet<Setting> Settings { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=HOANGYEN\\SQLEXPRESS;Database=ProjectSemester;user id=sa;password=123456");
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
@@ -61,6 +70,8 @@ namespace ProjectSemester3.Models
                     .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
+
+                entity.Property(e => e.IsAuthentication).HasColumnName("isAuthentication");
 
                 entity.Property(e => e.Job)
                     .HasMaxLength(100)
