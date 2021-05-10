@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        LoadData();
+    });
+
+    function GetDate(_date) {
+        let dateResults = _date.toString().split("T");
+        var date = new Date(dateResults[0]);
+        let result = '';
+        result += date.getDate() + "/";
+        result += (date.getMonth() + 1) + "/";
+        result += date.getFullYear();
+        return result;
+    }
+
+    function LoadData() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: 'loadData',
+            success: function (accountObjs) {
+                var result = '';
+                for (var i = 0; i < accountObjs.length; i++) {
+                    result += '<tr>';
+                    result += '<td>' + (i + 1) + '</td>';
+                    result += '<td>' + accountObjs[i].name + '</td>';
+                    result += '<td>' + GetDate(accountObjs[i].birthday) + '</td>';
+                    result += '<td>' + accountObjs[i].phoneNumber + '</td>';
+                    result += '<td>' + accountObjs[i].email + '</td>';
+                    result += '<td>' + accountObjs[i].address + '</td>';
+                    result += '<td>' + accountObjs[i].job + '</td>';
+                    result += '<td>' + accountObjs[i].gender + '</td>';
+                    result += '<td>' + accountObjs[i].idNum + '</td>';
+                    result += '<td>' + accountObjs[i].locked + '</td>';
+                    result += '<td>' + "edit" + '</td>';
+                    result += '<td>' + '<a href="#" class="btn btn-danger" onclick=DeleteData("' + accountObjs[i].id + '"); > Delete</a >' + '</td>';
+                    result += '</tr>';
+                }
+                $('#tableAccountObj').html(result);
+            }
+        })
+    }
+
+    function DeleteData(_id) {
+        var url = "delete/" + _id;
+        if (confirm("Are you sure you want to delete ...?")) {
+            $.post({
+                url: url,
+                success: function (data) {
+                    alert("Delete sucess!");
+                    LoadData();
+                }
+            });
+        } else {
+            return false;
+        }
+    }
+</script>
+
+<div class="container">
+    <br />
+    <div style="width:90%; margin:0 auto;">
+        <table id="accountObjGrid" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Birthday</th>
+                    <th>PhoneNumber</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Job</th>
+                    <th>Gender</th>
+                    <th>IdNum</th>
+                    <th>Locked</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="tableAccountObj">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

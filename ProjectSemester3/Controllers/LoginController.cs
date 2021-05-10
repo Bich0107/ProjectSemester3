@@ -26,7 +26,6 @@ namespace ProjectSemester3.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            ViewBag.title = db.Settings.Find(1).Title;
             return View("Login",new AccountObject());
         }
         

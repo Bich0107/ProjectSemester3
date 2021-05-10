@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Linq;
 using ProjectSemester3.Models;
-using System;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq.Dynamic;
+using System.Diagnostics;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -15,6 +18,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             db = _db;
         }
 
+        #region Add, update and delete
         [HttpGet]
         [Route("add")]
         public IActionResult Add()
@@ -70,13 +74,40 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             return View("update");
         }
 
-        [HttpGet]
         [Route("delete/{id}")]
         public IActionResult Delete(Guid id)
         {
-            db.AccountObjects.Remove(db.AccountObjects.Find(id));
-            db.SaveChanges();
-            return View("delete");
+            try
+            {
+                db.AccountObjects.Remove(db.AccountObjects.Find(id));
+                db.SaveChanges();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        } 
+        #endregion
+
+        [Route("index")]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [Route("loadData")]
+        public IActionResult LoadData()
+        {
+            try
+            {
+                return new JsonResult(db.AccountObjects.ToList());
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error account obj: " + e.Message);
+                return null;
+            }
         }
     }
 }
