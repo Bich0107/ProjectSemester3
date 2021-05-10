@@ -14,6 +14,7 @@ namespace ProjectSemester3.Controllers
     {
         private DatabaseContext db;
         const string key = "test123!@@)(*";
+        int wrongPassword = 0;
         public LoginController(DatabaseContext _db)
         {
             db = _db;
@@ -33,13 +34,14 @@ namespace ProjectSemester3.Controllers
         [HttpPost]
         public ActionResult Login(AccountObject accountObject)
         {
-                if (ProcessLogin(accountObject.Username, accountObject.Password) == null)
+            
+            if (ProcessLogin(accountObject.Username, accountObject.Password) == null)
                 {
                 ViewBag.loginFailed = "Username or Password Invalid";
                 return View("Login");
             }
-                else
-                {
+            else
+            {
                 var account = db.AccountObjects.FirstOrDefault(a => a.Username.Equals(accountObject.Username));
                 HttpContext.Session.SetString("tempid", accountObject.Username);
                 if (account.IsAuthentication)
@@ -50,7 +52,7 @@ namespace ProjectSemester3.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }                
-                }
+            }
                 
             
         }
@@ -64,15 +66,37 @@ namespace ProjectSemester3.Controllers
                 {
                     if (BCrypt.Net.BCrypt.Verify(password, account.Password))
                     {
+                        wrongPassword = 0;
                         return account;
                     }
-
+                    else
+                    {
+                        wrongPassword++;
+                    }
+                    HttpContext.Session.SetInt32("wrongPassword", wrongPassword);
                 }
                 return null;
             }
             catch
             {
                 return null;
+            }
+        }
+        private void MsgWarning()
+        {
+            try
+            {
+                if(HttpContext.Session.GetInt32("wrongPassword") != 0)
+                {
+
+                }else if(HttpContext.Session.GetInt32("wrongPassword") == 3)
+                {
+
+                }
+            }
+            catch
+            {
+                
             }
         }
 
