@@ -74,13 +74,19 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             return View("update");
         }
 
-        [HttpGet]
         [Route("delete/{id}")]
         public IActionResult Delete(Guid id)
         {
-            db.AccountObjects.Remove(db.AccountObjects.Find(id));
-            db.SaveChanges();
-            return View("delete");
+            try
+            {
+                db.AccountObjects.Remove(db.AccountObjects.Find(id));
+                db.SaveChanges();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         } 
         #endregion
 
@@ -90,56 +96,17 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpPost]
         [Route("loadData")]
         public IActionResult LoadData()
         {
             try
             {
-                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
-                // Skiping number of Rows count  
-                var start = Request.Form["start"].FirstOrDefault();
-                // Paging Length 10,20  
-                var length = Request.Form["length"].FirstOrDefault();
-                // Sort Column Name  
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-                // Sort Column Direction ( asc ,desc)  
-                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-                // Search Value from (Search box)  
-                var searchValue = Request.Form["search[value]"].FirstOrDefault();
-
-                //Paging Size (10,20,50,100)  
-                int pageSize = length != null ? Convert.ToInt32(length) : 0;
-                int skip = start != null ? Convert.ToInt32(start) : 0;
-                int recordsTotal = 0;
-
-                // Getting all Customer data  
-                var accountObj = (from tempAccountObj in db.AccountObjects
-                                    select tempAccountObj);
-
-                ////Sorting  
-                //if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
-                //{
-                //    accountObj = accountObj.OrderBy(sortColumn + " " + sortColumnDirection);
-                //}
-                //Search  
-                if (!string.IsNullOrEmpty(searchValue))
-                {
-                    accountObj = accountObj.Where(m => m.Name == searchValue);
-                }
-
-                //total number of rows count   
-                recordsTotal = accountObj.Count();
-                //Paging   
-                var data = accountObj.Skip(skip).Take(pageSize).ToList();
-
-                //Returning Json Data  
-                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+                return new JsonResult(db.AccountObjects.ToList());
             }
             catch (Exception e)
             {
                 Debug.WriteLine("Error account obj: " + e.Message);
-                throw;
+                return null;
             }
         }
     }
