@@ -20,6 +20,7 @@ namespace ProjectSemester3.Controllers
         [Route("index")]
         public IActionResult Index()
         {
+
             return View();
         }
     }

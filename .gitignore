@@ -73,3 +73,6 @@ _[Ss]cripts
 *.nupkg
 *.ncrunchsolution
 *.dot[Cc]over
+.vs/ProjectSemester3/config/applicationhost.config
+.vs/ProjectSemester3/DesignTimeBuild/.dtbcache.v2~2b17bd3fdcb3484003a0421cb66c7915dc3c3d70
+ProjectSemester3/appsettings.json
