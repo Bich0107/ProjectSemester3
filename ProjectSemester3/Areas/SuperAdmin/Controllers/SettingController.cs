@@ -2,6 +2,7 @@
 using ProjectSemester3.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,27 +19,46 @@ namespace ProjectSemester3.Areas.SuperAdmin.Controllers
             db = _db;
         }
 
-        [HttpGet]
-        [Route("update")]
-        public IActionResult Update()
-        {
-            var setting = db.Settings.Find(1);
-
-            return View("update", setting);
-        }
-
         [HttpPost]
-        [Route("update")]
+        [Route("edit")]
         public IActionResult Update(Setting _setting)
         {
-            var setting = db.Settings.Find(1);
+            try
+            {
+                var setting = db.Settings.Find(1);
 
-            setting.DefaultCurrencyId = _setting.DefaultCurrencyId;
-            setting.Title = _setting.Title;
-            setting.DefaultNumOfShowedTransaction = _setting.DefaultNumOfShowedTransaction;
+                setting.DefaultCurrencyId = _setting.DefaultCurrencyId;
+                setting.Title = _setting.Title;
+                setting.DefaultNumOfShowedTransaction = _setting.DefaultNumOfShowedTransaction;
 
-            db.SaveChanges();
-            return View("update");
+                db.SaveChanges();
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Route("loadData")]
+        public IActionResult LoadData()
+        {
+            try
+            {
+                return new JsonResult(db.Settings.Find(1));
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+        [Route("index")]
+        public IActionResult Index()
+        {
+            ViewBag.currencies = db.Currencies.ToList();
+            return View();
         }
     }
 }

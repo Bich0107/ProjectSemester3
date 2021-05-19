@@ -25,15 +25,11 @@
     <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->
     <link rel="stylesheet" href="~/plugins/summernote/summernote-bs4.min.css">
+    <!-- toasts -->
+    <link rel="stylesheet" href="~/plugins/toastr/toastr.min.css" />
 
-    <!-- jquery and css for datatable -->
+    <!-- jQuery 3.5.1 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
-
-    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -41,7 +37,7 @@
             <!-- Brand Logo -->
             <a href="#" class="brand-link">
                 <img src="~/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">AdminLTE 3</span>
+                <span class="brand-text font-weight-light">@ViewBag.title</span>
             </a>
 
             <!-- Sidebar -->
@@ -60,29 +56,45 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
-                     with font-awesome or any other icon font library -->
-                        <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                        with font-awesome or any other icon font library -->
+                        <li class="nav-item">
+                            <a class="nav-link" id="accountObj" asp-area="admin" asp-controller="accountObject" asp-action="index">
+                                <i class="far fa-user"></i>
                                 <p>
-                                    Dashboard
-                                    <i class="right fas fa-angle-left"></i>
+                                    Account objects
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
+                            <a class="nav-link" id="bankAccount" asp-area="admin" asp-controller="bankAccount" asp-action="index">
+                                <i class="fas fa-piggy-bank"></i>
                                 <p>
-                                    Widgets
-                                    <span class="right badge badge-danger">New</span>
+                                    Bank accounts
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-circle text-info"></i>
-                                <p>Informational</p>
+                            <a class="nav-link" id="bank" asp-area="admin" asp-controller="bank" asp-action="index">
+                                <i class="fas fa-university"></i>
+                                <p>
+                                    Banks
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="currency" asp-area="admin" asp-controller="currency" asp-action="index">
+                                <i class="fas fa-dollar-sign"></i>
+                                <p>
+                                    Currencies
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="help" asp-area="admin" asp-controller="help" asp-action="index">
+                                <i class="fas fa-dollar-sign"></i>
+                                <p>
+                                    Help
+                                </p>
                             </a>
                         </li>
                     </ul>
@@ -93,7 +105,6 @@
         </aside>
 
         <div class="content-wrapper">
-
             <!-- Content Header (Page header) -->
             <div class="content-header">
                 <div class="container-fluid">
@@ -103,8 +114,8 @@
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Dashboard v1</li>
+                                <li class="breadcrumb-item"><a asp-area="admin" asp-controller="accountObject" asp-action="index">Home</a></li>
+                                <li class="breadcrumb-item active">@ViewBag.tagName</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -145,11 +156,42 @@
     <script src="~/plugins/summernote/summernote-bs4.min.js"></script>
     <!-- overlayScrollbars -->
     <script src="~/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="~/dist/js/adminlte.js"></script>
+    <script src="~/dist/js/adminlte.min.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="~/dist/js/demo.js"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="~/dist/js/pages/dashboard.js"></script>
+    <!-- Toastr -->
+    <script src="~/plugins/toastr/toastr.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#@ViewBag.activeTag").addClass("active");
+        })
+
+        function CreateToastSuccess() {
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                title: 'Success',
+                icon: 'fas fa-check',
+                autohide: true,
+                body: 'Action done successfully!',
+                delay: 1500,
+            })
+        }
+
+        function CreateToastFailed(data) {
+            $(document).Toasts('create', {
+                icon: 'fas fa-exclamation-circle',
+                class: 'bg-danger',
+                title: 'Failed',
+                body: 'An error has occured.',
+                autohide: true,
+                delay: 3000,
+            })
+        }
+    </script>
 </body>
 </html>

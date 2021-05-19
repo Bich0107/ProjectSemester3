@@ -2,8 +2,9 @@
 using System.Linq;
 using ProjectSemester3.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Dynamic;
 using System.Diagnostics;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
@@ -18,60 +19,57 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             db = _db;
         }
 
-        #region Add, update and delete
-        [HttpGet]
-        [Route("add")]
-        public IActionResult Add()
-        {
-            var account = new AccountObject
-            {
-                CreatedDate = DateTime.Today
-            };
-            return View("add", account);
-        }
-
+        #region Add, edit and delete
         [HttpPost]
         [Route("add")]
         public IActionResult Add(AccountObject _accountObj)
         {
-            _accountObj.Password = BCrypt.Net.BCrypt.HashString(_accountObj.Password);
-            db.AccountObjects.Add(_accountObj);
-            db.SaveChanges();
+            try
+            {
+                _accountObj.CreatedDate = DateTime.Today;
+                _accountObj.Password = BCrypt.Net.BCrypt.HashString(_accountObj.Password);
+                db.AccountObjects.Add(_accountObj);
+                db.SaveChanges();
 
-            return View("add");
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        [HttpGet]
-        [Route("update/{id}")]
-        public IActionResult Add(Guid id)
+        [Route("edit/{id}")]
+        public IActionResult Edit(Guid id)
         {
-            var accountObj = db.AccountObjects.Find(id);
-
-            return View("update", accountObj);
+            return new JsonResult(db.AccountObjects.Find(id));
         }
 
         [HttpPost]
-        [Route("update")]
-        public IActionResult Update(AccountObject _accountObj)
+        [Route("edit")]
+        public IActionResult Edit(AccountObject _accountObj)
         {
-            var accountObj = db.AccountObjects.Find(_accountObj.Id);
+            try
+            {
+                var accountObj = db.AccountObjects.Find(_accountObj.Id);
 
-            accountObj.Name = _accountObj.Name;
-            accountObj.Birthday = _accountObj.Birthday;
-            accountObj.PhoneNumber = _accountObj.PhoneNumber;
-            accountObj.Email = _accountObj.Email;
-            accountObj.Address = _accountObj.Address;
-            accountObj.Job = _accountObj.Job;
-            accountObj.Gender = _accountObj.Gender;
-            accountObj.IdNum = _accountObj.IdNum;
-            accountObj.Staff = _accountObj.Staff;
-            accountObj.PositionId = _accountObj.PositionId;
-            accountObj.Username = _accountObj.Username;
-            accountObj.Locked = _accountObj.Locked;
+                accountObj.Name = _accountObj.Name;
+                accountObj.Birthday = _accountObj.Birthday;
+                accountObj.PhoneNumber = _accountObj.PhoneNumber;
+                accountObj.Email = _accountObj.Email;
+                accountObj.Address = _accountObj.Address;
+                accountObj.Job = _accountObj.Job;
+                accountObj.Gender = _accountObj.Gender;
+                accountObj.IdNum = _accountObj.IdNum;
+                accountObj.Locked = _accountObj.Locked;
 
-            db.SaveChanges();
-
-            return View("update");
+                db.SaveChanges();
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [Route("delete/{id}")]
@@ -87,21 +85,46 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             {
                 return BadRequest();
             }
-        } 
+        }
         #endregion
 
         [Route("index")]
         public IActionResult Index()
         {
-            return View();
+            ViewBag.tagName = "Account Object";
+            ViewBag.activeTag = "accountObj";
+            return View("index");
         }
 
+        // when there are no keyword, search is as same as loadData
+        [Route("search")]
         [Route("loadData")]
         public IActionResult LoadData()
         {
             try
             {
                 return new JsonResult(db.AccountObjects.ToList());
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error account obj: " + e.Message);
+                return null;
+            }
+        }
+
+        [Route("search/{keyword}")]
+        public IActionResult Search(string keyword)
+        {
+            try
+            {
+                return new JsonResult(db.AccountObjects.Where(
+                    a => a.Name.Contains(keyword) ||
+                        a.Address.Contains(keyword) ||
+                        a.PhoneNumber.Contains(keyword) ||
+                        a.Email.Contains(keyword) ||
+                        a.Username.Contains(keyword) ||
+                        a.IdNum.Contains(keyword)
+                ).ToList());
             }
             catch (Exception e)
             {

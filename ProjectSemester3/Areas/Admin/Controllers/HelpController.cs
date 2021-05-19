@@ -2,6 +2,7 @@
 using ProjectSemester3.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,29 +19,49 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             db = _db;
         }
 
-        [HttpGet]
-        [Route("Update")]
-        public IActionResult Update()
-        {
-            var help = db.Helps.Find(1);
-
-            return View("update", help);
-        }
-
         [HttpPost]
-        [Route("Update")]
+        [Route("edit")]
         public IActionResult Update(Help _help)
         {
-            var help = db.Helps.Find(1);
+            try
+            {
+                var help = db.Helps.Find(1);
 
-            help.ContactNumber1 = _help.ContactNumber1;
-            help.ContactNumber2 = _help.ContactNumber2;
-            help.Address = _help.Address;
-            help.Email = _help.Email;
+                help.ContactNumber1 = _help.ContactNumber1;
+                help.ContactNumber2 = _help.ContactNumber2;
+                help.Address = _help.Address;
+                help.Email = _help.Email;
 
-            db.SaveChanges();
+                db.SaveChanges();
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
-            return View("update");
+        [Route("index")]
+        public IActionResult Index()
+        {
+            ViewBag.tagName = "Help";
+            ViewBag.activeTag = "help";
+            return View("index");
+        }
+
+        // when there are no keyword, search is as same as loadData
+        [Route("loadData")]
+        public IActionResult LoadData()
+        {
+            try
+            {
+                return new JsonResult(db.Helps.Find(1));
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error: " + e.Message);
+                return null;
+            }
         }
     }
 }

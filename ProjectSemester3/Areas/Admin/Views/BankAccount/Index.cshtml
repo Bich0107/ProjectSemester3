@@ -1,0 +1,454 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/JS/dateScript.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(document).on({
+            ajaxStop: function () {
+                $("#loadingOverlay.overlay").removeClass("overlay");
+                $("#loadingOverlay").addClass("d-none");
+            }
+        });
+
+        LoadData();
+
+        $("#searchBox").on("keyup", function () {
+            var value = $(this).val();
+            Search(value);
+        });
+
+        var today = new Date();
+        var day = ("0" + today.getDate()).slice(-2);
+        var month = ("0" + (today.getMonth() + 1)).slice(-2);
+        var resultDate = today.getFullYear() + "-" + (month) + "-" + (day);
+        $("#A-CreatedDate").val(resultDate);
+    });
+
+    function LoadData() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: 'loadData',
+            success: function (bankAccounts) {
+                var result = '';
+                for (var i = 0; i < bankAccounts.length; i++) {
+                    result += '<tr>';
+                    result += '<td>' + (i + 1) + '</td>';
+                    result += '<td>' + bankAccounts[i].userAccount.name + '</td>';
+                    result += '<td>' + bankAccounts[i].balance + '</td>';
+                    result += '<td>' + GetDate(bankAccounts[i].createdDate) + '</td>';
+                    result += '<td>' + GetDate(bankAccounts[i].expiredDate) + '</td>';
+                    result += '<td>' + bankAccounts[i].bank.name + '</td>';
+                    result += '<td>' + bankAccounts[i].currency.name + '</td>';
+                    result += '<td>' + bankAccounts[i].locked + '</td>';
+                    result += '<td>' + '<i class="fas fa-edit" style="color:green;" ' +
+                        'data-toggle="modal" data-target="#updateModal" onclick=ShowEditTarget("' + bankAccounts[i].id + '")></i > | '
+                        + '<i class="far fa-trash-alt" style="color:red;" onclick=DeleteData("' + bankAccounts[i].id + '");></i>' + '</td>';
+                    result += '</tr>';
+                }
+                $('#table').html(result);
+            }
+        })
+    }
+
+    function DeleteData(_id) {
+        var url = "delete/" + _id;
+        if (confirm("Are you sure you want to delete ...?")) {
+            $.post({
+                url: url,
+                success: function (data) {
+                    if (data) {
+                        CreateToastSuccess();
+                    } else {
+                        CreateToastFailed();
+                    }
+                    LoadData();
+                }
+            });
+        }
+    }
+
+    function Search(keyword) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: 'search/' + keyword,
+            success: function (bankAccounts) {
+                var result = '';
+                for (var i = 0; i < bankAccounts.length; i++) {
+                    result += '<tr>';
+                    result += '<td>' + (i + 1) + '</td>';
+                    result += '<td>' + bankAccounts[i].userAccount.name + '</td>';
+                    result += '<td>' + bankAccounts[i].balance + '</td>';
+                    result += '<td>' + GetDate(bankAccounts[i].createdDate) + '</td>';
+                    result += '<td>' + GetDate(bankAccounts[i].expiredDate) + '</td>';
+                    result += '<td>' + bankAccounts[i].bank.name + '</td>';
+                    result += '<td>' + bankAccounts[i].currency.name + '</td>';
+                    result += '<td>' + bankAccounts[i].locked + '</td>';
+                    result += '<td>' + '<i class="fas fa-edit" style="color:green;" ' +
+                        'data-toggle="modal" data-target="#updateModal" onclick=ShowEditTarget("' + bankAccounts[i].id + '")></i > | '
+                        + '<i class="far fa-trash-alt" style="color:red;" onclick=DeleteData("' + bankAccounts[i].id + '");></i>' + '</td>';
+                    result += '</tr>';
+                }
+                $('#tableBankAccount').html(result);
+            }
+        })
+    }
+
+    function ShowEditTarget(_id) {
+        var url = "edit/" + _id;
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: url,
+            data: {
+                id: _id
+            },
+            success: function (result) {
+                $("#E-Id").val(_id);
+                $("#E-UserAccountId").val(result.userAccount.id);
+                $("#E-Balance").val(result.balance);
+
+                var createdDate = new Date(result.createdDate);
+                var day = ("0" + createdDate.getDate()).slice(-2);
+                var month = ("0" + (createdDate.getMonth() + 1)).slice(-2);
+                var resultDate = createdDate.getFullYear() + "-" + (month) + "-" + (day);
+                $("#E-CreatedDate").val(resultDate);
+
+                var ExpiredDate = new Date(result.expiredDate);
+                day = ("0" + ExpiredDate.getDate()).slice(-2);
+                month = ("0" + (ExpiredDate.getMonth() + 1)).slice(-2);
+                resultDate = ExpiredDate.getFullYear() + "-" + (month) + "-" + (day);
+                $("#E-ExpiredDate").val(resultDate);
+
+                $("#E-BankId").val(result.bank.id);
+                $("#E-Locked").prop('checked', result.locked);
+                $("#E-CurrencyId").val(result.currency.id);
+            }
+        });
+    }
+
+    function SaveTarget() {
+        var id = $("#E-Id").val();
+        var userAccountId = $("#E-UserAccountId").val();
+        var balance = $("#E-Balance").val();
+        var expiredDate = $("#E-ExpiredDate").val();
+        var bankId = $("#E-BankId").val();
+        var currencyId = $("#E-CurrencyId").val();
+
+        var locked = false;
+        if ($('#E-Locked').is(":checked")) {
+            locked = true;
+        }
+
+        var object = {
+            "Id": id,
+            "UserAccountId": userAccountId,
+            "Balance": balance,
+            "ExpiredDate": expiredDate,
+            "BankId": bankId,
+            "CurrencyId": currencyId,
+            "Locked": locked,
+        }
+
+        $.post("edit", object, function (data) {
+            if (data) {
+                CreateToastSuccess();
+            } else {
+                CreateToastFailed();
+            }
+            $('#updateModal').modal('toggle');
+            LoadData();
+        }).fail(function (data) {
+            CreateToastFailed();
+            $('#updateModal').modal('toggle');
+            LoadData();
+        });
+    }
+
+    function CreateTarget() {
+        var id = $("#A-Id").val();
+        var userAccountId = $("#A-UserAccountId").val();
+        var balance = $("#A-Balance").val();
+        var expiredDate = $("#A-ExpiredDate").val();
+        var bankId = $("#A-BankId").val();
+        var currencyId = $("#A-CurrencyId").val();
+
+        var object = {
+            "Id": id,
+            "UserAccountId": userAccountId,
+            "Balance": balance,
+            "ExpiredDate": expiredDate,
+            "BankId": bankId,
+            "CurrencyId": currencyId,
+            "Locked": false
+        }
+
+        $.post("add", object, function (data) {
+            if (data) {
+                CreateToastSuccess();
+            } else {
+                CreateToastFailed();
+            }
+            $('#addModal').modal('toggle');
+            LoadData();
+        }).fail(function (data) {
+            CreateToastFailed();
+            $('#addModal').modal('toggle');
+            LoadData();
+        });
+    }
+</script>
+
+<div class="container">
+    <br />
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">@ViewBag.tagName</h3>
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm" style="width: 300px;">
+                            <div class="input-group-prepend">
+                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#addModal">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+
+                            <input id="searchBox" type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-default">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="bankAccountGrid" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>User</th>
+                                <th>Balance</th>
+                                <th>Created date</th>
+                                <th>Expiry date</th>
+                                <th>Bank</th>
+                                <th>Currency</th>
+                                <th>Locked</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Id</th>
+                                <th>User</th>
+                                <th>Balance</th>
+                                <th>Created date</th>
+                                <th>Expiry date</th>
+                                <th>Bank</th>
+                                <th>Currency</th>
+                                <th>Locked</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- Loading -->
+                <div id="loadingOverlay" class="overlay d-none">
+                    <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                </div>
+                <!-- end loading -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal for update*@
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="E-UserAccountId" class="col-sm-2 col-form-label">User</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="E-UserAccountId">
+                                    @{
+                                        foreach (var userAccount in ViewBag.accountObjects)
+                                        {
+                                            <option value="@userAccount.Id">@userAccount.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-Balance" class="col-sm-2 col-form-label">Balance</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="number" id="E-Balance" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-CreatedDate" class="col-sm-2 col-form-label">Created date</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="date" id="E-CreatedDate" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-ExpiredDate" class="col-sm-2 col-form-label">Expiry date</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="date" id="E-ExpiredDate" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-BankId" class="col-sm-2 col-form-label">Bank</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="E-BankId">
+                                    @{
+                                        foreach (var bank in ViewBag.banks)
+                                        {
+                                            <option value="@bank.Id">@bank.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-CurrencyId" class="col-sm-2 col-form-label">Currency</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="E-CurrencyId">
+                                    @{
+                                        foreach (var currency in ViewBag.currencies)
+                                        {
+                                            <option value="@currency.Id">@currency.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="offset-sm-2 col-sm-10">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="E-Locked">
+                                    <label class="form-check-label" for="E-Locked">Locked</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="hidden" id="E-Id" />
+                        <input type="button" class="btn btn-info float-lg-right" value="Save" onclick="SaveTarget()" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal for add-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="A-Id" class="col-sm-2 col-form-label">Id</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-Id" value="@Guid.NewGuid()" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-UserAccountId" class="col-sm-2 col-form-label">User</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="A-UserAccountId">
+                                    @{
+                                        foreach (var userAccount in ViewBag.accountObjects)
+                                        {
+                                            <option value="@userAccount.Id">@userAccount.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-Balance" class="col-sm-2 col-form-label">Balance</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="number" id="A-Balance" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-CreatedDate" class="col-sm-2 col-form-label">Created date</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="date" id="A-CreatedDate" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-ExpiredDate" class="col-sm-2 col-form-label">Expiry date</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="date" id="A-ExpiredDate" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-BankId" class="col-sm-2 col-form-label">Bank</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="A-BankId">
+                                    @{
+                                        foreach (var bank in ViewBag.banks)
+                                        {
+                                            <option value="@bank.Id">@bank.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-CurrencyId" class="col-sm-2 col-form-label">Currency</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="A-CurrencyId">
+                                    @{
+                                        foreach (var currency in ViewBag.currencies)
+                                        {
+                                            <option value="@currency.Id">@currency.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="button" class="btn btn-info float-lg-right" value="Submit" onclick="CreateTarget()" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
