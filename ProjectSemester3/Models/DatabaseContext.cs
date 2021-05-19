@@ -29,14 +29,7 @@ namespace ProjectSemester3.Models
         public virtual DbSet<Setting> Settings { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=LAPTOP-PMM5LECP\\SQLEXPRESS;Database=ProjectSemester;user id=sa;password=123456");
-            }
-        }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -275,8 +268,24 @@ namespace ProjectSemester3.Models
             {
                 entity.ToTable("Setting");
 
+                entity.Property(e => e.SuccessMsg)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Title)
                     .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.WarningMsg1)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.WarningMsg2)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.WarningMsg3)
                     .HasMaxLength(250)
                     .IsUnicode(false);
             });
