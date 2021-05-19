@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        $(document).on({
+            ajaxStop: function () {
+                $("#loadingOverlay.overlay").removeClass("overlay");
+                $("#loadingOverlay").addClass("d-none");
+            }
+        });
+
+        LoadData();
+    });
+
+    function LoadData() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: 'loadData',
+            success: function (result) {
+                $("#title").val(result.title)
+                $("#defaultNumOfShowedTransaction").val(result.defaultNumOfShowedTransaction)
+                $("#defaultCurrencyId").val(result.defaultCurrencyId)
+            }
+        })
+    }
+
+    function SaveTarget() {
+        var title = $("#title").val();
+        var defaultNumOfShowedTransaction = $("#defaultNumOfShowedTransaction").val();
+        var defaultCurrencyId = $("#defaultCurrencyId").val();
+        var email = $("#email").val();
+
+        var object = {
+            "Id": 1,
+            "title": title,
+            "DefaultNumOfShowedTransaction": defaultNumOfShowedTransaction,
+            "DefaultCurrencyId": defaultCurrencyId,
+        }
+
+        $.post("edit", object, function (data) {
+            if (data) {
+                alert("Success!");
+            } else {
+                alert("Failed. Error: " + data);
+            }
+            LoadData();
+        });
+    }
+</script>
+
+<div class="container">
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Help info</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="title">Web title</label>
+                        <input type="text" id="title" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="defaultNumOfShowedTransaction">Default number of showed transaction</label>
+                        <input type="text" id="defaultNumOfShowedTransaction" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="defaultCurrencyId">Default currency</label>
+                        <select id="defaultCurrencyId" class="form-control custom-select">
+                            @{
+                                foreach (var currency in ViewBag.currencies)
+                                {
+                                    <option value="@currency.Id">@currency.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <a href="#" class="btn btn-secondary">Cancel</a>
+            <input type="submit" value="Save Changes" class="btn btn-success float-right" onclick="SaveTarget()">
+        </div>
+    </div>
+</div>

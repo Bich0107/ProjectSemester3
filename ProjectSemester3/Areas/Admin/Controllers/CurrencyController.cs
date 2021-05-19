@@ -19,54 +19,109 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             db = _db;
         }
 
-        [HttpGet]
-        [Route("add")]
-        public IActionResult Add()
-        {
-            var currency = new Currency();
-            return View("add", currency);
-        }
-
+        #region Add, edit, delete
         [HttpPost]
         [Route("add")]
         public IActionResult Add(Currency currency)
         {
-            db.Currencies.Add(currency);
-            db.SaveChanges();
-            return View("add");
+            try
+            {
+                Debug.WriteLine(currency.Name);
+                Debug.WriteLine(currency.Fullname);
+                Debug.WriteLine(currency.ExchangeRate);
+                Debug.WriteLine(currency.Default);
+                db.Currencies.Add(currency);
+                db.SaveChanges();
+
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        [HttpGet]
-        [Route("update/{id}")]
-        public IActionResult Add(int id)
+        [Route("edit/{id}")]
+        public IActionResult Edit(int id)
         {
-            var currency = db.Currencies.Find(id);
-            return View("update", currency);
+            return new JsonResult(db.Currencies.Find(id));
         }
 
         [HttpPost]
-        [Route("update")]
+        [Route("edit")]
         public IActionResult Update(Currency _currency)
         {
-            var currency = db.Currencies.Find(_currency.Id);
+            try
+            {
+                var currency = db.Currencies.Find(_currency.Id);
 
-            currency.Name = _currency.Name;
-            currency.Fullname = _currency.Fullname;
-            currency.ExchangeRate = _currency.ExchangeRate;
-            currency.Default = _currency.Default;
+                currency.Name = _currency.Name;
+                currency.Fullname = _currency.Fullname;
+                currency.ExchangeRate = _currency.ExchangeRate;
+                currency.Default = _currency.Default;
 
-            db.SaveChanges();
-
-            return View("update");
+                db.SaveChanges();
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        [HttpGet]
         [Route("delete/{id}")]
         public IActionResult Delete(int id)
         {
-            db.Currencies.Remove(db.Currencies.Find(id));
-            db.SaveChanges();
-            return View("delete");
+            try
+            {
+                db.Currencies.Remove(db.Currencies.Find(id));
+                db.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion
+
+        [Route("index")]
+        public IActionResult Index()
+        {
+            ViewBag.tagName = "Currency";
+            ViewBag.activeTag = "currency";
+            return View("index");
+        }
+
+        // when there are no keyword, search is as same as loadData
+        [Route("search")]
+        [Route("loadData")]
+        public IActionResult LoadData()
+        {
+            try
+            {
+                return new JsonResult(db.Currencies.ToList());
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        [Route("search/{keyword}")]
+        public IActionResult Search(string keyword)
+        {
+            try
+            {
+                return new JsonResult(db.Currencies.Where(
+                    a => a.Name.Contains(keyword) ||
+                        a.Fullname.Contains(keyword)
+                ).ToList());
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 }

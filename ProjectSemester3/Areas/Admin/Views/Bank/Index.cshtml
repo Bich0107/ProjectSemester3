@@ -1,0 +1,327 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        $(document).on({
+            ajaxStop: function () {
+                $("#loadingOverlay.overlay").removeClass("overlay");
+                $("#loadingOverlay").addClass("d-none");
+            }
+        });
+
+        LoadData();
+
+        $("#searchBox").on("keyup", function () {
+            var value = $(this).val();
+            Search(value);
+        });
+    });
+
+    function LoadData() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: 'loadData',
+            success: function (banks) {
+                var result = '';
+                for (var i = 0; i < banks.length; i++) {
+                    result += '<tr class="bank" data-widget="expandable-table" aria-expanded="false">';
+                    result += '<td>' + (i + 1) + '</td>';
+                    result += '<td>' + banks[i].name + '</td>';
+                    result += '<td>' + banks[i].address + '</td>';
+                    result += '<td>' + banks[i].status + '</td>';
+                    result += '<td>' + '<i class="fas fa-edit" style="color:green;" ' +
+                        'data-toggle="modal" data-target="#updateModal" onclick=ShowEditTarget("' + banks[i].id + '")></i > | '
+                        + '<i class="far fa-trash-alt" style="color:red;" onclick=DeleteData("' + banks[i].id + '");></i>' + '</td>';
+                    result += '</tr>';
+                    result += '<tr class="expandable-body d-none">';
+                    result += '<td colspan="8"><p style="display: none;">'
+                    result += banks[i].description
+                    result += '</p></td>'
+                    result += '</tr>';
+                }
+                $('#tableBank').html(result);
+                $(".bank").attr("aria-expanded", false);
+            }
+        })
+    }
+
+    function DeleteData(_id) {
+        var url = "delete/" + _id;
+        if (confirm("Are you sure you want to delete ...?")) {
+            $.post({
+                url: url,
+                success: function (data) {
+                    if (data) {
+                        CreateToastSuccess();
+                    } else {
+                        CreateToastFailed();
+                    }
+                    LoadData();
+                }
+            });
+        }
+    }
+
+    function Search(keyword) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: 'search/' + keyword,
+            success: function (banks) {
+                var result = '';
+                for (var i = 0; i < banks.length; i++) {
+                    result += '<tr class="bank" data-widget="expandable-table" aria-expanded="true">';
+                    result += '<td>' + (i + 1) + '</td>';
+                    result += '<td>' + banks[i].name + '</td>';
+                    result += '<td>' + banks[i].address + '</td>';
+                    result += '<td>' + banks[i].status + '</td>';
+                    result += '<td>' + '<i class="fas fa-edit" style="color:green;" ' +
+                        'data-toggle="modal" data-target="#updateModal" onclick=Update("' + banks[i].id + '")></i > | '
+                        + '<i class="far fa-trash-alt" style="color:red;" onclick=DeleteData("' + banks[i].id + '");></i>' + '</td>';
+                    result += '</tr>';
+                    result += '<tr class="expandable-body d-none">';
+                    result += '<td colspan="8"><p style="display: none;">'
+                    result += '<p>' + banks[i].description
+                    result += '</p></td>'
+                    result += '</tr>';
+                }
+                $('#tableBank').html(result);
+                $(".bank").attr("aria-expanded", false);
+            }
+        })
+    }
+
+    function ShowEditTarget(_id) {
+        var url = "edit/" + _id;
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: url,
+            data: {
+                id: _id
+            },
+            success: function (result) {
+                $("#E-Id").val(_id);
+                $("#E-Name").val(result.name);
+                $("#E-Address").val(result.address);
+                $("#E-Description").val(result.description);
+                $("#E-Status").prop('checked', result.status);
+            }
+        });
+    }
+
+    function SaveTarget() {
+        var id = $("#E-Id").val();
+        var name = $("#E-Name").val();
+        var address = $("#E-Address").val();
+        var description = $("#E-Description").val();
+
+        var status = false;
+        if ($('#E-Status').is(":checked")) {
+            status = true;
+        }
+
+        var object = {
+            "Id": id,
+            "Name": name,
+            "Address": address,
+            "Description": description,
+            "Status": status,
+        }
+
+        $.post("edit", object, function (data) {
+            if (data) {
+                CreateToastSuccess();
+            } else {
+                CreateToastFailed();
+            }
+            $('#updateModal').modal('toggle');
+            LoadData();
+        }).fail(function (data) {
+            CreateToastFailed();
+            $('#updateModal').modal('toggle');
+            LoadData();
+        });
+    }
+
+    function CreateTarget() {
+        var name = $("#A-Name").val();
+        var address = $("#A-Address").val();
+        var description = $("#A-Description").val();
+
+        var object = {
+            "Name": name,
+            "Address": address,
+            "Description": description,
+            "Status": true
+        }
+
+        $.post("add", object, function (data) {
+            if (data) {
+                CreateToastSuccess();
+            } else {
+                CreateToastFailed();
+            }
+            $('#addModal').modal('toggle');
+            LoadData();
+        }).fail(function (data) {
+            CreateToastFailed();
+            $('#addModal').modal('toggle');
+            LoadData();
+        });
+    }
+</script>
+
+<div class="container">
+    <br />
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">@ViewBag.tagName</h3>
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm" style="width: 300px;">
+                            <div class="input-group-prepend">
+                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#addModal">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+
+                            <input id="searchBox" type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-default">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="bankGrid" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBank">
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- Loading -->
+                <div id="loadingOverlay" class="overlay">
+                    <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                </div>
+                <!-- end loading -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<button type="button" class="btn btn-success toast-success"></button>
+@*Modal for update*@
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="E-Name" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="E-Name" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-Address" class="col-sm-2 col-form-label">Address</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="E-Address" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-Description" class="col-sm-2 col-form-label">Description</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="E-Description" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="offset-sm-2 col-sm-10">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="E-Status">
+                                    <label class="form-check-label" for="E-Status">Status</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="hidden" id="E-Id" />
+                        <input type="button" class="btn btn-info float-lg-right" value="Save" onclick="SaveTarget()" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for add -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="A-Name" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-Name" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-Address" class="col-sm-2 col-form-label">Address</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-Address" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-Description" class="col-sm-2 col-form-label">Description</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-Description" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="button" class="btn btn-info float-lg-right" value="Submit" onclick="CreateTarget()" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

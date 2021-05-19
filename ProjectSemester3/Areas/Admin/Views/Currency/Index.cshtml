@@ -1,0 +1,336 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        $(document).on({
+            ajaxStop: function () {
+                $("#loadingOverlay.overlay").removeClass("overlay");
+                $("#loadingOverlay").addClass("d-none");
+            }
+        });
+
+        LoadData();
+
+        $("#searchBox").on("keyup", function () {
+            var value = $(this).val();
+            Search(value);
+        });
+    });
+
+    function LoadData() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: 'loadData',
+            success: function (currencies) {
+                var result = '';
+                for (var i = 0; i < currencies.length; i++) {
+                    result += '<tr>';
+                    result += '<td>' + (i + 1) + '</td>';
+                    result += '<td>' + currencies[i].name + '</td>';
+                    result += '<td>' + currencies[i].fullname + '</td>';
+                    result += '<td>' + currencies[i].exchangeRate + '</td>';
+                    result += '<td>' + currencies[i].default + '</td>';
+                    result += '<td>' + '<i class="fas fa-edit" style="color:green;" ' +
+                        'data-toggle="modal" data-target="#updateModal" onclick=ShowEditTarget("' + currencies[i].id + '")></i > | '
+                        + '<i class="far fa-trash-alt" style="color:red;" onclick=DeleteData("' + currencies[i].id + '");></i>' + '</td>';
+                    result += '</tr>';
+                }
+                $('#table').html(result);
+            }
+        })
+    }
+
+    function Search(keyword) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: 'search/' + keyword,
+            success: function (currencies) {
+                var result = '';
+                for (var i = 0; i < currencies.length; i++) {
+                    result += '<tr>';
+                    result += '<td>' + (i + 1) + '</td>';
+                    result += '<td>' + currencies[i].name + '</td>';
+                    result += '<td>' + currencies[i].fullname + '</td>';
+                    result += '<td>' + currencies[i].exchangeRate + '</td>';
+                    result += '<td>' + currencies[i].default + '</td>';
+                    result += '<td>' + '<i class="fas fa-edit" style="color:green;" ' +
+                        'data-toggle="modal" data-target="#updateModal" onclick=ShowEditTarget("' + currencies[i].id + '")></i > | '
+                        + '<i class="far fa-trash-alt" style="color:red;" onclick=DeleteData("' + currencies[i].id + '");></i>' + '</td>';
+                    result += '</tr>';
+                }
+                $('#table').html(result);
+            }
+        })
+    }
+
+    function DeleteData(_id) {
+        var url = "delete/" + _id;
+        if (confirm("Are you sure you want to delete ...?")) {
+            $.post({
+                url: url,
+                success: function (data) {
+                    if (data) {
+                        CreateToastSuccess();
+                    } else {
+                        CreateToastFailed();
+                    }
+                    LoadData();
+                }
+            });
+        }
+    }
+
+    function ShowEditTarget(_id) {
+        var url = "edit/" + _id;
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: url,
+            data: {
+                id: _id
+            },
+            success: function (result) {
+                $("#E-Id").val(_id);
+                $("#E-Name").val(result.name);
+                $("#E-Fullname").val(result.fullname);
+                $("#E-ExchangeRate").val(result.exchangeRate);
+                $("#E-Default").prop('checked', result.default);
+            }
+        });
+    }
+
+    function SaveTarget() {
+        var id = $("#E-Id").val();
+        var fullname = $("#E-Fullname").val();
+        var name = $("#E-Name").val();
+        var exchangeRate = $("#E-ExchangeRate").val();
+
+        var isDefault = false;
+        if ($('#E-Default').is(":checked")) {
+            isDefault = true;
+        }
+
+        var object = {
+            "Id": id,
+            "Name": name,
+            "Fullname": fullname,
+            "ExchangeRate": exchangeRate,
+            "Default": isDefault,
+        }
+
+        $.post("update", object, function (data) {
+            if (data) {
+                CreateToastSuccess();
+            } else {
+                CreateToastFailed();
+            }
+            $('#updateModal').modal('toggle');
+            LoadData();
+        }).fail(function (data) {
+            CreateToastFailed();
+            $('#updateModal').modal('toggle');
+            LoadData();
+        });
+    }
+
+    function CreateTarget() {
+        var fullname = $("#A-Fullname").val();
+        var name = $("#A-Name").val();
+        var exchangeRate = $("#A-ExchangeRate").val();
+
+        var isDefault = false;
+        if ($('#A-Default').is(":checked")) {
+            isDefault = true;
+        }
+
+        var object = {
+            "Name": name,
+            "Fullname": fullname,
+            "ExchangeRate": exchangeRate,
+            "Default": isDefault,
+        }
+
+        $.post("add", object, function (data) {
+            if (data) {
+                CreateToastSuccess();
+            } else {
+                CreateToastFailed();
+            }
+            $('#addModal').modal('toggle');
+            LoadData();
+        }).fail(function (data) {
+            CreateToastFailed();
+            $('#addModal').modal('toggle');
+            LoadData();
+        });
+    }
+</script>
+
+<div class="container">
+    <br />
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">@ViewBag.tagName</h3>
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm" style="width: 300px;">
+                            <div class="input-group-prepend">
+                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#addModal">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+
+                            <input id="searchBox" type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-default">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="bankAccountGrid" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Fullname</th>
+                                <th>Exchange rate</th>
+                                <th>Default</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Fullname</th>
+                                <th>Exchange rate</th>
+                                <th>Default</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- Loading -->
+                <div id="loadingOverlay" class="overlay d-none">
+                    <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                </div>
+                <!-- end loading -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal for update*@
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="E-Name" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="E-Name" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-Fullname" class="col-sm-2 col-form-label">Fullname</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="E-Fullname" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-ExchangeRate" class="col-sm-2 col-form-label">Exchange Rate</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="number" step="0.01" id="E-ExchangeRate" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="offset-sm-2 col-sm-10">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="E-Default">
+                                    <label class="form-check-label" for="E-Default">Default</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="hidden" id="E-Id" />
+                        <input type="button" class="btn btn-info float-lg-right" value="Save" onclick="SaveTarget()" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal for add-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="A-Name" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-Name" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-Fullname" class="col-sm-2 col-form-label">Fullname</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-Fullname" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-ExchangeRate" class="col-sm-2 col-form-label">Exchange Rate</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="number" step="0.01" id="A-ExchangeRate" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="offset-sm-2 col-sm-10">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="A-Default">
+                                    <label class="form-check-label" for="A-Default">Default</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="button" class="btn btn-info float-lg-right" value="Save" onclick="CreateTarget()" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

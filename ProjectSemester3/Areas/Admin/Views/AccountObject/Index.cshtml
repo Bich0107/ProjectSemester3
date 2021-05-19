@@ -3,20 +3,25 @@
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
+
+<script src="~/JS/dateScript.js"></script>
+
 <script>
     $(document).ready(function () {
-        LoadData();
-    });
+        $(document).on({
+            ajaxStop: function () {
+                $("#loadingOverlay.overlay").removeClass("overlay");
+                $("#loadingOverlay").addClass("d-none");
+            }
+        });
 
-    function GetDate(_date) {
-        let dateResults = _date.toString().split("T");
-        var date = new Date(dateResults[0]);
-        let result = '';
-        result += date.getDate() + "/";
-        result += (date.getMonth() + 1) + "/";
-        result += date.getFullYear();
-        return result;
-    }
+        LoadData();
+
+        $("#searchBox").on("keyup", function () {
+            var value = $(this).val();
+            Search(value);
+        });
+    });
 
     function LoadData() {
         $.ajax({
@@ -27,22 +32,29 @@
             success: function (accountObjs) {
                 var result = '';
                 for (var i = 0; i < accountObjs.length; i++) {
-                    result += '<tr>';
+                    result += '<tr class="account" data-widget="expandable-table" aria-expanded="false">';
                     result += '<td>' + (i + 1) + '</td>';
                     result += '<td>' + accountObjs[i].name + '</td>';
                     result += '<td>' + GetDate(accountObjs[i].birthday) + '</td>';
                     result += '<td>' + accountObjs[i].phoneNumber + '</td>';
                     result += '<td>' + accountObjs[i].email + '</td>';
-                    result += '<td>' + accountObjs[i].address + '</td>';
-                    result += '<td>' + accountObjs[i].job + '</td>';
-                    result += '<td>' + accountObjs[i].gender + '</td>';
                     result += '<td>' + accountObjs[i].idNum + '</td>';
                     result += '<td>' + accountObjs[i].locked + '</td>';
-                    result += '<td>' + "edit" + '</td>';
-                    result += '<td>' + '<a href="#" class="btn btn-danger" onclick=DeleteData("' + accountObjs[i].id + '"); > Delete</a >' + '</td>';
+                    result += '<td>' + '<i class="fas fa-edit" style="color:green;" ' +
+                        'data-toggle="modal" data-target="#updateModal" onclick=ShowEditTarget("' + accountObjs[i].id + '")></i > | '
+                        + '<i class="far fa-trash-alt" style="color:red;" onclick=DeleteData("' + accountObjs[i].id + '");></i>' + '</td>';
+                    result += '</tr>';
+                    result += '<tr class="expandable-body d-none">';
+                    result += '<td colspan="8"><p style="display: none;">'
+                    result += '<b>Username:</b> ' + accountObjs[i].username + '<br />'
+                    result += '<b>Job:</b> ' + accountObjs[i].job + '<br />'
+                    result += '<b>Gender:</b> ' + accountObjs[i].gender + '<br />'
+                    result += '<b>Address:</b> ' + accountObjs[i].address
+                    result += '</p></td>'
                     result += '</tr>';
                 }
                 $('#tableAccountObj').html(result);
+                $(".account").attr("aria-expanded", false);
             }
         })
     }
@@ -53,40 +65,402 @@
             $.post({
                 url: url,
                 success: function (data) {
-                    alert("Delete sucess!");
+                    if (data) {
+                        CreateToastSuccess();
+                    } else {
+                        CreateToastFailed();
+                    }
                     LoadData();
                 }
             });
-        } else {
-            return false;
         }
+    }
+
+    function Search(keyword) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: 'search/' + keyword,
+            success: function (accountObjs) {
+                var result = '';
+                for (var i = 0; i < accountObjs.length; i++) {
+                    result += '<tr class="account" data-widget="expandable-table" aria-expanded="false">';
+                    result += '<td>' + (i + 1) + '</td>';
+                    result += '<td>' + accountObjs[i].name + '</td>';
+                    result += '<td>' + GetDate(accountObjs[i].birthday) + '</td>';
+                    result += '<td>' + accountObjs[i].phoneNumber + '</td>';
+                    result += '<td>' + accountObjs[i].email + '</td>';
+                    result += '<td>' + accountObjs[i].idNum + '</td>';
+                    result += '<td>' + accountObjs[i].locked + '</td>';
+                    result += '<td>' + '<i class="fas fa-edit" style="color:green;" ' +
+                        'data-toggle="modal" data-target="#updateModal" onclick=Update("' + accountObjs[i].id + '")></i > | '
+                        + '<i class="far fa-trash-alt" style="color:red;" onclick=DeleteData("' + accountObjs[i].id + '");></i>' + '</td>';
+                    result += '</tr>';
+                    result += '<tr class="expandable-body d-none">';
+                    result += '<td colspan="8"><p style="display: none;">'
+                    result += '<b>Username:</b> ' + accountObjs[i].username + '<br />'
+                    result += '<b>Job:</b> ' + accountObjs[i].job + '<br />'
+                    result += '<b>Gender:</b> ' + accountObjs[i].gender + '<br />'
+                    result += '<b>Address:</b> ' + accountObjs[i].address
+                    result += '</p></td>'
+                    result += '</tr>';
+                }
+                $('#tableAccountObj').html(result);
+                $(".account").attr("aria-expanded", false);
+            }
+        })
+    }
+
+    function ShowEditTarget(_id) {
+        var url = "edit/" + _id;
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: url,
+            data: {
+                id: _id
+            },
+            success: function (result) {
+                $("#E-Id").val(_id);
+                $("#E-Name").val(result.name);
+
+                var birthday = new Date(result.birthday);
+                var day = ("0" + birthday.getDate()).slice(-2);
+                var month = ("0" + (birthday.getMonth() + 1)).slice(-2);
+                var resultDate = birthday.getFullYear() + "-" + (month) + "-" + (day);
+
+                $("#E-Birthday").val(resultDate);
+
+                $("#E-PhoneNumber").val(result.phoneNumber);
+                $("#E-Email").val(result.email);
+                $("#E-Address").val(result.address);
+                $("#E-Job").val(result.job);
+                $("#E-Gender").val(result.gender);
+                $("#E-IdNum").val(result.idNum);
+                $("#E-Locked").prop('checked', result.locked);
+            }
+        });
+    }
+
+    function SaveTarget() {
+        var id = $("#E-Id").val();
+        var name = $("#E-Name").val();
+        var birthday = $("#E-Birthday").val();
+
+        var phoneNum = $("#E-PhoneNumber").val();
+        var email = $("#E-Email").val();
+        var address = $("#E-Address").val();
+        var job = $("#E-Job").val();
+        var gender = $("#E-Gender").val();
+        var idNum = $("#E-IdNum").val();
+
+        var checked = false;
+        if ($('#E-Locked').is(":checked")) {
+            checked = true;
+        }
+
+        var object = {
+            "Id": id,
+            "Name": name,
+            "Birthday": birthday,
+            "PhoneNumber": phoneNum,
+            "Email": email,
+            "Address": address,
+            "Job": job,
+            "Gender": gender,
+            "IdNum": idNum,
+            "Checked": checked,
+        }
+
+        $.post("edit", object, function (data) {
+            if (data) {
+                CreateToastSuccess();
+            } else {
+                CreateToastFailed();
+            }
+            $('#updateModal').modal('toggle');
+            LoadData();
+        }).fail(function (data) {
+            CreateToastFailed();
+            $('#updateModal').modal('toggle');
+            LoadData();
+        });
+    }
+
+    function CreateTarget() {
+        var id = $("#A-Id").val();
+        var name = $("#A-Name").val();
+        var username = $("#A-Username").val();
+        var birthday = $("#A-Birthday").val();
+
+        var phoneNum = $("#A-PhoneNumber").val();
+        var email = $("#A-Email").val();
+        var address = $("#A-Address").val();
+        var job = $("#A-Job").val();
+        var gender = $("#A-Gender").val();
+        var idNum = $("#A-IdNum").val();
+
+        var object = {
+            "Id": id,
+            "Name": name,
+            "Birthday": birthday,
+            "PhoneNumber": phoneNum,
+            "Email": email,
+            "Address": address,
+            "Job": job,
+            "Gender": gender,
+            "IdNum": idNum,
+            "Locked": false,
+            "Password": phoneNum,
+            "Username": username,
+        }
+
+        $.post("add", object, function (data) {
+            if (data) {
+                CreateToastSuccess();
+            } else {
+                CreateToastFailed();
+            }
+            $('#addModal').modal('toggle');
+            LoadData();
+        }).fail(function (data) {
+            console.log(data);
+            CreateToastFailed();
+            $('#addModal').modal('toggle');
+            LoadData();
+        });
     }
 </script>
 
 <div class="container">
     <br />
-    <div style="width:90%; margin:0 auto;">
-        <table id="accountObjGrid" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Birthday</th>
-                    <th>PhoneNumber</th>
-                    <th>Email</th>
-                    <th>Address</th>
-                    <th>Job</th>
-                    <th>Gender</th>
-                    <th>IdNum</th>
-                    <th>Locked</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody id="tableAccountObj">
-            </tbody>
-        </table>
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">@ViewBag.tagName</h3>
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm" style="width: 300px;">
+                            <div class="input-group-prepend">
+                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#addModal">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+
+                            <input id="searchBox" type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-default">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="accountObjGrid" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Birthday</th>
+                                <th>PhoneNumber</th>
+                                <th>Email</th>
+                                <th>Id Num</th>
+                                <th>Locked</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableAccountObj">
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Birthday</th>
+                                <th>PhoneNumber</th>
+                                <th>Email</th>
+                                <th>Id Num</th>
+                                <th>Locked</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- Loading -->
+                <div id="loadingOverlay" class="overlay">
+                    <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                </div>
+                <!-- end loading -->
+            </div>
+        </div>
     </div>
 </div>
 
+<!--Modal for update-->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="E-Name" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="E-Name" placeholder="Name" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-Birthday" class="col-sm-2 col-form-label">Birthday</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="date" id="E-Birthday" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-PhoneNumber" class="col-sm-2 col-form-label">Phone number</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="E-PhoneNumber" placeholder="Phone number" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-Email" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="E-Email" placeholder="Email" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-Address" class="col-sm-2 col-form-label">Address</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="E-Address" placeholder="Address" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-Job" class="col-sm-2 col-form-label">Job</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="E-Job" placeholder="Job" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-Gender" class="col-sm-2 col-form-label">Gender</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="E-Gender">
+                                    <option value="@Gender.Male">@Gender.Male</option>
+                                    <option value="@Gender.Female">@Gender.Female</option>
+                                    <option value="@Gender.Other">@Gender.Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-IdNum" class="col-sm-2 col-form-label">Id number</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="E-IdNum" placeholder="Identity number" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="offset-sm-2 col-sm-10">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="E-Locked">
+                                    <label class="form-check-label" for="E-Locked">Locked</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="hidden" id="E-Id" />
+                        <button type="button" class="btn btn-info float-lg-right" onclick="SaveTarget()">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal for add-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="A-Id" class="col-sm-2 col-form-label">Id</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-Id" value="@Guid.NewGuid()" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-Name" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-Name" placeholder="Name" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-Birthday" class="col-sm-2 col-form-label">Birthday</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="date" id="A-Birthday" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-PhoneNumber" class="col-sm-2 col-form-label">Phone number</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-PhoneNumber" placeholder="Phone number" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-Email" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-Email" placeholder="Email" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-Address" class="col-sm-2 col-form-label">Address</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-Address" placeholder="Address" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-Job" class="col-sm-2 col-form-label">Job</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-Job" placeholder="Job" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-Gender" class="col-sm-2 col-form-label">Gender</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="A-Gender">
+                                    <option value="@Gender.Male">@Gender.Male</option>
+                                    <option value="@Gender.Female">@Gender.Female</option>
+                                    <option value="@Gender.Other">@Gender.Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-IdNum" class="col-sm-2 col-form-label">Id number</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-IdNum" placeholder="Identity number" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="A-Username" class="col-sm-2 col-form-label">Username</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="A-Username" placeholder="Username" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-info float-lg-right" onclick="CreateTarget()">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
