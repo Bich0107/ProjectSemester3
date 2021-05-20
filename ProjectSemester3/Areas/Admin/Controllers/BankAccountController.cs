@@ -26,9 +26,6 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             try
             {
-                var bankCode = Guid.NewGuid().ToString().Substring(0, 6);
-                _bankAccount.BankCode = bankCode;
-
                 _bankAccount.CreatedDate = DateTime.Today;
 
                 db.BankAccounts.Add(_bankAccount);
@@ -142,6 +139,17 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 Debug.WriteLine("Error bank account: " + e.Message);
                 return null;
             }
+        }
+
+        [Route("resetOTP")]
+        public IActionResult ResetOTP()
+        {
+            foreach (var bankAccount in db.BankAccounts.ToList())
+            {
+                bankAccount.BankCode = null;
+            }
+
+            return Ok();
         }
     }
 }
