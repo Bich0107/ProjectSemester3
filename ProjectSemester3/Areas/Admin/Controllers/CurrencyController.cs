@@ -26,10 +26,6 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             try
             {
-                Debug.WriteLine(currency.Name);
-                Debug.WriteLine(currency.Fullname);
-                Debug.WriteLine(currency.ExchangeRate);
-                Debug.WriteLine(currency.Default);
                 db.Currencies.Add(currency);
                 db.SaveChanges();
 
