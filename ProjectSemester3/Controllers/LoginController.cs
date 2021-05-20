@@ -1,28 +1,30 @@
 ﻿using GoogleAuthenticatorService.Core;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 using ProjectSemester3.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProjectSemester3.Controllers
 {
-    [Route("login")]
+    [Route("account")]   
     public class LoginController : Controller
     {
         private DatabaseContext db;
         const string key = "test123!@@)(*";
-        int wrongPassword = 0;
         public LoginController(DatabaseContext _db)
         {
             db = _db;
         }
 
         [Route("login")]
-        [Route("")]
-        [Route("~/")]
+        //[Route("")]
+        //[Route("~/")]
         [HttpGet]
         public IActionResult Login()
         {
@@ -33,70 +35,153 @@ namespace ProjectSemester3.Controllers
         [HttpPost]
         public ActionResult Login(AccountObject accountObject)
         {
+            var LoginAccount = db.AccountObjects.SingleOrDefault(a => a.Username.Equals(accountObject.Username));
             
-            if (ProcessLogin(accountObject.Username, accountObject.Password) == null)
-                {
-                ViewBag.loginFailed = "Username or Password Invalid";
-                return View("Login");
-            }
-            else
+            if(LoginAccount != null)
             {
-                var account = db.AccountObjects.FirstOrDefault(a => a.Username.Equals(accountObject.Username));
-                HttpContext.Session.SetString("tempid", accountObject.Username);
-                if (account.IsAuthentication)
+                HttpContext.Session.SetString("username", LoginAccount.Username);
+                if (CheckLocked(LoginAccount))
                 {
-                    return RedirectToAction("Authentication");
+                    if (ProcessLogin(LoginAccount, accountObject.Password))
+                    {
+                        if (LoginAccount.IsAuthentication)
+                        {
+                            return RedirectToAction("Authentication");
+                        }
+                        else
+                        {
+                            if (LoginAccount.PositionId == 1)
+                            {
+                                return RedirectToAction("Index", "Home");
+                            }
+                            else
+                            {
+                                return RedirectToAction("Index", "Admin", new { area = "Admin" });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.loginFailed = "Username or password invalid";
+                        return View("Login");
+                    }
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Home");
-                }                
+                    ViewBag.loginFailed = "Your Account has been locked";
+                    return View("Login");
+                }
+               
+            }
+            else
+            {
+                ViewBag.loginFailed = "Username or password invalid";
+                return View("Login");
             }
                 
             
         }
         //Check Process Login
-        private AccountObject ProcessLogin(string username, string password)
+        private bool ProcessLogin(AccountObject account, string password)
         {
             try
             {
-                var account = db.AccountObjects.SingleOrDefault(a => a.Username.Equals(username));
-                if (account != null)
+                var passValid = BCrypt.Net.BCrypt.Verify(password, account.Password);
+                if (passValid)
                 {
-                    if (BCrypt.Net.BCrypt.Verify(password, account.Password))
-                    {
-                        wrongPassword = 0;
-                        return account;
-                    }
-                    else
-                    {
-                        wrongPassword++;
-                    }
-                    HttpContext.Session.SetInt32("wrongPassword", wrongPassword);
+                        account.WrongPassword = 0;
+                        db.SaveChanges();
+                        HttpContext.Session.SetInt32("wrongPassword", account.WrongPassword);
+                        return true;
                 }
-                return null;
+                else
+                {
+                    account.WrongPassword = account.WrongPassword + 1;
+                    if(account.WrongPassword >= 3)
+                    {
+                        account.Locked = true;
+                    }
+                    HttpContext.Session.SetInt32("wrongPassword", account.WrongPassword);
+                    MsgWarning(account);
+                    db.SaveChanges();
+                }
+                return false;
             }
             catch
             {
-                return null;
+                return false;
             }
         }
-        private void MsgWarning()
+
+        //Check Locked
+        private bool CheckLocked(AccountObject account)
         {
             try
             {
-                if(HttpContext.Session.GetInt32("wrongPassword") != 0)
+                if (account.Locked)
                 {
-
-                }else if(HttpContext.Session.GetInt32("wrongPassword") == 3)
-                {
-
+                    return false;
                 }
-            }
-            catch
-            {
+                else
+                {
+                    return true;
+                }
                 
+            }catch(Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return false;
             }
+            
+        }
+        private async void MsgWarning(AccountObject accountObject)
+        {
+            Debug.WriteLine("Wrong password: " + accountObject.WrongPassword);            
+                try
+                {
+                MimeMessage message = new MimeMessage();
+
+                MailboxAddress from = new MailboxAddress("Admin",
+                "tinhoang7901@gmail.com");
+                message.From.Add(from);
+
+                MailboxAddress to = new MailboxAddress("User", accountObject.Email);
+                message.To.Add(to);                       
+
+                message.Subject = "This is email Warning";
+
+                BodyBuilder bodyBuilder = new BodyBuilder();
+                //bodyBuilder.HtmlBody = "<h1>Hello World!</h1>";
+                var Msg = db.Settings.Find(1);
+                if (accountObject.WrongPassword == 1)
+                {
+                    bodyBuilder.TextBody = Msg.WarningMsg1;
+                }else if(accountObject.WrongPassword == 2)
+                {
+                    bodyBuilder.TextBody = Msg.WarningMsg2;
+                }
+                else
+                {
+                    bodyBuilder.TextBody = Msg.WarningMsg3;
+                };
+                message.Body = bodyBuilder.ToMessageBody();
+
+                SmtpClient client = new SmtpClient();
+                client.Connect("smtp.gmail.com", 587, false);
+                client.Authenticate("tinhoang7901@gmail.com", "0347557353");
+                
+                await client.SendAsync(message);
+                Debug.WriteLine("Done");
+                client.Disconnect(true);
+                client.Dispose();
+
+                    
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            
         }
 
         [Route("authentication")]
@@ -104,17 +189,17 @@ namespace ProjectSemester3.Controllers
         public ActionResult Authentication()
 
         {
-            var tempid = HttpContext.Session.GetString("tempid");
-            if (HttpContext.Session.GetString("tempid") != null)
+            var username = HttpContext.Session.GetString("username");
+            if (HttpContext.Session.GetString("username") != null)
             {
 
                 TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
 
-                var UserUniqueKey = (Convert.ToString(HttpContext.Session.GetString("tempid")) + key);
+                var UserUniqueKey = (Convert.ToString(HttpContext.Session.GetString("username")) + key);
 
                 HttpContext.Session.SetString("UserUniqueKey", UserUniqueKey);
 
-                var setupInfo = tfa.GenerateSetupCode("Banking Online", tempid, UserUniqueKey, 100, 100);
+                var setupInfo = tfa.GenerateSetupCode("Banking Online", username, UserUniqueKey, 100, 100);
 
                 ViewBag.BarcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
 
@@ -133,9 +218,9 @@ namespace ProjectSemester3.Controllers
         [HttpPost]
         public ActionResult Authentication(string passcode)
         {
-            var tempid = (HttpContext.Session.GetString("tempid"));
+            var username = (HttpContext.Session.GetString("username"));
 
-            if (tempid == null)
+            if (username == null)
             {
 
                 return RedirectToAction("Login");
@@ -149,9 +234,17 @@ namespace ProjectSemester3.Controllers
             }
             else
             {
-                HttpContext.Session.SetString("id", Convert.ToString(tempid));
+                var account = db.AccountObjects.SingleOrDefault(a => a.Username.Equals(username));
+                HttpContext.Session.SetString("id", Convert.ToString(username));
                 passcode = "";
-                return RedirectToAction("Index", "Home");
+                if (account.PositionId == 1)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Admin", new { area = "Admin" });
+                }
             }
             
 
@@ -162,10 +255,10 @@ namespace ProjectSemester3.Controllers
             try
             {
                 var token = passcode;
-                var tempid = (HttpContext.Session.GetString("tempid"));
+                var username = (HttpContext.Session.GetString("username"));
                 TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
 
-                string UserUniqueKey = (Convert.ToString(tempid) + key);
+                string UserUniqueKey = (Convert.ToString(username) + key);
 
                 bool isValid = tfa.ValidateTwoFactorPIN(UserUniqueKey, token);
                 return isValid;
@@ -179,7 +272,7 @@ namespace ProjectSemester3.Controllers
         [Route("logout")]
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("tempid");
+            HttpContext.Session.Remove("username");
             return RedirectToAction("login");
         }
     }

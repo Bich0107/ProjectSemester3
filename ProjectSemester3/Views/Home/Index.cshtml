@@ -4,13 +4,77 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h3>Index (Home, currently testing)</h3>
-<form>
-    <table border="1">
-        <tr>
-            <th>Chu tai khoan</th>
-            <td></td>
-        </tr>
-    </table>
-</form>
+<!-- ======= Hero Section ======= -->
 
+<section class="hero" id="home">
+    <div class="container">
+
+        <div class="section-title">
+            <h2>Home</h2>
+        </div>
+        <form method="get" asp-controller="home" asp-action="index">
+            <div class="container-fluid">
+                <div class="container">
+                    <fieldset class="border">
+                        <legend class="col-md-4">Account Information</legend>
+                        <table class="table text-center">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Account Number</th>
+                                    <th scope="col">Currency Type</th>
+                                    <th scope="col">Current balance</th>
+                                    <th scope="col">Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var b in ViewBag.@bankAccounts)
+                                {
+                                    <tr>
+                                        <td class="border-right">@b.BankCode</td>
+                                        <td class="border-right">@b.Currency.Name</td>
+                                        <td class="border-right">@b.Balance</td>
+                                        <td><a href="#">Detail</a></td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </div>
+                <div class="container mt-5">
+                    <fieldset class="border">
+                        <legend class="col-md-3">Quick search</legend>
+                        <div class="container ml-4">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="radio" name="QuickSearch" id="10" checked />
+                                    <label>Last 10 transactions</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="radio" name="QuickSearch" id="10" />
+                                    <label>Transaction within 1 month</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="radio" name="QuickSearch" id="10" />
+                                    <label>Transaction within 3 months</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md">
+                                    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</section>
+    <!-- End Hero -->

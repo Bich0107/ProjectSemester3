@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProjectSemester3.MiddleWares;
 using ProjectSemester3.Models;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ namespace ProjectSemester3
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddSession();
+            services.AddMvc();
 
             var connectionString = configuration.GetConnectionString("Defaultconnection");
             services.AddDbContext<DatabaseContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
@@ -49,15 +51,22 @@ namespace ProjectSemester3
 
             app.UseSession();
 
+            //app.UseMiddleware<AuthenticalMiddleware>();
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapAreaControllerRoute(
+                    name: "admin",
+                    areaName: "admin",
+                    pattern: "admin/{controller}/{action=index}"
+                );
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Contact}/{action=Index}/{id?}"
+                    pattern: "{controller=home}/{action=index}/{id?}"
                 );
             });
         }
