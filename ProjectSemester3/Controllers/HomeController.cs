@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProjectSemester3.Controllers
 {
-    [Route("account")]
+    [Route("home")]
     public class HomeController : Controller
     {
         private DatabaseContext db;
@@ -35,6 +35,12 @@ namespace ProjectSemester3.Controllers
         {
             var account = db.AccountObjects.SingleOrDefault(x => x.Username.Equals(HttpContext.Session.GetString("username")));
             return View(account);
+        }
+        [Route("account-detail")]
+        public IActionResult AccountDetail()
+        {
+            var account = db.AccountObjects.SingleOrDefault(x => x.Username.Equals(HttpContext.Session.GetString("username")));
+            return View("AccountDetail");
         }
     }
 }

@@ -275,5 +275,17 @@ namespace ProjectSemester3.Controllers
             HttpContext.Session.Remove("username");
             return RedirectToAction("login");
         }
+        [Route("forgot-password")]
+        public IActionResult ForgotPassword()
+        {
+            
+            return View("ForgotPassword");
+        }
+        [Route("sign-up")]
+        public IActionResult SignUp()
+        {
+
+            return View("SignUp");
+        }
     }
 }

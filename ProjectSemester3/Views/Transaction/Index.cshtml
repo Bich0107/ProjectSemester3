@@ -1,0 +1,179 @@
+﻿@{
+    ViewData["title"] = "Banking Online";
+    ViewData["pageName"] = "Transaction";
+    ViewData["controller"] = "transaction";
+    ViewData["action"] = "index";
+    Layout = "_Layout";
+}
+<div class="row">
+    <div class=" container col-xl-8 col-md-12">
+        <!-- multistep form -->
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-10 col-lg-10 col-xl-12 text-center p-0 mt-3 mb-2">
+                    <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                        <h2 id="heading">Transaction</h2>
+                        <form id="msform">
+                            <!-- progressbar -->
+                            <ul id="progressbar">
+                                <li class="active" id="initialization"><strong>Initialization</strong></li>
+                                <li id="verify"><strong>Verify</strong></li>
+                                <li id="accuracy"><strong>Accuracy</strong></li>
+                                <li id="confirm"><strong>Finish</strong></li>
+                            </ul>
+                            <fieldset>
+                                <div class="form-card">
+                                    <div class="table-card ">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <td>Account Number</td>
+                                                        <td class="text-right">
+                                                            <Select class="form-control form-control-primary">
+                                                                <option value="">123456789</option>
+                                                                <option value="">987654321</option>
+                                                                <option value="">741852963</option>
+                                                            </Select>
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    <tr>
+                                                        <td>Account holder</td>
+                                                        <td class="text-right">Hoang Minh Tien</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Current balance</td>
+                                                        <td class="text-right">1,123,876,234 VND</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label for="account-to">Beneficiary account</label>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <input class="form-check-input" type="text" id="account-to">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>transfer amount</td>
+                                                        <td class="text-right">
+                                                            <input class="form-check-input" type="text" id="account-to">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Text</td>
+                                                        <td class="text-right">
+                                                            <input class="form-check-input" type="text" id="account-to">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="button" name="next" class="next action-button" value="Next" />
+                            </fieldset>
+                            <fieldset>
+                                <div class="form-card">
+                                    <div class="table-card ">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <tbody>
+
+                                                    <tr>
+                                                        <th>From</th>
+                                                        <td class="text-right">Hoang Minh Tien <br> 1234567890</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Transfer amount</th>
+                                                        <td class="text-right">500,000 VND</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>To</th>
+                                                        <td class="text-right">
+                                                            Hoang Minh Tam <br> 9876543210 <br> NGAN HANG TMCP DAU TU VA PHAT TRIEN VIET NAM (BIDV)
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="button" name="next" class="next action-button" value="Next" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                            </fieldset>
+                            <fieldset>
+                                <div class="form-card">
+                                    <div class="table-card">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <label class="col-12 text-center">Enter OTP code</label>
+                                                            <div class="col-12 text-center">
+                                                                <input class="w-50" type="text" id="">
+                                                            </div>
+                                                            <label class="col-12 text-center">We have sent OTP code to your email! <br>OTP code is available in 30s</label>
+                                                        </td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <input type="button" name="next" class="next action-button" value="Submit" />
+                                <a asp-controller="transaction" asp-action="index"><input type="button" name="previous" class="action-button-previous " value="Cancel" /></a>
+                            </fieldset>
+                            <fieldset>
+                                <div class="form-card">
+                                    <div class="table-card">
+                                        <div class="text-center card-border-default pt-2 background-primary">
+                                            <h4><b>Amount</b></h4>
+                                            <h5>VND 500,000</h5>
+                                            <br>
+                                        </div>
+                                        <div class="table-reponsive">
+                                            <table class="table">
+                                                <tbody>
+
+                                                    <tr>
+                                                        <td>Date</td>
+                                                        <td class="text-right">20:18 11/05/2021</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Account holder </td>
+                                                        <td class="text-right">VND-TGTT-HOANG MINH TIEN <br> 1234567890</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Beneficiary account </td>
+                                                        <td class="text-right">VND-TGTT-HOANG VAN CHINH <br>9876543210</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Text transaction</td>
+                                                        <td class="text-right">thank bro </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Transaction code</td>
+                                                        <td class="text-right">FT21131559570414 (48256207803)</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <a asp-controller="home" asp-action="index"><input type="button" name="home" class="action-button" value="Exit" /></a>
+                                <a asp-controller="transaction" asp-action="index"><input type="button" name="new" class="action-button" value="New" /></a>
+
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
