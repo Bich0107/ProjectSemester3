@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace ProjectSemester3.Controllers
 {
-    [Route("forgot-password")]
-    public class ForgotPasswordController : Controller
+    [Route("bank-account")]
+    public class BankAccountController : Controller
     {
+        [Route("index")]
+        [Route("")]
         public IActionResult Index()
         {
             return View();

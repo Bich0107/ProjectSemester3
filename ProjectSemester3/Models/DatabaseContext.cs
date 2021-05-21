@@ -22,6 +22,7 @@ namespace ProjectSemester3.Models
         public virtual DbSet<BankAccount> BankAccounts { get; set; }
         public virtual DbSet<Check> Checks { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
+        public virtual DbSet<Faq> Faqs { get; set; }
         public virtual DbSet<Help> Helps { get; set; }
         public virtual DbSet<Problem> Problems { get; set; }
         public virtual DbSet<Result> Results { get; set; }
@@ -192,6 +193,20 @@ namespace ProjectSemester3.Models
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Faq>(entity =>
+            {
+                entity.ToTable("FAQ");
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Subject)
+                    .IsRequired()
+                    .HasMaxLength(250)
                     .IsUnicode(false);
             });
 

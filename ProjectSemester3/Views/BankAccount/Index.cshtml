@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["title"] = "Banking Online";
+    ViewData["pageName"] = "Account";
+    ViewData["controller"] = "bankaccount";
+    ViewData["action"] = "index";
+    Layout = "_Layout";
+}
+<div class="row">
+    <div class=" container col-xl-8 col-md-12 ">
+        <div class="step-title mb-2 ">
+            <b>Bước 1: </b>Chọn tài khoản
+        </div>
+        <div class="card table-card ">
+            <div class="card-header ">
+                <h5>THÔNG TIN TÀI KHOẢN</h5>
+            </div>
+            <div class="card-block ">
+                <div class="table-responsive ">
+                    <table class="table table-hover ">
+                        <tbody>
+                            <tr>
+                                <td>Chọn tài khoản</td>
+                                <td>
+                                    <select name="accounts " class="form-control">
+                                        <option value=" ">Chọn tài khoản</option>
+                                        <option value="01 ">123165465145</option>
+                                        <option value="02 ">110548565666</option>
+                                        <option value="03 ">56555545566</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Loại tài khoản </td>
+                                <td class="text-right ">TIEN GUI THANH TOAN</td>
+                            </tr>
+                            <tr>
+                                <td>Số dư hiện tại </td>
+                                <td class="text-right ">VND 2,964,922</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="container col-xl-8 col-md-12 ">
+        <div class="step-title mb-2 ">
+            <b>Bước 2: </b>Chọn giao dịch
+        </div>
+        <div class="card">
+            <div class="card-header ">
+                <h5>TÌM KIẾM NHANH</h5>
+            </div>
+            <div class="card-block ">
+                <div class="form-check ml-4">
+                    <input type="radio" class="form-check-input" name="radio-transaction " id="10" checked />
+                    <label class="form-check-label" for="10 ">10 giao dịch cuối</label>
+                </div>
+                <div class="form-check ml-4">
+                    <input type="radio" class="form-check-input" name="radio-transaction " id="1month" />
+                    <label class="form-check-label" for="1month ">giao dịch trong vòng 1 tháng</label>
+                </div>
+                <div class="form-check ml-4">
+                    <input type="radio" class="form-check-input" name="radio-transaction " id="3month" />
+                    <label class="form-check-label" for="3month ">giao dịch trong vòng 3 tháng</label>
+                </div>
+            </div>
+            <div class="button-group mb-3 ml-3 ">
+                <input class="btn btn-primary " type="submit" value="Thực hiện ">
+                <input class="btn btn-primary " type="submit" value="Tải xuống ">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="container col-xl-8 col-md-12 ">
+        <div class="card">
+            <div class="card-header ">
+                <h5> TÌM KIẾM GIAO DỊCH</h5>
+            </div>
+            <div class="card-block ">
+                <div class="row">
+                    <div class="col-md-6 ">
+                        <table class="mb-3 ml-3 ">
+                            <tr class="">
+                                <td>Từ ngày </td>
+                                <td><input class="form-control" type="date" placeholder="01/01/2021" name="datetime " id=""></td>
+                            </tr>
+                            <tr>
+                                <td>Tới ngày </td>
+                                <td><input class="form-control" type="date" value="1/1/2021" name="datetime " id=""></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6 ">
+                        <table class="mb-3 ">
+                            <tr>
+                                <td>Số tiền từ </td>
+                                <td><input class="form-control mb-2" type="text" name=" " id=" "></td>
+                            </tr>
+                            <tr>
+                                <td>Tới số tiền </td>
+                                <td><input class="form-control" type="text" name=" " id=" "></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="button-group mb-3 ml-3 ">
+                <input class="btn btn-primary " type="submit" value="Thực hiện ">
+                <input class="btn btn-primary " type="submit" value="Tải xuống ">
+            </div>
+        </div>
+    </div>
+</div>

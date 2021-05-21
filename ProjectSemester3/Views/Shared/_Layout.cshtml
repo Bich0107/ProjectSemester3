@@ -1,97 +1,371 @@
-﻿
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <title>@ViewData["title"]</title>
     <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-    <title>iPortfolio Bootstrap Template - Index</title>
-    <meta content="" name="description">
-    <meta content="" name="keywords">
-
-    <!-- Favicons -->
-    <link href="~/user/assets/img/favicon.png" rel="icon">
-    <link href="~/user/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
-    <!-- Vendor CSS Files -->
-    <link href="~/user/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="~/user/assets/vendor/icofont/icofont.min.css" rel="stylesheet">
-    <link href="~/user/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-    <link href="~/user/assets/vendor/venobox/venobox.css" rel="stylesheet">
-    <link href="~/user/assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="~/user/assets/vendor/aos/aos.css" rel="stylesheet">
-
-    <!-- Template Main CSS File -->
-    <link href="~/user/assets/css/style.css" rel="stylesheet">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" href="~/assets/images/favicon.ico" type="image/x-icon">
+    <!-- Google font-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
+    <!-- waves.css -->
+    <link rel="stylesheet" href="~/assets/pages/waves/css/waves.min.css" type="text/css" media="all">
+    <!-- Required Fremwork -->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/bootstrap/css/bootstrap.min.css">
+    <!-- waves.css -->
+    <link rel="stylesheet" href="~/assets/pages/waves/css/waves.min.css" type="text/css" media="all">
+    <!-- themify icon -->
+    <link rel="stylesheet" type="text/css" href="~/assets/icon/themify-icons/themify-icons.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" href="~/assets/icon/font-awesome/css/font-awesome.min.css">
+    <!-- scrollbar.css -->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/jquery.mCustomScrollbar.css">
+    <!-- am chart export.css -->
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+    <!-- Style.css -->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    
 </head>
 
 <body>
+    <script type="text/javascript">
+        function loaddata() {
+            var context = "";
+            context = '<a asp-controller="@ViewData["controller"]" asp-action="@ViewData["action"]" >@ViewData["pageName"]</a >';
+                document.getElementById('breadcrumb').innerHTML = context;
+                console.log("Done");
+        };
+        window.onload = loaddata;
 
-    <!-- ======= Mobile nav toggle button ======= -->
-    <button type="button" class="mobile-nav-toggle d-xl-none"><i class="icofont-navigation-menu"></i></button>
-
-    <!-- ======= Header ======= -->
-    <header id="header">
-        <div class="d-flex flex-column">
-
-            <div class="profile">
-                <img src="~/user/assets/img/profile-img.jpg" alt="" class="img-fluid rounded-circle">
-                <h1 class="text-light"><a asp-controller="home" asp-action="index">Alex Smith</a></h1>
-            </div>
-
-            <nav class="nav-menu">
-                <ul>
-                    <li class="active"><a asp-controller="home" asp-action="index"><i class="bx bx-home"></i> <span>Home</span></a></li>
-                    <li><a asp-controller="account" asp-action="index"><i class="bx bx-user"></i> <span>Accounts</span></a></li>
-                    <li><a href="#resume"><i class="bx bx-file-blank"></i> <span>Transfer</span></a></li>
-                    <li><a href="#portfolio"><i class="bx bx-book-content"></i> Setting</a></li>
-                    <li><a href="#contact"><i class="bx bx-envelope"></i> Contact</a></li>
-                    <li><a href="#services"><i class="bx bx-server"></i> Log out</a></li>
-
-                </ul>
-            </nav><!-- .nav-menu -->
-            <button type="button" class="mobile-nav-toggle d-xl-none"><i class="icofont-navigation-menu"></i></button>
-
-        </div>
-    </header><!-- End Header -->
-    <main id="main">        
-        @RenderBody()
-    </main><!-- End #main -->
-    <!-- ======= Footer ======= -->
-    <footer id="footer">
-        <div class="container">            
-        </div>
-    </footer><!-- End  Footer -->
-
-    <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
-
-    <!-- Vendor JS Files -->
-    <script src="~/user/assets/vendor/jquery/jquery.min.js"></script>
-    <script src="~/user/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="~/user/assets/vendor/jquery.easing/jquery.easing.min.js"></script>
-    <script src="~/user/assets/vendor/php-email-form/validate.js"></script>
-    <script src="~/user/assets/vendor/waypoints/jquery.waypoints.min.js"></script>
-    <script src="~/user/assets/vendor/counterup/counterup.min.js"></script>
-    <script src="~/user/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-    <script src="~/user/assets/vendor/venobox/venobox.min.js"></script>
-    <script src="~/user/assets/vendor/owl.carousel/owl.carousel.min.js"></script>
-    <script src="~/user/assets/vendor/typed.js/typed.min.js"></script>
-    <script src="~/user/assets/vendor/aos/aos.js"></script>
-
-    <!-- Template Main JS File -->
-    <script src="~/user/assets/js/main.js"></script>
-    <script>
-        $(document).ready(function () {
-            $.each($('.nav-menu').find('li'), function () {
-                $(this).toggleClass('active',
-                    window.location.pathname.indexOf($(this).find('a').attr('href')) > -1);
-            });
-        });
     </script>
+    <!-- Pre-loader start -->
+    <div class="theme-loader">
+        <div class="loader-track">
+            <div class="preloader-wrapper">
+                <div class="spinner-layer spinner-blue">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+                <div class="spinner-layer spinner-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-yellow">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-green">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pre-loader end -->
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            <nav class="navbar header-navbar pcoded-header">
+                <div class="navbar-wrapper">
+                    <div class="navbar-logo">
+                        <a class="mobile-menu waves-effect waves-light" id="mobile-collapse" href="#!">
+                            <i class="ti-menu"></i>
+                        </a>
+                        <div class="mobile-search waves-effect waves-light">
+                            <div class="header-search">
+                                <div class="main-search morphsearch-search">
+                                    <div class="input-group">
+                                        <span class="input-group-addon search-close"><i class="ti-close"></i></span>
+                                        <input type="text" class="form-control" placeholder="Enter Keyword">
+                                        <span class="input-group-addon search-btn"><i class="ti-search"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="index.html">
+                            <img class="img-fluid" src="~/assets/images/logo.png" alt="Theme-Logo" />
+                        </a>
+                        <a class="mobile-options waves-effect waves-light">
+                            <i class="ti-more"></i>
+                        </a>
+                    </div>
+
+                    <div class="navbar-container container-fluid">
+                        <ul class="nav-left">
+                            <li>
+                                <div class="sidebar_toggle"><a href="javascript:void(0)"><i class="ti-menu"></i></a></div>
+                            </li>
+                            <li>
+                                <a href="#!" onclick="javascript:toggleFullScreen()" class="waves-effect waves-light">
+                                    <i class="ti-fullscreen"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav-right">
+                            <li class="header-notification">
+                                <a href="#!" class="waves-effect waves-light">
+                                    <i class="ti-bell"></i>
+                                    <span class="badge bg-c-red"></span>
+                                </a>
+                                <ul class="show-notification">
+                                    <li>
+                                        <h6>Notifications</h6>
+                                        <label class="label label-danger">New</label>
+                                    </li>
+                                    <li class="waves-effect waves-light">
+                                        <div class="media">
+                                            <img class="d-flex align-self-center img-radius" src="~/assets/images/avatar-2.jpg" alt="Generic placeholder image">
+                                            <div class="media-body">
+                                                <h5 class="notification-user">John Doe</h5>
+                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                                <span class="notification-time">30 minutes ago</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="waves-effect waves-light">
+                                        <div class="media">
+                                            <img class="d-flex align-self-center img-radius" src="~/assets/images/avatar-4.jpg" alt="Generic placeholder image">
+                                            <div class="media-body">
+                                                <h5 class="notification-user">Joseph William</h5>
+                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                                <span class="notification-time">30 minutes ago</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="waves-effect waves-light">
+                                        <div class="media">
+                                            <img class="d-flex align-self-center img-radius" src="~/assets/images/avatar-3.jpg" alt="Generic placeholder image">
+                                            <div class="media-body">
+                                                <h5 class="notification-user">Sara Soudein</h5>
+                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                                <span class="notification-time">30 minutes ago</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="user-profile header-notification">
+                                <a href="#!" class="waves-effect waves-light">
+                                    <img src="~/assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                                    <span>John Doe</span>
+                                    <i class="ti-angle-down"></i>
+                                </a>
+                                <ul class="show-notification profile-notification">
+                                    <li class="waves-effect waves-light">
+                                        <a href="#!">
+                                            <i class="ti-settings"></i> Settings
+                                        </a>
+                                    </li>
+                                    <li class="waves-effect waves-light">
+                                        <a href="user-profile.html">
+                                            <i class="ti-user"></i> Profile
+                                        </a>
+                                    </li>
+                                    <li class="waves-effect waves-light">
+                                        <a href="email-inbox.html">
+                                            <i class="ti-email"></i> My Messages
+                                        </a>
+                                    </li>
+                                    <li class="waves-effect waves-light">
+                                        <a href="auth-lock-screen.html">
+                                            <i class="ti-lock"></i> Lock Screen
+                                        </a>
+                                    </li>
+                                    <li class="waves-effect waves-light">
+                                        <a href="auth-normal-sign-in.html">
+                                            <i class="ti-layout-sidebar-left"></i> Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    <nav class="pcoded-navbar">
+                        <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
+                        <div class="pcoded-inner-navbar main-menu">
+                            <div class="">
+                                <div class="main-menu-header">
+                                    <img class="img-80 img-radius" src="~/assets/images/avatar-4.jpg" alt="User-Profile-Image">
+                                    <div class="user-details">
+                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                    </div>
+                                </div>
+
+                                <div class="main-menu-content">
+                                    <ul>
+                                        <li class="more-details">
+                                            <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
+                                            <a href="#!"><i class="ti-settings"></i>Settings</a>
+                                            <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="pcoded-navigation-label" data-i18n="nav.category.navigation">&nbsp;</div>
+                            <ul class="pcoded-item pcoded-left-item">
+                                <li class="active">
+                                    <a href="index.html" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.dash.main">Home</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Access &amp; Deal</div>
+                            <ul class="pcoded-item pcoded-left-item">
+                                <li class="">
+                                    <a asp-controller="bankaccount" asp-action="index" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-layout-accordion-separated"></i><b>D</b></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.dash.main">Account</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a asp-controller="transaction" asp-action="index" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-layout-accordion-separated"></i><b>D</b></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.dash.main">Transaction</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="pcoded-item pcoded-left-item">
+                                <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Help</div>
+                                <li class="">
+                                    <a href="contact.html" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-layout-accordion-separated"></i><b>D</b></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.dash.main">Contact</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="user-manual.html" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="ti-layout-accordion-separated"></i><b>D</b></span>
+                                        <span class="pcoded-mtext" data-i18n="nav.dash.main">User manual</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <div class="pcoded-content">
+                        <!-- Page-header start -->
+                        <div class="page-header">
+                            <div class="page-block">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <div class="page-header-title">
+                                            <h5 class="m-b-10">@ViewData["pageName"]</h5>
+                                            <p class="m-b-0">Welcome to @ViewData["title"]</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <ul class="breadcrumb-title" >
+                                            <li class="breadcrumb-item">
+                                                <a asp-controller="home" asp-action="index"> <i class="fa fa-home"></i> </a>
+                                            </li>
+                                            <li class="breadcrumb-item" id="breadcrumb">
+                                                <a asp-controller="@ViewData["controller"]" asp-action="@ViewData["action"]">@ViewData["pageName"]</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Page-header end -->
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <!-- Page-body start -->
+                                    <div class="page-body">
+                                        @RenderBody()
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Page-body end -->
+                        <div class="page-footer">
+                            <hr>
+                            <div class="text-center">
+                                <a asp-controller="home" asp-action="index">Home</a> |
+                                <a asp-controller="bankaccount" asp-action="index">Account</a> |
+                                <a asp-controller="transaction" asp-action="index">Transaction</a> |
+                                <a asp-controller="account" asp-action="">Contact</a> |
+                                <a asp-controller="account" asp-action="">Help</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="styleSelector"> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/assets/js/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery-ui/jquery-ui.min.js "></script>
+    <script type="text/javascript" src="~/assets/js/popper.js/popper.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/bootstrap/js/bootstrap.min.js "></script>
+    <script type="text/javascript" src="~/assets/pages/widget/excanvas.js "></script>
+    <!-- waves js -->
+    <script src="~/assets/pages/waves/js/waves.min.js"></script>
+    <!-- jquery slimscroll js -->
+    <script type="text/javascript" src="~/assets/js/jquery-slimscroll/jquery.slimscroll.js "></script>
+    <!-- modernizr js -->
+    <script type="text/javascript" src="~/assets/js/modernizr/modernizr.js "></script>
+    <!-- slimscroll js -->
+    <script type="text/javascript" src="~/assets/js/SmoothScroll.js"></script>
+    <script src="~/assets/js/jquery.mCustomScrollbar.concat.min.js "></script>
+    <!-- Chart js -->
+    <script type="text/javascript" src="~/assets/js/chart.js/Chart.js"></script>
+    <!-- amchart js -->
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="~/assets/pages/widget/amchart/gauge.js"></script>
+    <script src="~/assets/pages/widget/amchart/serial.js"></script>
+    <script src="~/assets/pages/widget/amchart/light.js"></script>
+    <script src="~/assets/pages/widget/amchart/pie.min.js"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <!-- menu js -->
+    <script src="~/assets/js/pcoded.min.js"></script>
+    <script src="~/assets/js/vertical-layout.min.js "></script>
+    <!-- custom js -->
+    <script type="text/javascript" src="~/assets/pages/dashboard/custom-dashboard.js"></script>
+    <script type="text/javascript" src="~/assets/js/script.js "></script>
+
 </body>
 
 </html>
