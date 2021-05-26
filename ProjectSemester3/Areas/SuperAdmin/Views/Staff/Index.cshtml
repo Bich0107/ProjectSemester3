@@ -26,7 +26,7 @@
     function ShowValue(values) {
         var result = '';
         for (var i = 0; i < values.length; i++) {
-            result += '<tr class="account" data-widget="expandable-table" aria-expanded="false">';
+            result += '<tr class="rowItem" data-widget="expandable-table" aria-expanded="false">';
             result += '<td>' + (i + 1) + '</td>';
             result += '<td>' + values[i].name + '</td>';
             result += '<td>' + GetDate(values[i].birthday) + '</td>';
@@ -51,7 +51,7 @@
         $('#table').html(result);
 
         // fix auto expand onload
-        $(".account").attr("aria-expanded", false);
+        $(".rowItem").attr("aria-expanded", false);
     }
 
     // add, edit, and delete functions - start
@@ -211,7 +211,6 @@
     // reset form functions on this view
     function ResetAddForm() {
         $("#addForm").validate().resetForm();
-
         $('#addForm .form-control').removeClass('is-invalid');
 
         // get a new guid
@@ -223,6 +222,7 @@
     }
 </script>
 
+@*main content*@
 <div class="container">
     <br />
     <div class="row">
@@ -468,3 +468,4 @@
         </div>
     </div>
 </div>
+

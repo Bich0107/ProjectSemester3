@@ -1,20 +1,20 @@
-﻿using System;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProjectSemester3.Models;
-using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace ProjectSemester3.Areas.Admin.Controllers
+namespace ProjectSemester3.Areas.SuperAdmin.Controllers
 {
-    [Area("admin")]
-    [Route("admin/accountObject")]
-    public class AccountObjectController : Controller
+    [Area("superAdmin")]
+    [Route("superAdmin/staff")]
+    public class StaffController : Controller
     {
         private DatabaseContext db;
 
-        public AccountObjectController(DatabaseContext _db)
+        public StaffController(DatabaseContext _db)
         {
             db = _db;
         }
@@ -29,8 +29,8 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 _accountObj.CreatedDate = DateTime.Today;
                 _accountObj.Password = BCrypt.Net.BCrypt.HashString(_accountObj.Password);
                 _accountObj.WrongPassword = 0;
-                _accountObj.PositionId = 1;
-                _accountObj.Staff = false;
+                _accountObj.PositionId = 2;
+                _accountObj.Staff = true;
 
                 db.AccountObjects.Add(_accountObj);
                 db.SaveChanges();
@@ -96,9 +96,12 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         [Route("index")]
         public IActionResult Index()
         {
-            ViewBag.tagName = "Account Object";
-            ViewBag.activeTag = "accountObj";
-            return View("index");
+            ViewBag.currencies = db.Currencies.ToList();
+
+            ViewBag.tagName = "Staff";
+            ViewBag.activeTag = "staff";
+            ViewBag.activeParentTag = "sa";
+            return View();
         }
 
         // when there are no keyword, search is as same as loadData
@@ -108,7 +111,8 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             try
             {
-                return new JsonResult(db.AccountObjects.Where(a => !a.Staff).ToList());
+                // return staffs who are not sa
+                return new JsonResult(db.AccountObjects.Where(a => a.Staff && a.PositionId != (int) Roles.Superadmin).ToList());
             }
             catch (Exception e)
             {
@@ -129,24 +133,8 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                         a.PhoneNumber.Contains(keyword) ||
                         a.Email.Contains(keyword) ||
                         a.Username.Contains(keyword) ||
-                        a.IdNum.Contains(keyword)) && !a.Staff
+                        a.IdNum.Contains(keyword)) && a.Staff && a.PositionId != (int)Roles.Superadmin
                 ).ToList());
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Error account obj: " + e.Message);
-                return null;
-            }
-        }
-
-        // find account object by username (unique)
-        [Route("find/{username}")]
-        public IActionResult Find(string username)
-        {
-            try
-            {
-                return new JsonResult(db.AccountObjects.Where(
-                    a => a.Username.Equals(username)).SingleOrDefault());
             }
             catch (Exception e)
             {

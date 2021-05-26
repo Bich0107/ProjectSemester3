@@ -72,7 +72,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             {
                 db.Currencies.Remove(db.Currencies.Find(id));
                 db.SaveChanges();
-                return Ok();
+                return Ok(true);
             }
             catch (Exception e)
             {
@@ -86,6 +86,8 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             ViewBag.tagName = "Currency";
             ViewBag.activeTag = "currency";
+
+            ViewBag.settings = db.Settings.Find(1);
             return View("index");
         }
 
@@ -98,7 +100,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             {
                 return new JsonResult(db.Currencies.ToList());
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -114,7 +116,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                         a.Fullname.Contains(keyword)
                 ).ToList());
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

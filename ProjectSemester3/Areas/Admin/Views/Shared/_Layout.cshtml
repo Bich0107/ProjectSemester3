@@ -30,6 +30,16 @@
 
     <!-- jQuery 3.5.1 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- jquery-validation -->
+    <script src="~/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/plugins/jquery-validation/additional-methods.min.js"></script>
+    <script src="~/JS/validation.js"></script>
+
+    <!-- display data -->
+    <script src="~/JS/data_display.js"></script>
+
+    <!-- date converter -->
+    <script src="~/JS/dateScript.js"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -37,29 +47,47 @@
             <!-- Brand Logo -->
             <a href="#" class="brand-link">
                 <img src="~/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">@ViewBag.title</span>
+                <span class="brand-text font-weight-light">Admin</span>
             </a>
 
             <!-- Sidebar -->
             <div class="sidebar">
-                <!-- Sidebar user panel (optional) -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="~/dist/img/default-150x150.png" class="img-circle elevation-2" alt="User Image">
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
-                    </div>
-                </div>
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-                        with font-awesome or any other icon font library -->
+                        <li class="nav-item" id="homeList">
+                            <a href="#" class="nav-link" id="home">
+                                <i class="fas fa-home nav-icon"></i>
+                                <p>
+                                    Home
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile" asp-area="admin" asp-controller="home" asp-action="index">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Profile</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="account" asp-area="admin" asp-controller="home" asp-action="account">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Account</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Logout</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" id="accountObj" asp-area="admin" asp-controller="accountObject" asp-action="index">
-                                <i class="far fa-user"></i>
+                                <i class="far fa-user nav-icon"></i>
                                 <p>
                                     Account objects
                                 </p>
@@ -67,7 +95,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="bankAccount" asp-area="admin" asp-controller="bankAccount" asp-action="index">
-                                <i class="fas fa-piggy-bank"></i>
+                                <i class="fas fa-piggy-bank nav-icon"></i>
                                 <p>
                                     Bank accounts
                                 </p>
@@ -75,7 +103,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="bank" asp-area="admin" asp-controller="bank" asp-action="index">
-                                <i class="fas fa-university"></i>
+                                <i class="fas fa-university nav-icon"></i>
                                 <p>
                                     Banks
                                 </p>
@@ -83,7 +111,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="currency" asp-area="admin" asp-controller="currency" asp-action="index">
-                                <i class="fas fa-dollar-sign"></i>
+                                <i class="fas fa-dollar-sign nav-icon"></i>
                                 <p>
                                     Currencies
                                 </p>
@@ -91,11 +119,50 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="help" asp-area="admin" asp-controller="help" asp-action="index">
-                                <i class="fas fa-dollar-sign"></i>
+                                <i class="fas fa-headset nav-icon"></i>
                                 <p>
-                                    Help
+                                    Help info
                                 </p>
                             </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="faq" asp-area="admin" asp-controller="faq" asp-action="index">
+                                <i class="fas fa-info nav-icon"></i>
+                                <p>
+                                    FAQ
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="customerProb" asp-area="admin" asp-controller="question" asp-action="index">
+                                <i class="far fa-question-circle nav-icon"></i>
+                                <p>
+                                    Customer questions
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item" id="saList">
+                            <a href="#" class="nav-link" id="sa">
+                                <i class="fas fa-users-cog nav-icon"></i>
+                                <p>
+                                    Super admin
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a class="nav-link" id="setting" asp-area="superadmin" asp-controller="setting" asp-action="index">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Setting</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="staff" asp-area="superadmin" asp-controller="staff" asp-action="index">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Staff</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </nav>
@@ -125,6 +192,7 @@
 
             <section class="content">
                 <div class="container-fluid">
+                    <!-- view specific script -->
                     @RenderBody()
                 </div>
             </section>
@@ -168,7 +236,10 @@
 
     <script>
         $(document).ready(function () {
+            // set active tag
             $("#@ViewBag.activeTag").addClass("active");
+            $("#@ViewBag.activeParentTag").addClass("active");
+            $("#@ViewBag.activeParentTag" + "List").addClass("menu-open");
         })
 
         function CreateToastSuccess() {
@@ -187,7 +258,7 @@
                 icon: 'fas fa-exclamation-circle',
                 class: 'bg-danger',
                 title: 'Failed',
-                body: 'An error has occured.',
+                body: 'An error has occured: ' + data,
                 autohide: true,
                 delay: 3000,
             })

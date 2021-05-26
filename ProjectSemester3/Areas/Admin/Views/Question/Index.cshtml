@@ -1,0 +1,178 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    // setting up data
+    $(document).ready(function () {
+        $(document).on({
+            ajaxStop: function () {
+                $("#loadingOverlay.overlay").removeClass("overlay");
+                $("#loadingOverlay").addClass("d-none");
+            }
+        });
+
+        LoadData();
+
+        $("#searchBox").on("keyup", function () {
+            var value = $(this).val();
+            console.log(value);
+            Search(value);
+        });
+    });
+
+    // config data display on this view
+    function ShowValue(values) {
+        var result = '';
+        for (var i = 0; i < values.length; i++) {
+            result += '<tr class="question" data-widget="expandable-table" aria-expanded="false">';
+            result += '<td>' + (i + 1) + '</td>';
+            result += '<td style="max-width:1px;"><div style="word-wrap:break-word; overflow-wrap:break-word;">' + values[i].question + '</div></td>';
+            result += '<td>' + (values[i].answer != null ? "Answered" : "Pending") + '</td>';
+            result += '<td>' + '<i class="fas fa-reply" style="color:blue;" ' +
+                ' onclick=ShowEditTarget("' + values[i].id + '")></i ></td>';
+            result += '</tr>';
+            result += '<tr class="expandable-body d-none">';
+            result += '<td colspan="8"><p style="display: none;">'
+            result += '<b>Answer:</b> ' + (values[i].answer != null ? values[i].answer : "")
+            result += '</p></td>'
+            result += '</tr>';
+        }
+
+        $('#table').html(result);
+        $(".question").attr("aria-expanded", false);
+    }
+
+    // update value
+    function SaveTarget() {
+        var id = $("#id").val();
+        var answer = $("#description").val();
+
+        var object = {
+            "Id": id,
+            "Answer": answer,
+        }
+
+        $.post("edit", object, function (data) {
+            if (data) {
+                CreateToastSuccess();
+            } else {
+                CreateToastFailed(data);
+            }
+            LoadData();
+        });
+    }
+
+    // set values on modal
+    function ShowEditTarget(_id) {
+        ResetUpdateForm();
+
+        var url = "edit/" + _id;
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: url,
+            data: {
+                id: _id
+            },
+            success: function (result) {
+                if (result.answer) {
+                    if (confirm("This question has been answer before, do you want to resend another answer?")) {
+                        $("#id").val(result.id);
+                        $("#subject").val(result.question);
+                        $("#description").val(result.answer);
+
+                        $("#updateModal").modal('toggle');
+                    }
+                } else {
+                    $("#id").val(result.id);
+                    $("#subject").val(result.question);
+                    $("#description").val(result.answer);
+                }
+            }
+        });
+    }
+</script>
+
+<div class="container">
+    <br />
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">@ViewBag.tagName</h3>
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm" style="width: 500px;">
+                            <input id="searchBox" type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-default">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th width="10%">Id</th>
+                                <th width="70%">Question</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table">
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Id</th>
+                                <th>Question</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- Loading -->
+                <div id="loadingOverlay" class="overlay">
+                    <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                </div>
+                <!-- end loading -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal for update*@
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update</h4>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="subject">Question</label>
+                            <textarea id="subject" class="form-control ignore" rows="3" readonly></textarea>
+                        </div>
+                        <div class="form-group row">
+                            <label for="descriptionn">Answer</label>
+                            <textarea id="description" class="form-control description" name="description" rows="6"></textarea>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="hidden" id="id" class="ignore" />
+                        <input type="submit" class="btn btn-info float-lg-right" value="Save" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

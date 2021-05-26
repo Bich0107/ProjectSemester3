@@ -1,0 +1,142 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    // setting up data
+    $(document).ready(function () {
+        $(document).on({
+            ajaxStop: function () {
+                $("#loadingOverlay.overlay").removeClass("overlay");
+                $("#loadingOverlay").addClass("d-none");
+            }
+        });
+
+        LoadData();
+    });
+
+    // get and show data function
+    function LoadData() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '../accountObject/find/@ViewBag.username',
+            success: function (result) {
+                $("#name").val(result.name);
+
+                var birthday = new Date(result.birthday);
+                var day = ("0" + birthday.getDate()).slice(-2);
+                var month = ("0" + (birthday.getMonth() + 1)).slice(-2);
+                var resultDate = birthday.getFullYear() + "-" + (month) + "-" + (day);
+
+                $("#birthday").val(resultDate);
+
+                $("#phoneNumber").val(result.phoneNumber);
+                $("#email").val(result.email);
+                $("#address").val(result.address);
+                $("#gender").val(result.gender);
+                $("#idNum").val(result.idNum);
+            }
+        })
+
+        ResetUpdateForm();
+    }
+
+    // update data function
+    function SaveTarget() {
+        var name = $("#name").val();
+        var birthday = $("#birthday").val();
+
+        var phoneNum = $("#phoneNumber").val();
+        var email = $("#email").val();
+        var address = $("#address").val();
+        var gender = $("#gender").val();
+        var idNum = $("#idNum").val();
+
+        var object = {
+            "Name": name,
+            "Birthday": birthday,
+            "PhoneNumber": phoneNum,
+            "Email": email,
+            "Address": address,
+            "Gender": gender,
+            "IdNum": idNum
+        }
+
+        $.post("editProfile", object, function (data) {
+            if (data) {
+                CreateToastSuccess();
+            } else {
+                CreateToastFailed(data);
+            }
+            LoadData();
+        }).fail(function (data) {
+            CreateToastFailed(data);
+            LoadData();
+        });
+    }
+</script>
+
+<div class="container">
+    <br />
+    <form id="updateForm">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Profile</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" class="form-control name" name="name">
+                        </div>
+                        <div class="form-group row">
+                            <label for="birthday">Birthday</label>
+                            <input class="form-control" type="date" id="birthday" name="date" />
+                        </div>
+                        <div class="form-group row">
+                            <label for="title">Phone number</label>
+                            <input type="text" id="phoneNumber" name="phoneNumber" class="form-control phoneNumber">
+                        </div>
+                        <div class="form-group row">
+                            <label for="title">Email</label>
+                            <input type="text" id="email" name="email" class="form-control email">
+                        </div>
+                        <div class="form-group row">
+                            <label for="gender">Gender</label>
+                            <select class="form-control" id="gender">
+                                <option value="@Gender.Male">@Gender.Male</option>
+                                <option value="@Gender.Female">@Gender.Female</option>
+                                <option value="@Gender.Other">@Gender.Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group row">
+                            <label for="address">Address</label>
+                            <textarea id="address" name="address" class="form-control address" rows="4"></textarea>
+                        </div>
+                        <div class="form-group row">
+                            <label for="title">Id number</label>
+                            <input type="text" id="idNum" name="idNum" class="form-control idNum">
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <input type="button" value="Reset" class="btn btn-info float-left" onclick="LoadData()" />
+                <input type="submit" value="Save Changes" class="btn btn-success float-right">
+            </div>
+        </div>
+    </form>
+</div>

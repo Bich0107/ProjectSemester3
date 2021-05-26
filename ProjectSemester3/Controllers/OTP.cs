@@ -19,5 +19,12 @@ namespace ProjectSemester3.Controllers
 
             return Ok(generator.GenerateNumericString(length));
         }
+
+        [HttpPost]
+        [Route("guid")]
+        public IActionResult GenerateGUID()
+        {
+            return Ok(Guid.NewGuid().ToString());
+        }
     }
 }
