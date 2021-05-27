@@ -58,6 +58,10 @@ namespace ProjectSemester3.Areas.SuperAdmin.Controllers
         public IActionResult Index()
         {
             ViewBag.currencies = db.Currencies.ToList();
+
+            ViewBag.tagName = "Setting";
+            ViewBag.activeTag = "setting";
+            ViewBag.activeParentTag = "sa";
             return View();
         }
     }

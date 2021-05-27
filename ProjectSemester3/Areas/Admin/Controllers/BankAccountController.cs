@@ -27,7 +27,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             try
             {
                 _bankAccount.CreatedDate = DateTime.Today;
-
+                
                 db.BankAccounts.Add(_bankAccount);
                 db.SaveChanges();
 
@@ -89,7 +89,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             {
                 return BadRequest(e.Message);
             }
-        } 
+        }
         #endregion
 
         [Route("index")]
@@ -99,7 +99,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
             ViewBag.activeTag = "bankAccount";
 
-            ViewBag.accountObjects = db.AccountObjects.ToList();
+            ViewBag.accountObjects = db.AccountObjects.Where(a => !a.Staff).ToList();
             ViewBag.currencies = db.Currencies.ToList();
             ViewBag.banks = db.Banks.ToList();
 
@@ -113,7 +113,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             try
             {
-                return new JsonResult(db.BankAccounts.ToList());
+                return new JsonResult(db.BankAccounts.Where(b => !b.UserAccount.Staff).ToList());
             }
             catch (Exception e)
             {
@@ -128,10 +128,10 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             try
             {
                 return new JsonResult(db.BankAccounts.Where(
-                    a => a.UserAccount.Name.Contains(keyword) ||
+                    a => (a.UserAccount.Name.Contains(keyword) ||
                       a.Bank.Name.Contains(keyword) ||
                       a.Currency.Name.Contains(keyword) ||
-                      a.Currency.Fullname.Contains(keyword)
+                      a.Currency.Fullname.Contains(keyword)) && !a.UserAccount.Staff
                 ).ToList());
             }
             catch (Exception e)

@@ -30,8 +30,6 @@ namespace ProjectSemester3.Models
         public virtual DbSet<Setting> Settings { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
 
-        
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
@@ -127,7 +125,6 @@ namespace ProjectSemester3.Models
                 entity.Property(e => e.Balance).HasColumnType("money");
 
                 entity.Property(e => e.BankCode)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 

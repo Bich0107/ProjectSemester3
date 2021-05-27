@@ -7,6 +7,7 @@
 <script src="~/JS/dateScript.js"></script>
 
 <script>
+    // setting up data
     $(document).ready(function () {
         $(document).on({
             ajaxStop: function () {
@@ -27,36 +28,31 @@
         var month = ("0" + (today.getMonth() + 1)).slice(-2);
         var resultDate = today.getFullYear() + "-" + (month) + "-" + (day);
         $("#A-CreatedDate").val(resultDate);
+    // setting up data
     });
 
-    function LoadData() {
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            contentType: 'application/json',
-            url: 'loadData',
-            success: function (bankAccounts) {
-                var result = '';
-                for (var i = 0; i < bankAccounts.length; i++) {
-                    result += '<tr>';
-                    result += '<td>' + (i + 1) + '</td>';
-                    result += '<td>' + bankAccounts[i].userAccount.name + '</td>';
-                    result += '<td>' + bankAccounts[i].balance + '</td>';
-                    result += '<td>' + GetDate(bankAccounts[i].createdDate) + '</td>';
-                    result += '<td>' + GetDate(bankAccounts[i].expiredDate) + '</td>';
-                    result += '<td>' + bankAccounts[i].bank.name + '</td>';
-                    result += '<td>' + bankAccounts[i].currency.name + '</td>';
-                    result += '<td>' + bankAccounts[i].locked + '</td>';
-                    result += '<td>' + '<i class="fas fa-edit" style="color:green;" ' +
-                        'data-toggle="modal" data-target="#updateModal" onclick=ShowEditTarget("' + bankAccounts[i].id + '")></i > | '
-                        + '<i class="far fa-trash-alt" style="color:red;" onclick=DeleteData("' + bankAccounts[i].id + '");></i>' + '</td>';
-                    result += '</tr>';
-                }
-                $('#table').html(result);
-            }
-        })
+    // config data display on this view
+    function ShowValue(values) {
+        var result = '';
+        for (var i = 0; i < values.length; i++) {
+            result += '<tr>';
+            result += '<td>' + (i + 1) + '</td>';
+            result += '<td>' + values[i].userAccount.name + '</td>';
+            result += '<td>' + values[i].balance + '</td>';
+            result += '<td>' + GetDate(values[i].createdDate) + '</td>';
+            result += '<td>' + GetDate(values[i].expiredDate) + '</td>';
+            result += '<td>' + values[i].bank.name + '</td>';
+            result += '<td>' + values[i].currency.name + '</td>';
+            result += '<td>' + values[i].locked + '</td>';
+            result += '<td>' + '<i class="fas fa-edit" style="color:green;" ' +
+                'data-toggle="modal" data-target="#updateModal" onclick=ShowEditTarget("' + values[i].id + '")></i > | '
+                + '<i class="far fa-trash-alt" style="color:red;" onclick=DeleteData("' + values[i].id + '");></i>' + '</td>';
+            result += '</tr>';
+        }
+        $('#table').html(result);
     }
 
+    // add, edit, and delete functions - start
     function DeleteData(_id) {
         var url = "delete/" + _id;
         if (confirm("Are you sure you want to delete ...?")) {
@@ -66,7 +62,7 @@
                     if (data) {
                         CreateToastSuccess();
                     } else {
-                        CreateToastFailed();
+                        CreateToastFailed(data);
                     }
                     LoadData();
                 }
@@ -74,35 +70,9 @@
         }
     }
 
-    function Search(keyword) {
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            contentType: 'application/json',
-            url: 'search/' + keyword,
-            success: function (bankAccounts) {
-                var result = '';
-                for (var i = 0; i < bankAccounts.length; i++) {
-                    result += '<tr>';
-                    result += '<td>' + (i + 1) + '</td>';
-                    result += '<td>' + bankAccounts[i].userAccount.name + '</td>';
-                    result += '<td>' + bankAccounts[i].balance + '</td>';
-                    result += '<td>' + GetDate(bankAccounts[i].createdDate) + '</td>';
-                    result += '<td>' + GetDate(bankAccounts[i].expiredDate) + '</td>';
-                    result += '<td>' + bankAccounts[i].bank.name + '</td>';
-                    result += '<td>' + bankAccounts[i].currency.name + '</td>';
-                    result += '<td>' + bankAccounts[i].locked + '</td>';
-                    result += '<td>' + '<i class="fas fa-edit" style="color:green;" ' +
-                        'data-toggle="modal" data-target="#updateModal" onclick=ShowEditTarget("' + bankAccounts[i].id + '")></i > | '
-                        + '<i class="far fa-trash-alt" style="color:red;" onclick=DeleteData("' + bankAccounts[i].id + '");></i>' + '</td>';
-                    result += '</tr>';
-                }
-                $('#tableBankAccount').html(result);
-            }
-        })
-    }
-
     function ShowEditTarget(_id) {
+        ResetUpdateForm();
+
         var url = "edit/" + _id;
         $.ajax({
             type: 'POST',
@@ -163,12 +133,12 @@
             if (data) {
                 CreateToastSuccess();
             } else {
-                CreateToastFailed();
+                CreateToastFailed(data);
             }
             $('#updateModal').modal('toggle');
             LoadData();
         }).fail(function (data) {
-            CreateToastFailed();
+            CreateToastFailed(data);
             $('#updateModal').modal('toggle');
             LoadData();
         });
@@ -196,14 +166,36 @@
             if (data) {
                 CreateToastSuccess();
             } else {
-                CreateToastFailed();
+                CreateToastFailed(data);
             }
             $('#addModal').modal('toggle');
             LoadData();
         }).fail(function (data) {
-            CreateToastFailed();
+            CreateToastFailed(data);
             $('#addModal').modal('toggle');
             LoadData();
+        });
+    }
+    // add, edit, and delete functions - end
+
+    // reset form functions
+    function ResetAddForm() {
+        // plug-in reset function
+        $("#addForm").validate().resetForm();
+
+        // fix bootstrap reset error
+        $('#addForm .form-control').removeClass('is-invalid');
+
+        // format date
+        var today = new Date();
+        var day = ("0" + today.getDate()).slice(-2);
+        var month = ("0" + (today.getMonth() + 1)).slice(-2);
+        var resultDate = today.getFullYear() + "-" + (month) + "-" + (day);
+        $("#A-CreatedDate").val(resultDate);
+
+        // get a new guid
+        $.post("../../otp/guid", function (result) {
+            $("#A-Id").val(result);
         });
     }
 </script>
@@ -212,13 +204,13 @@
     <br />
     <div class="row">
         <div class="col-12">
-            <div class="card card-outline card-primary">
+            <div class="card card-primary">
                 <div class="card-header">
                     <h3 class="card-title">@ViewBag.tagName</h3>
                     <div class="card-tools">
                         <div class="input-group input-group-sm" style="width: 300px;">
                             <div class="input-group-prepend">
-                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#addModal">
+                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#addModal" onclick="ResetAddForm()">
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
@@ -283,12 +275,12 @@
                 <h4 class="modal-title">Update</h4>
             </div>
             <div class="modal-body">
-                <form method="post">
+                <form id="updateForm">
                     <div class="card-body">
                         <div class="form-group row">
                             <label for="E-UserAccountId" class="col-sm-2 col-form-label">User</label>
                             <div class="col-sm-10">
-                                <select class="form-control" id="E-UserAccountId">
+                                <select class="form-control ignore" id="E-UserAccountId">
                                     @{
                                         foreach (var userAccount in ViewBag.accountObjects)
                                         {
@@ -301,25 +293,25 @@
                         <div class="form-group row">
                             <label for="E-Balance" class="col-sm-2 col-form-label">Balance</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="number" id="E-Balance" />
+                                <input class="form-control balance" name="balance" type="number" id="E-Balance" />
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="E-CreatedDate" class="col-sm-2 col-form-label">Created date</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="date" id="E-CreatedDate" readonly />
+                                <input class="form-control ignore" type="date" id="E-CreatedDate" readonly />
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="E-ExpiredDate" class="col-sm-2 col-form-label">Expiry date</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="date" id="E-ExpiredDate" />
+                                <input class="form-control ignore" type="date" id="E-ExpiredDate" />
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="E-BankId" class="col-sm-2 col-form-label">Bank</label>
                             <div class="col-sm-10">
-                                <select class="form-control" id="E-BankId">
+                                <select class="form-control ignore" id="E-BankId">
                                     @{
                                         foreach (var bank in ViewBag.banks)
                                         {
@@ -332,7 +324,7 @@
                         <div class="form-group row">
                             <label for="E-CurrencyId" class="col-sm-2 col-form-label">Currency</label>
                             <div class="col-sm-10">
-                                <select class="form-control" id="E-CurrencyId">
+                                <select class="form-control ignore" id="E-CurrencyId">
                                     @{
                                         foreach (var currency in ViewBag.currencies)
                                         {
@@ -345,15 +337,15 @@
                         <div class="form-group row">
                             <div class="offset-sm-2 col-sm-10">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="E-Locked">
+                                    <input type="checkbox" class="form-check-input ignore" id="E-Locked">
                                     <label class="form-check-label" for="E-Locked">Locked</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <input type="hidden" id="E-Id" />
-                        <input type="button" class="btn btn-info float-lg-right" value="Save" onclick="SaveTarget()" />
+                        <input type="hidden" class="ignore" id="E-Id" />
+                        <input type="submit" class="btn btn-info float-lg-right" value="Save" />
                     </div>
                 </form>
             </div>
@@ -369,18 +361,18 @@
                 <h4 class="modal-title">Add</h4>
             </div>
             <div class="modal-body">
-                <form method="post">
+                <form id="addForm">
                     <div class="card-body">
                         <div class="form-group row">
                             <label for="A-Id" class="col-sm-2 col-form-label">Id</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" id="A-Id" value="@Guid.NewGuid()" readonly />
+                                <input class="form-control ignore" type="text" id="A-Id" value="@Guid.NewGuid()" readonly />
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="A-UserAccountId" class="col-sm-2 col-form-label">User</label>
                             <div class="col-sm-10">
-                                <select class="form-control" id="A-UserAccountId">
+                                <select class="form-control ignore" id="A-UserAccountId">
                                     @{
                                         foreach (var userAccount in ViewBag.accountObjects)
                                         {
@@ -393,25 +385,25 @@
                         <div class="form-group row">
                             <label for="A-Balance" class="col-sm-2 col-form-label">Balance</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="number" id="A-Balance" />
+                                <input class="form-control balance" name="balance" type="number" id="A-Balance" />
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="A-CreatedDate" class="col-sm-2 col-form-label">Created date</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="date" id="A-CreatedDate" readonly />
+                                <input class="form-control ignore" type="date" id="A-CreatedDate" readonly />
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="A-ExpiredDate" class="col-sm-2 col-form-label">Expiry date</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="date" id="A-ExpiredDate" />
+                                <input class="form-control date" name="date" type="date" id="A-ExpiredDate" />
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="A-BankId" class="col-sm-2 col-form-label">Bank</label>
                             <div class="col-sm-10">
-                                <select class="form-control" id="A-BankId">
+                                <select class="form-control ignore" id="A-BankId">
                                     @{
                                         foreach (var bank in ViewBag.banks)
                                         {
@@ -424,7 +416,7 @@
                         <div class="form-group row">
                             <label for="A-CurrencyId" class="col-sm-2 col-form-label">Currency</label>
                             <div class="col-sm-10">
-                                <select class="form-control" id="A-CurrencyId">
+                                <select class="form-control ignore" id="A-CurrencyId">
                                     @{
                                         foreach (var currency in ViewBag.currencies)
                                         {
@@ -436,19 +428,10 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <input type="button" class="btn btn-info float-lg-right" value="Submit" onclick="CreateTarget()" />
+                        <input type="submit" class="btn btn-info float-lg-right" value="Submit"/>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-

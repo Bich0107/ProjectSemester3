@@ -9,24 +9,23 @@ using System.Threading.Tasks;
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
     [Area("admin")]
-    [Route("admin/bank")]
-    public class BankController : Controller
+    [Route("admin/faq")]
+    public class FAQController : Controller
     {
         private DatabaseContext db;
 
-        public BankController(DatabaseContext _db)
+        public FAQController(DatabaseContext _db)
         {
             db = _db;
         }
-
-        #region Add, Edit, Delete
+        #region Add, edit, delete
         [HttpPost]
         [Route("add")]
-        public IActionResult Add(Bank bank)
+        public IActionResult Add(Faq faq)
         {
             try
             {
-                db.Banks.Add(bank);
+                db.Faqs.Add(faq);
                 db.SaveChanges();
 
                 return Ok(true);
@@ -40,21 +39,18 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         [Route("edit/{id}")]
         public IActionResult Edit(int id)
         {
-            return new JsonResult(db.Banks.Find(id));
+            return new JsonResult(db.Faqs.Find(id));
         }
 
         [HttpPost]
         [Route("edit")]
-        public IActionResult Edit(Bank _bank)
+        public IActionResult Update(Faq _faq)
         {
             try
             {
-                var bank = db.Banks.Find(_bank.Id);
-
-                bank.Name = _bank.Name;
-                bank.Description = _bank.Description;
-                bank.Address = _bank.Address;
-                bank.Status = _bank.Status;
+                var faq = db.Faqs.Find(_faq.Id);
+                faq.Subject = _faq.Subject;
+                faq.Description = _faq.Description;
 
                 db.SaveChanges();
                 return Ok(true);
@@ -70,7 +66,7 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             try
             {
-                db.Banks.Remove(db.Banks.Find(id));
+                db.Faqs.Remove(db.Faqs.Find(id));
                 db.SaveChanges();
                 return Ok(true);
             }
@@ -84,10 +80,8 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         [Route("index")]
         public IActionResult Index()
         {
-            ViewBag.activeTag = "bank";
-            ViewBag.tagName = "Bank";
-
-            ViewBag.settings = db.Settings.Find(1);
+            ViewBag.tagName = "FAQ";
+            ViewBag.activeTag = "faq";
             return View("index");
         }
 
@@ -98,11 +92,11 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             try
             {
-                return new JsonResult(db.Banks.ToList());
+                return new JsonResult(db.Faqs.ToList());
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Error bank: " + e.Message);
+                Debug.WriteLine("Error: " + e.Message);
                 return null;
             }
         }
@@ -112,13 +106,12 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             try
             {
-                return new JsonResult(db.Banks.Where(
-                    a => a.Name.Contains(keyword) 
+                return new JsonResult(db.Faqs.Where(
+                    a => a.Subject.Contains(keyword)
                 ).ToList());
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Debug.WriteLine("Error account obj: " + e.Message);
                 return null;
             }
         }

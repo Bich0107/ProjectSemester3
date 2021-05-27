@@ -1,0 +1,192 @@
+﻿
+@{
+    ViewData["Title"] = "ChangePassword";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    // seting up data
+    $(document).ready(function () {
+        $(document).on({
+            ajaxStop: function () {
+                $("#loadingOverlay.overlay").removeClass("overlay");
+                $("#loadingOverlay").addClass("d-none");
+            }
+        });
+
+        LoadData();
+
+        $('#updateForm').validate({
+            submitHandler: function (form) {
+                ChangeInfo();
+            }
+        });
+
+        $('#changePasswordForm').validate({
+            submitHandler: function (form) {
+                ChangePassword();
+            }
+        });
+    });
+
+    // get and show data
+    function LoadData() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '../accountObject/find/@ViewBag.username',
+            success: function (result) {
+                $("#username").val(result.username);
+                $("#isAuthentication").prop('checked', result.isAuthentication);
+            }
+        })
+
+        ResetUpdateForm();
+    }
+
+    // reset password form
+    function ResetPasswordForm() {
+        $('#oldPassword').val("");
+        $('#newPassword').val("");
+        $('#confirmNewPassword').val("");
+
+        // plug-in reset function
+        $("#changePasswordForm").validate().resetForm();
+
+        // fix bootstrap reset error
+        $('#changePasswordForm .form-control').removeClass('is-invalid');
+    }
+
+    // post: update user's username and whether to enable 2FA Auth -- unfinished
+    function ChangeInfo() {
+        var username = $("#username").val();
+        var authenticated = false;
+        if ($('#isAuthentication').is(":checked")) {
+            authenticated = true;
+        }
+
+        var object = {
+            "Username": username,
+            "IsAuthentication": authenticated,
+        }
+
+        $.post("editInfo", object, function (data) {
+            if (data) {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Success',
+                    icon: 'fas fa-check',
+                    body: 'Change username successfully. Now you need to login again.'
+                })
+
+                setTimeout(function () {
+                    // return to login base here (trigger logout)
+                    alert("Logout");
+                }, 2000);
+
+            } else {
+                CreateToastFailed(data);
+            }
+            LoadData();
+        }).fail(function (data) {
+            CreateToastFailed(data);
+            LoadData();
+        });
+    }
+
+    // post: change user's password -- unfinished
+    function ChangePassword() {
+
+
+        var object = {
+
+        }
+
+        $.post("changePassword", object, function (data) {
+            if (data) {
+                alert("Success!");
+            } else {
+                alert("Failed. Error: " + data);
+            }
+            LoadData();
+        });
+    }
+</script>
+
+<div class="container">
+    <br />
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="updateForm">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Change account info</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="name">Username</label>
+                                    <input type="text" id="username" class="form-control username" name="username" placeholder="Username">
+                                </div>
+                                <div class="form-group mb-0">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="form-check-input" id="isAuthentication">
+                                        <label class="form-check-label ignore" for="isAuthentication">Is authenticated</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <input type="button" value="Reset" class="btn btn-info float-left" onclick="LoadData()" />
+                                <input type="submit" value="Save Changes" class="btn btn-success float-right">
+                            </div>
+                        </div>
+                    </form>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="changePasswordForm">
+                        <div class="card card-danger">
+                            <div class="card-header">
+                                <h3 class="card-title">Change password</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="name">Old password</label>
+                                    <input type="password" id="oldPassword" name="oldPassword" class="form-control ignore" required>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="name">New password</label>
+                                    <input type="password" id="newPassword" name="newPassword" class="form-control password">
+                                </div>
+                                <div class="form-group row">
+                                    <label for="name">Confirm new password</label>
+                                    <input type="password" id="confirmNewPassword" name="confirmPassword" class="form-control confirmPassword">
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <input type="button" value="Reset" class="btn btn-info float-left" onclick="ResetPasswordForm()" />
+                                <input type="submit" value="Save Changes" class="btn btn-success float-right">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</div>
+

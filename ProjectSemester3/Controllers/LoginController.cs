@@ -176,7 +176,6 @@ namespace ProjectSemester3.Controllers
                 Debug.WriteLine("Done");
                 client.Disconnect(true);
                 client.Dispose();
-
                     
                 }
                 catch (Exception e)
