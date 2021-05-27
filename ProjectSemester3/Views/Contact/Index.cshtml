@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["title"] = "Banking Online";
+    ViewData["pageName"] = "Contact";
+    ViewData["controller"] = "contact";
+    ViewData["action"] = "index";
+    Layout = "_Layout";
+}
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <div class="card ">
+            <div class="card-header">
+                <h4>Contact Us</h4>
+                <!--<span>Add class of <code>.form-control</code> with <code>&lt;input&gt;</code> tag</span>-->
+            </div>
+            <div class="card-block">
+                <form class="form-material">
+                    <div class="form-group form-primary">
+                        <input type="text" name="footer-email" class="form-control" required="">
+                        <span class="form-bar"></span>
+                        <label class="float-label">Your Name</label>
+                    </div>
+                    <div class="form-group form-primary">
+                        <input type="text" name="footer-email" class="form-control" required="">
+                        <span class="form-bar"></span>
+                        <label class="float-label">Email </label>
+                    </div>
+                    <div class="form-group form-primary">
+                        <textarea class="form-control" required=""></textarea>
+                        <span class="form-bar"></span>
+                        <label class="float-label">Text Massage</label>
+                    </div>
+                    <div class="text-center"><input type="button" name="send" class="btn btn-primary action-button" value="Send" /></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>

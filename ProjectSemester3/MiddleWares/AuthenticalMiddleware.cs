@@ -21,7 +21,10 @@ namespace ProjectSemester3.MiddleWares
         {
             var path = httpContext.Request.Path;
             if (path.HasValue && !path.Value.Equals("/account")
-                && !path.Value.Equals("/account/login"))
+                && !path.Value.Equals("/account/login") 
+                && !path.Value.Equals("/account/forgot-password")
+                && !path.Value.Equals("/account/sign-up")
+                && httpContext.Session.GetString("username") == null)
             {
                 if (httpContext.Session.GetString("username") == null)
                 {

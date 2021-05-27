@@ -5,20 +5,26 @@
     ViewData["action"] = "account-detail";
     Layout = "_Layout";
 }
-    <div class="row">
-        <!--  project and team member start -->
-        <div class=" container col-xl-8 col-md-12">
-            <h5>Account Detail</h5>
-            <br>
+@using ProjectSemester3;
+@model dynamic;
+
+@{ var b = Model.bankAccount;}
+<div class="row">
+    <!--  project and team member start -->
+    <div class=" container col-xl-8 col-md-12">
+        <h5>Account Detail</h5>
+        <br>
+        <form method="get" asp-controller="home" asp-action="accountdetail">
             <div class="card table-card ">
                 <table class="table">
                     <tr>
                         <td>Account Number</td>
                         <td class="text-right">
-                            <Select class="form-control">
-                                <option value="">123456789</option>
-                                <option value="">987654321</option>
-                                <option value="">741852963</option>
+                            <Select id="list-code" class="form-control" onchange="bankAccountChange()">
+                                @foreach (var code in Model.bankAccounts)
+                                {
+                                    <option value="@code.Id">@code.BankCode</option>
+                                }
                             </Select>
                         </td>
                     </tr>
@@ -27,28 +33,28 @@
             <div class="card table-card">
                 <div class="card-block">
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover" id="bank-account-detail">
                             <tbody>
 
                                 <tr>
                                     <td>Account holder</td>
-                                    <td class="text-right">Hoang Minh Tien</td>
+                                    <td class="text-right">@b.UserAccount.Name</td>
                                 </tr>
                                 <tr>
                                     <td>Current balance</td>
-                                    <td class="text-right">1,123,876,234 VND</td>
+                                    <td class="text-right">@b.Balance @b.Currency.Name</td>
                                 </tr>
                                 <tr>
-                                    <td>Currency type</td>
-                                    <td class="text-right">VND</td>
+                                    <td>Account type</td>
+                                    <td class="text-right">@b.Currency.Name</td>
                                 </tr>
                                 <tr>
                                     <td>Account open date</td>
-                                    <td class="text-right">10/12/2020</td>
+                                    <td class="text-right">@b.CreatedDate</td>
                                 </tr>
                                 <tr>
                                     <td>Account expired date</td>
-                                    <td class="text-right">10/12/2025</td>
+                                    <td class="text-right">@b.ExpiredDate</td>
                                 </tr>
                                 <tr>
                                     <td>Lasted transaction date</td>
@@ -59,5 +65,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
+
     </div>
+</div>
+@section ScriptsBlock
+{
+    <script src="~/assets/js/script.bank-account.detail.js" asp-append-version="true"></script>
+}

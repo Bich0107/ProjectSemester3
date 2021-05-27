@@ -3,6 +3,8 @@ using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
+using ProjectSemester.Helpers;
+using ProjectSemester3.Helpers;
 using ProjectSemester3.Models;
 using System;
 using System.Collections.Generic;
@@ -23,8 +25,8 @@ namespace ProjectSemester3.Controllers
         }
 
         [Route("login")]
-        //[Route("")]
-        //[Route("~/")]
+        [Route("")]
+        [Route("~/")]
         [HttpGet]
         public IActionResult Login()
         {
@@ -275,17 +277,102 @@ namespace ProjectSemester3.Controllers
             HttpContext.Session.Remove("username");
             return RedirectToAction("login");
         }
+        // forgot-password
+        
         [Route("forgot-password")]
+        [HttpGet]
         public IActionResult ForgotPassword()
         {
             
             return View("ForgotPassword");
         }
+        [Route("forgot-password")]
+        [HttpPost]
+        public IActionResult ForgotPassword(AccountObject accountObject)
+        {
+            try
+            {
+                var account = db.AccountObjects.SingleOrDefault(a => a.IdNum.Equals(accountObject.IdNum) 
+                && a.PhoneNumber.Equals(accountObject.PhoneNumber)
+                && a.Email.Equals(accountObject.Email));
+
+                if (account != null)
+                {
+                    Generator generator = new Generator();
+                    var otp = generator.GenerateOtp();
+                    var body = "This is new password. Now, you can submit this password when you want to login.<br/>" + otp;
+                    MailHelper mail = new MailHelper();
+                    mail.Send("Admin","tinhoang7901@gmail.com","0347557353",account.Name, 
+                        "tinhoang7901@gmail.com","New Password",body);
+                    account.Password = BCrypt.Net.BCrypt.HashPassword(otp);
+                    account.Locked = false;
+                    db.SaveChanges();
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    ViewBag.resetPasswordFailed = "Identity Number, phone number or email invalid";
+                    return View("ForgotPassword");
+                }
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine("Forgot password Failed: " + e.Message);
+                return View("ForgotPassword");
+            }
+
+            
+        }
         [Route("sign-up")]
+        [HttpGet]
         public IActionResult SignUp()
         {
 
             return View("SignUp");
+        }
+        [Route("sign-up")]
+        [HttpPost]
+        public IActionResult SignUp(AccountObject _accountObj)
+        {
+
+            try
+            {
+                var checkUsername = db.AccountObjects.FirstOrDefault(a => 
+                a.Username.Equals(_accountObj.Username)
+                || a.PhoneNumber.Equals(_accountObj.PhoneNumber)
+                || a.Email.Equals(_accountObj.Email)
+                || a.IdNum.Equals(_accountObj.IdNum)
+                );
+                if(checkUsername == null)
+                {
+                    if(_accountObj.Id == Guid.Empty)
+                    {
+                        _accountObj.Id = Guid.NewGuid();
+                        _accountObj.CreatedDate = DateTime.Today;
+                        _accountObj.Password = BCrypt.Net.BCrypt.HashString(_accountObj.Password);
+                        _accountObj.Locked = false;
+                        _accountObj.WrongPassword = 0;
+                        _accountObj.IsAuthentication = false;
+                        _accountObj.Staff = false;
+                        _accountObj.PositionId = 1;
+                        db.AccountObjects.Add(_accountObj);
+                        //gui mail xac nhan dang ki thanh cong
+                        db.SaveChanges();                        
+                    }
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    ViewBag.signUpFailed = "Some of your information already exists. Please double-check before you sign up";
+                    return View("SignUp");
+                }
+            }
+            catch (Exception e)
+            {
+                ViewBag.signUpFailed = "Invalid";
+                Debug.WriteLine("Signup failed: " + e.Message);
+                return View("SignUp");
+            }
         }
     }
 }

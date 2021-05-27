@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["title"] = "Banking Online";
+    ViewData["pageName"] = "Transaction";
+    ViewData["controller"] = "transaction";
+    ViewData["action"] = "index";
+    Layout = "_Layout";
+}
+<div class="row">
+    <div class=" container col-xl-8 col-md-12">
+        <!-- multistep form -->
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-10 col-lg-10 col-xl-12 text-center p-0 mt-3 mb-2">
+                    <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                        <h2 id="heading">Transaction</h2>
+                        <form id="msform" method="post" asp-controller="transaction" asp-action="step3">
+                            <!-- progressbar -->
+                            <ul id="progressbar">
+                                <li class="active" id="initialization"><strong>Initialization</strong></li>
+                                <li class="active" id="verify"><strong>Verify</strong></li>
+                                <li class="active" id="accuracy"><strong>Accuracy</strong></li>
+                                <li id="confirm"><strong>Finish</strong></li>
+                            </ul>
+                            <fieldset>
+                                <div class="form-card">
+                                    <div class="table-card">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <label class="col-12 text-center">Enter OTP code</label>
+                                                            <div class="col-12 text-center">
+                                                                <input class="w-50" type="text" id="">
+                                                            </div>
+                                                            <label class="col-12 text-center">We have sent OTP code to your email! <br>OTP code is available in 30s</label>
+                                                        </td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <input type="submit" name="next" class="next action-button" value="Submit" />
+                                <a href='javascript:history.go(-2)'><input type="button" name="previous" class="action-button-previous " value="Cancel" /></a>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptsBlock
+{
+    <script src="~/assets/js/script.transfer.js" asp-append-version="true"></script>
+}

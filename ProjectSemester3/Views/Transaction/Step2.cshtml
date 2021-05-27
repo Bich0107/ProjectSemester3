@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["title"] = "Banking Online";
+    ViewData["pageName"] = "Transaction";
+    ViewData["controller"] = "transaction";
+    ViewData["action"] = "index";
+    Layout = "_Layout";
+}
+@model ProjectSemester3.Models.Transaction;
+<div class="row">
+    <div class=" container col-xl-8 col-md-12">
+        <!-- multistep form -->
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-10 col-lg-10 col-xl-12 text-center p-0 mt-3 mb-2">
+                    <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                        <h2 id="heading">Transaction</h2>
+                        <form id="msform" method="post" asp-controller="transaction" asp-action="step2">
+                            <!-- progressbar -->
+                            <ul id="progressbar">
+                                <li class="active" id="initialization"><strong>Initialization</strong></li>
+                                <li class="active" id="verify"><strong>Verify</strong></li>
+                                <li id="accuracy"><strong>Accuracy</strong></li>
+                                <li id="confirm"><strong>Finish</strong></li>
+                            </ul>                            
+                            <fieldset>
+                                <div class="form-card">
+                                    <div class="table-card ">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <tbody>
+
+                                                    <tr>
+                                                        <th>From</th>
+                                                        <td class="text-right">@Model.BankAccountIdFrom <br > @Model.BankAccountIdFrom</td>
+                                                        
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Transfer amount</th>
+                                                        <td class="text-right">@Model.Amount</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>To</th>
+                                                        <td class="text-right">
+                                                            @Model.BankAccountIdTo <br> @Model.BankAccountIdTo <br> @Model.BankAccountIdTo
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*@Html.HiddenFor(model => model,Model)*@
+                                <input type="submit" name="next" class="action-button" value="Next" />
+                                <a href='javascript:history.go(-1)'><input type="button" name="previous" class="action-button-previous" value="Previous" /></a>
+                                
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptsBlock
+{
+    <script src="~/assets/js/script.transfer.js" asp-append-version="true"></script>
+}

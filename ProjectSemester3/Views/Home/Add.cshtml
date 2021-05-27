@@ -1,0 +1,61 @@
+﻿<!--Modal for update-->
+@model ProjectSemester3.Models.BankAccount;
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add new Bank Account</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-controller="home" asp-action="index">
+                    <div class="table-responsive ">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <td>Bank name</td>
+                                    <td class="text-right">
+                                        <Select class="form-control" asp-for="BankId" required="">
+                                            <option value="" disabled selected hidden>Please choose a bank...</option>
+                                            @foreach (var code in ViewBag.banks)
+                                            {
+                                                <option value="@code.Id">@code.Name</option>
+                                            }
+                                        </Select>
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Bank code</td>
+                                    <td class="text-right"><input class="form-control" type="text" asp-for="BankCode" value="@Guid.NewGuid().ToString().Substring(0, 6)" readonly/></td>
+                                </tr>
+                                <tr>
+                                    <td>Created date</td>
+                                    <td class="text-right"><input class="form-control datepicker" type="text" asp-for="CreatedDate" id="CreatedDate" disabled/></td>
+                                </tr>
+                                <tr>
+                                    <td>Expiry date</td>
+                                    <td class="text-right"><input class="form-control datepicker" type="text" asp-for="ExpiredDate" id="ExpiredDate" disabled/></td>
+                                </tr>
+                                <tr>
+                                    <td>Curency type</td>
+                                    <td class="text-right">
+                                        <Select class="form-control" asp-for="CurrencyId" required="">
+                                            @foreach (var code in ViewBag.currencies)
+                                            {
+                                                <option value="@code.Id">@code.Name</option>
+                                            }
+                                        </Select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-right">
+                            <input type="submit" class="btn btn-primary btn-md waves-effect waves-light text-center m-b-20" value="Add" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

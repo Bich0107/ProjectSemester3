@@ -6,16 +6,19 @@
     ViewData["action"] = "index";
     Layout = "_Layout";
 }
-    <div class="row">
-        <div class=" container col-xl-8 col-md-12">
-            <div class="card table-card">
-                <div class="card-header">
-                    <h5>List Current Accounts</h5>
-                    <div class="card-header-right mb-5">
-                        <input type="button" name="add" class="btn btn-primary" value="New Account" />
-                    </div>
 
+@{ var count = 0; }
+<div class="row">
+    <div class=" container col-xl-8 col-md-12">
+        <div class="card table-card">
+            <div class="card-header">
+                <h5>List Current Accounts</h5>
+                <div class="card-header-right mb-5">
+                    <input type="button" name="add" class="btn btn-primary" data-toggle="modal" data-target="#updateModal" value="New Account" />
                 </div>
+
+            </div>
+            <form method="get" asp-controller="home" asp-action="index">
                 <div class="card-block">
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -28,22 +31,26 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>123456789123</td>
-                                    <td>1,234,567 VND</td>
-                                    <td class="text-right"><label class="label label-inverse-primary"><a asp-controller="home" asp-action="account-detail">Detail</a></label></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>123456789123</td>
-                                    <td>9,123,123,121 VND</td>
-                                    <td class="text-right"><label class="label label-inverse-primary"><a href="account-detail.html">Detail</a></label></td>
-                                </tr>
+                                @foreach (var b in ViewBag.bankAccounts)
+                                {
+                                    count += 1;
+                                    <tr>
+                                        <td>@count</td>
+                                        <td>@b.BankCode</td>
+                                        <td>@b.Balance</td>
+                                        <td class="text-right"><label class="label label-inverse-primary"><a asp-controller="home" asp-action="account-detail" asp-route-id="@b.Id">Detail</a></label></td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+</div>
+@await Html.PartialAsync($"~/Views/Home/Add.cshtml")
+@section ScriptsBlock
+{
+    <script src="~/assets/js/script.home.js"></script>
+}

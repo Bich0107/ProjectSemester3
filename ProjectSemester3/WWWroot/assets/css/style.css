@@ -87,6 +87,7 @@ File: style.css
         padding-right: 20px;
     }
     /**====== Custom css end ======**/
+    
     /**====== Transfer css start ======**/
     
     * {
@@ -411,6 +412,7 @@ File: style.css
     }
     
     .card .card-footer {
+        position:fixed;
         border-top: none;
         padding: 15px 20px;
         border-radius: 0 0 5px 5px;

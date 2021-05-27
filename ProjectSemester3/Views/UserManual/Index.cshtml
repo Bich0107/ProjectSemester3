@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["title"] = "Banking Online";
+    ViewData["pageName"] = "User Manual";
+    ViewData["controller"] = "usermanual";
+    ViewData["action"] = "index";
+    Layout = "_Layout";
+}
+<!-- Row start -->
+<div class="row">
+    <!-- Color Open Accordion start -->
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-header-text">FAQ</h5>
+            </div>
+            <div class="card-block accordion-block">
+                <div id="accordion" role="tablist" aria-multiselectable="true">
+                    @foreach (var f in ViewBag.faqs)
+                    {
+                        <div class="accordion-panel">
+                            <div class="accordion-heading" role="tab" id="headingOne">
+                                <h3 class="card-title accordion-title">
+                                    <a class="accordion-msg waves-effect waves-dark" data-toggle="collapse"
+                                       data-parent="#accordion" href="#@f.Id"
+                                       aria-expanded="true" aria-controls="collapseOne">
+                                        @f.Subject
+                                    </a>
+                                </h3>
+                            </div>
+                            <div id="@f.Id" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                <div class="accordion-content accordion-desc">
+                                    <p>
+                                        @f.Description
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Color Open Accordion ends -->
+</div>
+<!-- Row end -->

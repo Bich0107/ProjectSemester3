@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["title"] = "Banking Online";
+    ViewData["pageName"] = "Transaction";
+    ViewData["controller"] = "transaction";
+    ViewData["action"] = "index";
+    Layout = "_Layout";
+}
+<div class="row">
+    <div class=" container col-xl-8 col-md-12">
+        <!-- multistep form -->
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-10 col-lg-10 col-xl-12 text-center p-0 mt-3 mb-2">
+                    <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                        <h2 id="heading">Transaction</h2>
+                        <form id="msform" method="get" asp-controller="transaction" asp-action="success">
+                            <!-- progressbar -->
+                            <ul id="progressbar">
+                                <li class="active" id="initialization"><strong>Initialization</strong></li>
+                                <li class="active" id="verify"><strong>Verify</strong></li>
+                                <li class="active" id="accuracy"><strong>Accuracy</strong></li>
+                                <li class="active" id="confirm"><strong>Finish</strong></li>
+                            </ul>
+                            <fieldset>
+                                <div class="form-card">
+                                    <div class="table-card">
+                                        <div class="text-center card-border-default pt-2 background-primary">
+                                            <h4><b>Amount</b></h4>
+                                            <h5>VND 500,000</h5>
+                                            <br>
+                                        </div>
+                                        <div class="table-reponsive">
+                                            <table class="table">
+                                                <tbody>
+
+                                                    <tr>
+                                                        <td>Date</td>
+                                                        <td class="text-right">20:18 11/05/2021</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Account holder </td>
+                                                        <td class="text-right">VND-TGTT-HOANG MINH TIEN <br> 1234567890</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Beneficiary account </td>
+                                                        <td class="text-right">VND-TGTT-HOANG VAN CHINH <br>9876543210</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Text transaction</td>
+                                                        <td class="text-right">thank bro </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Transaction code</td>
+                                                        <td class="text-right">FT21131559570414 (48256207803)</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <a asp-controller="home" asp-action="index"><input type="button" name="home" class="action-button" value="Exit" /></a>
+                                <a asp-controller="transaction" asp-action="index"><input type="button" name="new" class="action-button" value="New" /></a>
+
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptsBlock
+{
+    <script src="~/assets/js/script.transfer.js" asp-append-version="true"></script>
+}

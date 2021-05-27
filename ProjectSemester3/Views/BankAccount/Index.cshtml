@@ -5,37 +5,43 @@
     ViewData["action"] = "index";
     Layout = "_Layout";
 }
+
+@using ProjectSemester3;
+@model dynamic;
 <div class="row">
     <div class=" container col-xl-8 col-md-12 ">
         <div class="step-title mb-2 ">
-            <b>Bước 1: </b>Chọn tài khoản
+            <b>Step 1: </b>Choose account
         </div>
         <div class="card table-card ">
             <div class="card-header ">
-                <h5>THÔNG TIN TÀI KHOẢN</h5>
+                <h5>ACCOUNT INFORMATION</h5>
             </div>
             <div class="card-block ">
                 <div class="table-responsive ">
-                    <table class="table table-hover ">
-                        <tbody>
+                    <table id="bank-account" class="table table-hover ">
+                        <thead>
                             <tr>
-                                <td>Chọn tài khoản</td>
+                                <td>Choose account</td>
                                 <td>
-                                    <select name="accounts " class="form-control">
-                                        <option value=" ">Chọn tài khoản</option>
-                                        <option value="01 ">123165465145</option>
-                                        <option value="02 ">110548565666</option>
-                                        <option value="03 ">56555545566</option>
-                                    </select>
+                                    <Select id="list-code" class="form-control" onchange="bankAccountChange()">
+                                        <option value="" disabled selected hidden>Please choose an account...</option>
+                                        @foreach (var code in Model.bankAccounts)
+                                        {
+                                            <option name="bank-id" id="@code.Id" value="@code.Id">@code.BankCode</option>
+                                        }
+                                    </Select>
                                 </td>
                             </tr>
+                        </thead>
+                        <tbody>
                             <tr>
-                                <td>Loại tài khoản </td>
-                                <td class="text-right ">TIEN GUI THANH TOAN</td>
+                                <td>Account type</td>
+                                <td class="text-right ">VND</td>
                             </tr>
                             <tr>
-                                <td>Số dư hiện tại </td>
-                                <td class="text-right ">VND 2,964,922</td>
+                                <td>Current balance </td>
+                                <td class="text-right ">0.0</td>
                             </tr>
                         </tbody>
                     </table>
@@ -47,29 +53,31 @@
 <div class="row">
     <div class="container col-xl-8 col-md-12 ">
         <div class="step-title mb-2 ">
-            <b>Bước 2: </b>Chọn giao dịch
+            <b>Step 2: </b>Choose transaction
         </div>
         <div class="card">
             <div class="card-header ">
-                <h5>TÌM KIẾM NHANH</h5>
+                <h5>
+                    QUICK SEARCH
+                </h5>
             </div>
             <div class="card-block ">
                 <div class="form-check ml-4">
-                    <input type="radio" class="form-check-input" name="radio-transaction " id="10" checked />
-                    <label class="form-check-label" for="10 ">10 giao dịch cuối</label>
+                    <input type="radio" class="form-check-input" name="radio-transaction" id="ten-day" value="ten-day" checked />
+                    <label class="form-check-label" for="ten-day">Last 10 transactions</label>
                 </div>
                 <div class="form-check ml-4">
-                    <input type="radio" class="form-check-input" name="radio-transaction " id="1month" />
-                    <label class="form-check-label" for="1month ">giao dịch trong vòng 1 tháng</label>
+                    <input type="radio" class="form-check-input" name="radio-transaction" id="one-month" value="one-month" />
+                    <label class="form-check-label" for="one-month">Transaction within 1 month</label>
                 </div>
                 <div class="form-check ml-4">
-                    <input type="radio" class="form-check-input" name="radio-transaction " id="3month" />
-                    <label class="form-check-label" for="3month ">giao dịch trong vòng 3 tháng</label>
+                    <input type="radio" class="form-check-input" name="radio-transaction" id="three-months" value="three-months" />
+                    <label class="form-check-label" for="three-months">Transaction within 3 months</label>
                 </div>
             </div>
             <div class="button-group mb-3 ml-3 ">
-                <input class="btn btn-primary " type="submit" value="Thực hiện ">
-                <input class="btn btn-primary " type="submit" value="Tải xuống ">
+                <input class="btn btn-primary " type="submit" value="Search" data-toggle="modal" data-target="#updateModal" onclick="listTransaction()" />
+                <input class="btn btn-primary " type="submit" value="Download">
             </div>
         </div>
     </div>
@@ -78,18 +86,18 @@
     <div class="container col-xl-8 col-md-12 ">
         <div class="card">
             <div class="card-header ">
-                <h5> TÌM KIẾM GIAO DỊCH</h5>
+                <h5>SEARCH TRANSACTION</h5>
             </div>
             <div class="card-block ">
                 <div class="row">
                     <div class="col-md-6 ">
                         <table class="mb-3 ml-3 ">
                             <tr class="">
-                                <td>Từ ngày </td>
+                                <td>Date from </td>
                                 <td><input class="form-control" type="date" placeholder="01/01/2021" name="datetime " id=""></td>
                             </tr>
                             <tr>
-                                <td>Tới ngày </td>
+                                <td>Date to</td>
                                 <td><input class="form-control" type="date" value="1/1/2021" name="datetime " id=""></td>
                             </tr>
                         </table>
@@ -97,11 +105,11 @@
                     <div class="col-md-6 ">
                         <table class="mb-3 ">
                             <tr>
-                                <td>Số tiền từ </td>
+                                <td>Amount from</td>
                                 <td><input class="form-control mb-2" type="text" name=" " id=" "></td>
                             </tr>
                             <tr>
-                                <td>Tới số tiền </td>
+                                <td>Amount to</td>
                                 <td><input class="form-control" type="text" name=" " id=" "></td>
                             </tr>
                         </table>
@@ -109,9 +117,16 @@
                 </div>
             </div>
             <div class="button-group mb-3 ml-3 ">
-                <input class="btn btn-primary " type="submit" value="Thực hiện ">
-                <input class="btn btn-primary " type="submit" value="Tải xuống ">
+                <input class="btn btn-primary " type="submit"  value="Search" data-toggle="modal" data-target="#updateModal" onclick="listTransactionByDate()">
+                <input class="btn btn-primary " type="submit" value="Download">
             </div>
         </div>
     </div>
 </div>
+<!--modal update-->
+@await Html.PartialAsync($"~/Views/bankAccount/Detail.cshtml")
+@section ScriptsBlock
+{
+    <script src="~/assets/js/script.bank-account.js" asp-append-version="true"></script>
+}
+
