@@ -5,57 +5,57 @@
     ViewData["action"] = "index";
     Layout = "_Layout";
 }
+@model ProjectSemester3.Models.AccountObject;
 <div class="card">
     <div class="card-header">
-        <h4>Profile</h4>
-        <div class="card-header-right">
-            <ul class="list-unstyled card-option">
-                <li><i class="fa fa fa-wrench open-card-option"></i></li>
-                <li><i class="fa fa-window-maximize full-card"></i></li>
-                <li><i class="fa fa-minus minimize-card"></i></li>
-                <li><i class="fa fa-refresh reload-card"></i></li>
-                <li><i class="fa fa-trash close-card"></i></li>
-            </ul>
-        </div>
+        <h4>Profile</h4><br />
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal" onclick=ShowUpdate("@Model.Id")>
+            <i class="fas fa-edit">Update</i>
+        </button>
     </div>
     <div class="card-block table-border-style">
         <div class="table-responsive">
-            <table class="table">
+            <table id="account-object-table" class="table table-hover">
                 <tbody>
                     <tr>
                         <th>Name</th>
-                        <td>Hoang Minh Tien</td>
+                        <td>@Model.Name</td>
                     </tr>
                     <tr>
                         <th>Birthday</th>
-                        <td>07-09-2001</td>
+                        <td>@Model.Birthday.ToString("dd/MM/yyyy")</td>
                     </tr>
                     <tr>
                         <th>Phone Number</th>
-                        <td>0123456789</td>
+                        <td>@Model.PhoneNumber</td>
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td>tinhoang7901@gmail.com</td>
+                        <td>@Model.Email</td>
                     </tr>
                     <tr>
                         <th>Address</th>
-                        <td>HBC, Thủ Đức, tp Hồ Chí Minh</td>
+                        <td>@Model.Address</td>
                     </tr>
                     <tr>
                         <th>Job</th>
-                        <td>Student</td>
+                        <td>@Model.Job</td>
                     </tr>
                     <tr>
                         <th>Gender</th>
-                        <td>Male</td>
+                        <td>@Model.Gender</td>
                     </tr>
                     <tr>
                         <th>ID Number</th>
-                        <td>00000001</td>
+                        <td>@Model.IdNum</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+@await Html.PartialAsync($"~/Views/AccountObject/Update.cshtml")
+@section ScriptsBlock
+{
+    <script src="~/assets/js/script.account-object.js"></script>
+}

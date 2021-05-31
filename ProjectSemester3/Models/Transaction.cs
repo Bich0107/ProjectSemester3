@@ -14,6 +14,8 @@ namespace ProjectSemester3.Models
         public decimal Amount { get; set; }
         public string Content { get; set; }
         public int ResultId { get; set; }
+        public decimal BalanceFrom { get; set; }
+        public decimal BalanceTo { get; set; }
 
         public virtual BankAccount BankAccountIdFromNavigation { get; set; }
         public virtual BankAccount BankAccountIdToNavigation { get; set; }

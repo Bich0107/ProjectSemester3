@@ -27,6 +27,11 @@
     <!-- Style.css -->
     <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="~/plugins/sweetalert2/sweetalert2.min.css" />
+
 
 </head>
 
@@ -318,8 +323,8 @@
                                 <a asp-controller="home" asp-action="index">Home</a> |
                                 <a asp-controller="bankaccount" asp-action="index">Account</a> |
                                 <a asp-controller="transaction" asp-action="index">Transaction</a> |
-                                <a asp-controller="account" asp-action="">Contact</a> |
-                                <a asp-controller="account" asp-action="">Help</a>
+                                <a asp-controller="Contact" asp-action="index">Contact</a> |
+                                <a asp-controller="userManual" asp-action="index">User manual</a>
                             </div>
                         </div>
                     </div>
@@ -448,6 +453,16 @@
     <!-- custom js -->
     <script type="text/javascript" src="~/assets/pages/dashboard/custom-dashboard.js"></script>
     <script type="text/javascript" src="~/assets/js/script.js "></script>
+    <!-- jquery-validation -->
+    <script src="~/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/plugins/jquery-validation/additional-methods.min.js"></script>
+    <script src="~/JS/validation.js"></script>
+
+    <!-- display data -->
+    <script src="~/JS/data_display.js"></script>
+    <script src="~/JS/dateScript.js"></script>
+    <!-- SweetAlert2 -->
+    <script type="text/javascript" src="~/plugins/sweetalert2/sweetalert2.all.min.js"></script>
     @RenderSection("ScriptsBlock", false)
 
 </body>

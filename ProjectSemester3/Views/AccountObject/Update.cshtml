@@ -1,0 +1,50 @@
+﻿<!--Modal for update-->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update</h4>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="E-Name" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input class="form-control name" type="text" name="name" id="E-Name" placeholder="Name" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-PhoneNumber" class="col-sm-2 col-form-label">Phone number</label>
+                            <div class="col-sm-10">
+                                <input class="form-control phoneNumber" type="text" name="phoneNumber" id="E-PhoneNumber" placeholder="Phone number" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-Email" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input class="form-control email" type="text" name="email" id="E-Email" placeholder="Email" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-Address" class="col-sm-2 col-form-label">Address</label>
+                            <div class="col-sm-10">
+                                <input class="form-control address" type="text" name="address" id="E-Address" placeholder="Address" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="E-Job" class="col-sm-2 col-form-label">Job</label>
+                            <div class="col-sm-10">
+                                <input class="form-control job" type="text" name="job" id="E-Job" placeholder="Job" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="hidden" class="ignore" id="E-Id" />
+                        <input type="submit" class="btn btn-info float-lg-right" value="Save">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

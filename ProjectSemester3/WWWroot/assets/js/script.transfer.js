@@ -31,7 +31,6 @@ function changeAccount() {
             result += '<tr>';
             result += '<td>Account Holder</td>';
             result += '<td class="text-right">' + model.userAccount.name;
-            result += '<input type="hidden" asp-for="BankAccountIdTo" value="' + model.id + '"/>';
             result += '</td>';
             result += '</tr>';
             result += '<tr>';

@@ -35,9 +35,9 @@ function listTransaction() {
                 for (var i = 0; i < model.length; i++) {
                     result += '<tr>';
                     result += '<td>' + model[i].time + '</td>';
-                    result += '<td class="text-right">' + model[i].content + '</td>';
+                    result += '<td>' + model[i].content + '</td>';
                     result += '<td>' + model[i].amount + '</td>';
-                    /*result += '<td class="text-right">' + model[i].content + '</td>';*/
+                    result += '<td class="text-right">' + model[i].balanceFrom + '</td>';
                     result += '</tr>';
                 };
             }

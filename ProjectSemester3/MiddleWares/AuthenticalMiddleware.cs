@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using ProjectSemester3.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace ProjectSemester3.MiddleWares
                     httpContext.Response.Redirect("/account/login");
                 }
             }
+            
             return _next(httpContext);
         }
     }

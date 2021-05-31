@@ -37,11 +37,12 @@ namespace ProjectSemester3.Controllers
         [HttpPost]
         public ActionResult Login(AccountObject accountObject)
         {
-            var LoginAccount = db.AccountObjects.SingleOrDefault(a => a.Username.Equals(accountObject.Username));
+            var LoginAccount = db.AccountObjects.FirstOrDefault(a => a.Username.Equals(accountObject.Username));
             
             if(LoginAccount != null)
             {
                 HttpContext.Session.SetString("username", LoginAccount.Username);
+                HttpContext.Session.SetInt32("position", LoginAccount.PositionId);
                 if (CheckLocked(LoginAccount))
                 {
                     if (ProcessLogin(LoginAccount, accountObject.Password))
@@ -58,7 +59,7 @@ namespace ProjectSemester3.Controllers
                             }
                             else
                             {
-                                return RedirectToAction("Index", "Admin", new { area = "Admin" });
+                                return RedirectToAction("Index", "Home", new { area = "Admin" });
                             }
                         }
                     }
@@ -244,7 +245,7 @@ namespace ProjectSemester3.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Admin", new { area = "Admin" });
+                    return RedirectToAction("Index", "Home", new { area = "Admin" });
                 }
             }
             

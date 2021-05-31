@@ -20,6 +20,7 @@ namespace ProjectSemester3.Models
         public virtual DbSet<AccountObject> AccountObjects { get; set; }
         public virtual DbSet<Bank> Banks { get; set; }
         public virtual DbSet<BankAccount> BankAccounts { get; set; }
+        public virtual DbSet<BankOtp> BankOtps { get; set; }
         public virtual DbSet<Check> Checks { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
         public virtual DbSet<Faq> Faqs { get; set; }
@@ -29,6 +30,8 @@ namespace ProjectSemester3.Models
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Setting> Settings { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
+
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -151,6 +154,24 @@ namespace ProjectSemester3.Models
                     .HasConstraintName("FK_BankAccount_AccountObject");
             });
 
+            modelBuilder.Entity<BankOtp>(entity =>
+            {
+                entity.ToTable("BankOTP");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.Otp)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.AccountObject)
+                    .WithMany(p => p.BankOtps)
+                    .HasForeignKey(d => d.AccountObjectId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BankOTP_AccountObject");
+            });
+
             modelBuilder.Entity<Check>(entity =>
             {
                 entity.ToTable("Check");
@@ -235,8 +256,6 @@ namespace ProjectSemester3.Models
             {
                 entity.ToTable("Problem");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Answer)
                     .HasMaxLength(250)
                     .IsUnicode(false);
@@ -249,6 +268,11 @@ namespace ProjectSemester3.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ReceivedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Sender)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Answerer)
                     .WithMany(p => p.Problems)
@@ -306,9 +330,11 @@ namespace ProjectSemester3.Models
             {
                 entity.ToTable("Transaction");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Amount).HasColumnType("money");
+
+                entity.Property(e => e.BalanceFrom).HasColumnType("money");
+
+                entity.Property(e => e.BalanceTo).HasColumnType("money");
 
                 entity.Property(e => e.Content)
                     .HasMaxLength(250)

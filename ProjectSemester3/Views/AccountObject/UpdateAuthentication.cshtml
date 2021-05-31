@@ -1,0 +1,71 @@
+﻿<!-- Modal start -->
+<div class="modal fade modal-icon" id="updateAuthentication" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="page-body">
+                    <div class="row">
+                        <!--  project and team member start -->
+                        <div class=" container col-xl-12 col-md-12">
+                            <!-- multistep form -->
+                            <div class="container">
+                                <div class="row">
+                                    <form id="A-UpdateForm">
+                                        <div class="col-12 col-sm-10 col-md-10 col-lg-10 col-xl-12 text-center p-0 mt-3 mb-2">
+                                            @if (!Model.IsAuthentication)
+                                            {
+                                                <div class="card px-0 pb-0 mb-3">
+                                                    <div class="card-header">
+                                                        <h5>Image QR Code</h5>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <img src="@ViewBag.BarcodeImageUrl" style="height:250px;width:auto" alt="Barcode Image Url" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" value="@ViewBag.SetupCode" readonly />
+                                                    </div>
+                                                    <span>
+                                                        <b>Guide: </b>To activate the service's 2FA code,
+                                                        you need to install the Google Authenticator app in your phone,
+                                                        then you need to scan this image into the app or enter the secret code into the app
+
+                                                    </span>
+                                                </div>
+                                            }
+                                            <div class="table-card">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <tbody>
+                                                            <label class="col-12 text-center"><h5>Enter 2FA code</h5></label>
+                                                            <div class="col-12 text-center">
+                                                                <input class="w-50 text-center" type="text" id="A-Code" pattern="[0-9]{6}" required="" maxlength="6">
+                                                            </div>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            @*<input type="hidden" id="A-Id" value="@Model.Id" />*@
+                                            <input type="submit" value="Submit" class="btn btn-primary" />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div> -->
+        </div>
+    </div>
+</div>
+<!-- Modal end -->

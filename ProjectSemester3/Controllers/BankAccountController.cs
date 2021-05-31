@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using ProjectSemester3.Models;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace ProjectSemester3.Controllers
         [Route("")]
         public IActionResult Index()
         {
-            var account = db.AccountObjects.SingleOrDefault(x => x.Username.Equals("username3"));
+            var account = db.AccountObjects.FirstOrDefault(a => a.Username.Equals(HttpContext.Session.GetString("username")));
             var bankAccounts = db.BankAccounts.Where(b => b.UserAccountId == account.Id).ToList();
             dynamic model = new ExpandoObject();
             model.bankAccounts = bankAccounts;

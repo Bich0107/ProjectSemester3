@@ -51,7 +51,7 @@
                                                             <label for="account-to">Beneficiary account</label>
                                                         </td>
                                                         <td class="text-right form-group form-primary">
-                                                            <input class="form-control form-control-primary" type="text" id="account-to" pattern="[A-Za-z0-9]{6}" maxlength="6" onchange="changeAccount()">
+                                                            <input class="form-control form-control-primary" name="bankto" type="text" id="account-to" pattern="[A-Za-z0-9]{6}" maxlength="6" onchange="changeAccount()">
                                                             <span style="color:red;font-size:14px;" id="account-failed"></span>
                                                         </td>
                                                     </tr>
@@ -68,7 +68,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Text</td>
+                                                        <td>Description</td>
                                                         <td class="text-right">
                                                             <textarea asp-for="Content" class="form-control" maxlength="250"></textarea>
                                                         </td>

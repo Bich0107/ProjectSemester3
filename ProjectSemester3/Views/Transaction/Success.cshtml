@@ -5,6 +5,7 @@
     ViewData["action"] = "index";
     Layout = "_Layout";
 }
+@model ProjectSemester3.Models.Transaction;
 <div class="row">
     <div class=" container col-xl-8 col-md-12">
         <!-- multistep form -->
@@ -26,7 +27,7 @@
                                     <div class="table-card">
                                         <div class="text-center card-border-default pt-2 background-primary">
                                             <h4><b>Amount</b></h4>
-                                            <h5>VND 500,000</h5>
+                                            <h5>@ViewBag.bankFrom.Currency.Name @Model.Amount</h5>
                                             <br>
                                         </div>
                                         <div class="table-reponsive">
@@ -35,23 +36,31 @@
 
                                                     <tr>
                                                         <td>Date</td>
-                                                        <td class="text-right">20:18 11/05/2021</td>
+                                                        <td class="text-right">@Model.Time</td>
                                                     </tr>
                                                     <tr>
                                                         <td>Account holder </td>
-                                                        <td class="text-right">VND-TGTT-HOANG MINH TIEN <br> 1234567890</td>
+                                                        <td class="text-right">
+                                                            @ViewBag.bankFrom.Currency.Name-@ViewBag.bankFrom.UserAccount.Name
+                                                            <br>
+                                                            @ViewBag.bankFrom.Bank.Name
+                                                            <br />
+                                                            @ViewBag.bankFrom.BankCode
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Beneficiary account </td>
-                                                        <td class="text-right">VND-TGTT-HOANG VAN CHINH <br>9876543210</td>
+                                                        <td class="text-right">
+                                                            @ViewBag.bankTo.Currency.Name-@ViewBag.bankTo.UserAccount.Name
+                                                            <br>
+                                                            @ViewBag.bankTo.Bank.Name
+                                                            <br />
+                                                            @ViewBag.bankTo.BankCode
+                                                        </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Text transaction</td>
-                                                        <td class="text-right">thank bro </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Transaction code</td>
-                                                        <td class="text-right">FT21131559570414 (48256207803)</td>
+                                                        <td>Description</td>
+                                                        <td class="text-right">@Model.Content</td>
                                                     </tr>
                                                 </tbody>
                                             </table>

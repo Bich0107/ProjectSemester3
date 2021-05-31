@@ -31,8 +31,8 @@
 
                                                     <tr>
                                                         <th>From</th>
-                                                        <td class="text-right">@Model.BankAccountIdFrom <br > @Model.BankAccountIdFrom</td>
-                                                        
+                                                        <td class="text-right">@ViewBag.bankFrom.Currency.Name-@ViewBag.bankFrom.UserAccount.Name <br> @ViewBag.bankFrom.BankCode</td>
+
                                                     </tr>
                                                     <tr>
                                                         <th>Transfer amount</th>
@@ -41,7 +41,13 @@
                                                     <tr>
                                                         <th>To</th>
                                                         <td class="text-right">
-                                                            @Model.BankAccountIdTo <br> @Model.BankAccountIdTo <br> @Model.BankAccountIdTo
+                                                            @ViewBag.bankTo.Currency.Name-@ViewBag.bankTo.UserAccount.Name <br> @ViewBag.bankTo.BankCode <br> @ViewBag.bankTo.Bank.Name
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Description</th>
+                                                        <td class="text-right">
+                                                            <textarea class="form-control" maxlength="250" readonly>@Model.Content</textarea>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -49,10 +55,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                @*@Html.HiddenFor(model => model,Model)*@
+                                <input type="hidden" asp-for="BankAccountIdFrom" />
+                                <input type="hidden" asp-for="BankAccountIdTo" />
+                                <input type="hidden" asp-for="Amount" />
+                                <input type="hidden" asp-for="Content" />
                                 <input type="submit" name="next" class="action-button" value="Next" />
                                 <a href='javascript:history.go(-1)'><input type="button" name="previous" class="action-button-previous" value="Previous" /></a>
-                                
+
                             </fieldset>
                         </form>
                     </div>

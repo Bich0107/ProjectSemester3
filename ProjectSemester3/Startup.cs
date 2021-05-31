@@ -52,7 +52,8 @@ namespace ProjectSemester3
 
             app.UseSession();
 
-            //app.UseMiddleware<AuthenticalMiddleware>();
+            app.UseMiddleware<AuthenticalMiddleware>();
+            app.UseMiddleware<MapPathMiddleware>();
 
             app.UseStaticFiles();
 

@@ -5,6 +5,70 @@
     ViewData["action"] = "setting";
     Layout = "_Layout";
 }
+@model ProjectSemester3.Models.AccountObject;
+<style>
+    /**====== Switch css start ======**/
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    /**====== Switch css end ======**/
+</style>
 <div class="row">
     <div class="col-sm-12">
         <!-- Material tab card start -->
@@ -37,25 +101,27 @@
                                         <div class="card text-center">
                                             <div class="card-block ">
                                                 <h6>Choose a strong password and don't reuse it for other accounts</h6>
-                                                <form class="form-material mt-3">
+                                                <form id="changePasswordForm" class="form-material mt-3">
                                                     <div class="form-group form-default form-primary">
-                                                        <input type="password" name="footer-email" class="form-control" required="">
+                                                        <input type="password" id="oldPassword" name="oldPassword" class="form-control ignore" required>
                                                         <span class="form-bar"></span>
                                                         <label class="float-label">Password</label>
                                                     </div>
                                                     <div class="form-group form-default form-primary">
-                                                        <input type="password" name="footer-email" class="form-control" required="">
+                                                        <input type="password" id="newPassword" name="newPassword" class="form-control password" required>
                                                         <span class="form-bar"></span>
                                                         <label class="float-label">New Password</label>
                                                     </div>
                                                     <div class="form-group form-default form-primary">
-                                                        <input type="password" name="footer-email" class="form-control" required="">
+                                                        <input type="password" id="confirmNewPassword" name="confirmPassword" class="form-control confirmPassword" required>
                                                         <span class="form-bar"></span>
                                                         <label class="float-label">Re Enter Password</label>
                                                     </div>
-                                                    <div class="text-center mt-5"><input type="button" name="next" class="btn btn-primary" value="Save change" /></div>
+                                                    <div class="text-center mt-5">
+                                                        <input type="hidden" id="SettingId" value="@Model.Id" />
+                                                        <input type="submit" name="next" class="btn btn-primary" value="Save change" />
+                                                    </div>
                                                 </form>
-
                                             </div>
                                         </div>
                                     </div>
@@ -66,16 +132,14 @@
                                     <h4>Protect your account with 2-Step Verification</h4>
                                     <label for="">Every time you sign in to your Account, you'll need your password and verification code.</label>
                                     <div class="row mt-3">
-                                        <div class="col-md-2 col-12 "><img src="assets/images/security1.PNG" alt=""></div>
+                                        <div class="col-md-2 col-12 "><img src="~/assets/images/security1.PNG" alt=""></div>
                                         <div class="col-md-10 col-12 pt-4">
-                                            <b>Looking for more information</b> <br><br>
-                                            Add an extra layer of security Enter the unique password and verification code sent to your phone.
+                                            <b>Looking for more information</b> <br><br> Add an extra layer of security Enter the unique password and verification code sent to your phone.
                                         </div>
-                                        <div class="col-md-2 col-12 pl-1"><div class="col-md-2 col-12 "><img src="assets/images/security2.PNG" alt=""></div></div>
-                                        <div class="col-md-10 col-12 pt-4">
-                                            <b>Avoid the bad guys</b> <br><br>
-                                            Even if someone gets your password, it won't be enough to log into your account.
+                                        <div class="col-md-2 col-12 pl-1">
+                                            <div class="col-md-2 col-12 "><img src="~/assets/images/security2.PNG" alt=""></div>
                                         </div>
+                                        <div class="col-md-10 col-12 pt-4"><b>Avoid the bad guys</b> <br><br> Even if someone gets your password, it won't be enough to log into your account.</div>
                                     </div>
                                 </div>
                                 <div class="card-block">
@@ -83,7 +147,14 @@
                                         <div class="row text-right">
                                             <div class=" col-md-10 outer-ellipsis">
                                                 <label class="switch">
-                                                    <input type="checkbox">
+                                                    @if (!Model.IsAuthentication)
+                                                    {
+                                                        <input type="checkbox" id="codeCheck" data-toggle="modal" data-target="#updateAuthentication">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" id="codeCheck" data-toggle="modal" data-target="#updateAuthentication" checked>
+                                                    }
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -101,3 +172,11 @@
         <!-- Material tab card end -->
     </div>
 </div>
+@await Html.PartialAsync($"~/Views/AccountObject/UpdateAuthentication.cshtml")
+@section ScriptsBlock
+{
+    <script src="~/assets/js/script.setting.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"></script>
+
+}

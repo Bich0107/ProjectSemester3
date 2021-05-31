@@ -5,6 +5,7 @@
     ViewData["action"] = "index";
     Layout = "_Layout";
 }
+@model ProjectSemester3.Models.Transaction;
 <div class="row">
     <div class=" container col-xl-8 col-md-12">
         <!-- multistep form -->
@@ -30,8 +31,9 @@
                                                     <tr>
                                                         <td>
                                                             <label class="col-12 text-center">Enter OTP code</label>
+                                                            <div class="col-12 text-center"><input class="w-50" type="text" name="otp" id=""></div>
                                                             <div class="col-12 text-center">
-                                                                <input class="w-50" type="text" id="">
+                                                                <span style="color:red;font-size:14px;">@ViewBag.otpFailed</span>
                                                             </div>
                                                             <label class="col-12 text-center">We have sent OTP code to your email! <br>OTP code is available in 30s</label>
                                                         </td>
@@ -43,8 +45,12 @@
                                     </div>
 
                                 </div>
+                                <input type="hidden" asp-for="BankAccountIdFrom" />
+                                <input type="hidden" asp-for="BankAccountIdTo" />
+                                <input type="hidden" asp-for="Amount" />
+                                <input type="hidden" asp-for="Content" />
                                 <input type="submit" name="next" class="next action-button" value="Submit" />
-                                <a href='javascript:history.go(-2)'><input type="button" name="previous" class="action-button-previous " value="Cancel" /></a>
+                                <a asp-controller="transaction" asp-action="index"><input type="button" name="previous" class="action-button-previous " value="Cancel" /></a>
                             </fieldset>
                         </form>
                     </div>
