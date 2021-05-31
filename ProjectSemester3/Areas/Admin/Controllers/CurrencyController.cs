@@ -1,18 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ProjectSemester3.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
+    public class CurrencyAPI
+    {
+        public string id { get; set; }
+        public string currencyName { get; set; }
+        public string currencySymbol { get; set; }
+    }
+
+    public class Result
+    {
+        public List<CurrencyAPI> Results { get; set; }
+    }
+
     [Area("admin")]
     [Route("admin/currency")]
     public class CurrencyController : Controller
     {
         private DatabaseContext db;
+        private static string currencyAPIKey = "f4383dc2ba2dcc94a2d6";
 
         public CurrencyController(DatabaseContext _db)
         {
@@ -103,6 +119,38 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        [Route("updateAll")]
+        public IActionResult UpdateAll()
+        {
+            try
+            {
+                // get default currency
+                string baseCurrency = db.Currencies.Find(db.Settings.Find(1).DefaultCurrencyId).Name;
+
+                foreach (var currency in db.Currencies.ToList())
+                {
+                    using (WebClient web = new WebClient())
+                    {
+                        string url = string.Format("https://free.currconv.com/api/v7/convert?q={0}_{1}&compact=ultra&apiKey={2}", currency.Name.ToUpper(),
+                            baseCurrency.ToUpper(), currencyAPIKey);
+                        string response = web.DownloadString(url);
+                        response = response.Remove(response.Length - 1);
+                        string[] result = response.Split(':');
+
+                        currency.ExchangeRate = float.Parse(result[1]);
+                    }
+                }
+
+                db.SaveChanges();
+
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
 

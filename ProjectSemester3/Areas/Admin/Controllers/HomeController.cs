@@ -104,5 +104,27 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 return BadRequest(e.Message);
             }
         }
+    
+        [HttpPost]
+        [Route("changePassword")] 
+        public IActionResult EditPassword(AccountObject _accountObj)
+        {
+            try
+            {
+                var username = HttpContext.Session.GetString("username");
+                username = username == null ? "superAdmin" : username;
+
+                var accountObj = db.AccountObjects.Where(a => a.Username.Equals(username)).SingleOrDefault();
+
+                accountObj.Password = BCrypt.Net.BCrypt.HashString(_accountObj.Password);
+                db.SaveChanges();
+
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

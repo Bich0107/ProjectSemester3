@@ -18,7 +18,6 @@
 
         $("#searchBox").on("keyup", function () {
             var value = $(this).val();
-            console.log(value);
             Search(value);
         });
     });
@@ -29,6 +28,7 @@
         for (var i = 0; i < values.length; i++) {
             result += '<tr class="question" data-widget="expandable-table" aria-expanded="false">';
             result += '<td>' + (i + 1) + '</td>';
+            result += '<td>' + values[i].name + '</td>';
             result += '<td style="max-width:1px;"><div style="word-wrap:break-word; overflow-wrap:break-word;">' + values[i].question + '</div></td>';
             result += '<td>' + (values[i].answer != null ? "Answered" : "Pending") + '</td>';
             result += '<td>' + '<i class="fas fa-reply" style="color:blue;" ' +
@@ -61,6 +61,11 @@
             } else {
                 CreateToastFailed(data);
             }
+            $('#updateModal').modal('toggle');
+            LoadData();
+        }).fail(function (data) {
+            CreateToastFailed(data);
+            $('#updateModal').modal('toggle');
             LoadData();
         });
     }
@@ -82,6 +87,7 @@
                 if (result.answer) {
                     if (confirm("This question has been answer before, do you want to resend another answer?")) {
                         $("#id").val(result.id);
+                        $("#name").val(result.name);
                         $("#subject").val(result.question);
                         $("#description").val(result.answer);
 
@@ -89,8 +95,11 @@
                     }
                 } else {
                     $("#id").val(result.id);
+                    $("#name").val(result.name);
                     $("#subject").val(result.question);
                     $("#description").val(result.answer);
+
+                    $("#updateModal").modal('toggle');
                 }
             }
         });
@@ -101,7 +110,7 @@
     <br />
     <div class="row">
         <div class="col-12">
-            <div class="card card-primary">
+            <div class="card card-outline card-primary">
                 <div class="card-header">
                     <h3 class="card-title">@ViewBag.tagName</h3>
                     <div class="card-tools">
@@ -121,6 +130,7 @@
                         <thead>
                             <tr>
                                 <th width="10%">Id</th>
+                                <th>Name</th>
                                 <th width="70%">Question</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -131,6 +141,7 @@
                         <tfoot>
                             <tr>
                                 <th>Id</th>
+                                <th>Name</th>
                                 <th>Question</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -158,6 +169,10 @@
             <div class="modal-body">
                 <form id="updateForm">
                     <div class="card-body">
+                        <div class="form-group row">
+                            <label for="name" class="col-form-label">Name</label>
+                            <input class="form-control ignore" name="name" type="text" id="name" readonly />
+                        </div>
                         <div class="form-group row">
                             <label for="subject">Question</label>
                             <textarea id="subject" class="form-control ignore" rows="3" readonly></textarea>

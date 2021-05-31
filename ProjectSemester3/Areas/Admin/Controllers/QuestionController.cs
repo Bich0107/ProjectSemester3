@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProjectSemester3.Helpers;
 using ProjectSemester3.Models;
 using System;
 using System.Collections.Generic;
@@ -42,17 +43,20 @@ namespace ProjectSemester3.Areas.Admin.Controllers
 
                 var currentStaff = db.AccountObjects.Where(a => a.Username.Equals(username) && a.Staff).SingleOrDefault();
 
+                // update database
                 problem.AnswerDate = DateTime.Now;
                 problem.AnswererId = currentStaff.Id;
                 problem.Answer = _problem.Answer;
 
-                // send mail here
-                //
-                //
-                // =================
+                // get default contact info
+                var contact = db.Helps.Find(1);
+
+                // send mail
+                MailHelper mailHelper = new MailHelper();
+                var result = mailHelper.Send(currentStaff.Name, contact.Email, contact.Password, problem.Name, problem.Sender, contact.Subject, problem.Answer);
 
                 db.SaveChanges();
-                return Ok(true);
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -65,6 +69,15 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             ViewBag.tagName = "Customer problems";
             ViewBag.activeTag = "customerProb";
+
+            // get current login staff
+            var username = HttpContext.Session.GetString("username");
+
+            // testing only
+            username = string.IsNullOrEmpty(username) ? "superAdmin" : username;
+
+            var currentStaff = db.AccountObjects.Where(a => a.Username.Equals(username) && a.Staff).SingleOrDefault();
+            ViewBag.email = currentStaff.Email;
             return View("index");
         }
 

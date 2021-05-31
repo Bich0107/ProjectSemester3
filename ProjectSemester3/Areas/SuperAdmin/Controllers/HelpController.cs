@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
-    [Area("admin")]
-    [Route("admin/help")]
+    [Area("superAdmin")]
+    [Route("superAdmin/help")]
     public class HelpController : Controller
     {
         private DatabaseContext db;
@@ -46,7 +46,8 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         {
             ViewBag.tagName = "Help";
             ViewBag.activeTag = "help";
-            return View("index");
+            ViewBag.activeParentTag = "sa";
+            return View("index"); 
         }
 
         // when there are no keyword, search is as same as loadData
@@ -61,6 +62,26 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             {
                 Debug.WriteLine("Error: " + e.Message);
                 return null;
+            }
+        }
+
+        [HttpPost]
+        [Route("changeEmailPassword")]
+        public IActionResult ChangeEmailPassword(Help _help)
+        {
+            try
+            {
+                var help = db.Helps.Find(1);
+
+                help.Password = _help.Password;
+
+                db.SaveChanges();
+
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
     }

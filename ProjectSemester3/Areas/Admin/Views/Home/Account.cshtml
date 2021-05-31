@@ -95,12 +95,12 @@
         });
     }
 
-    // post: change user's password -- unfinished
+    // post: change user's password
     function ChangePassword() {
-
+        var password = $("#confirmNewPassword").val();
 
         var object = {
-
+            "Password": password
         }
 
         $.post("changePassword", object, function (data) {
@@ -121,7 +121,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <form id="updateForm">
-                        <div class="card card-primary">
+                        <div class="card card-outline card-primary">
                             <div class="card-header">
                                 <h3 class="card-title">Change account info</h3>
                                 <div class="card-tools">
@@ -154,7 +154,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <form id="changePasswordForm">
-                        <div class="card card-danger">
+                        <div class="card card-outline card-danger">
                             <div class="card-header">
                                 <h3 class="card-title">Change password</h3>
                                 <div class="card-tools">

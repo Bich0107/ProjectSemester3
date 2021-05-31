@@ -8,6 +8,12 @@ using Newtonsoft.Json;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
 {
+    public class MinAccount
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+
     [Area("admin")]
     [Route("admin/accountObject")]
     public class AccountObjectController : Controller
@@ -153,6 +159,15 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 Debug.WriteLine("Error account obj: " + e.Message);
                 return null;
             }
+        }
+
+        [HttpPost]
+        [Route("checkPassword")]
+        public bool CheckPassword(MinAccount _account)
+        {
+            var account = db.AccountObjects.Where(a => a.Username.Equals(_account.Username)).SingleOrDefault();
+
+            return BCrypt.Net.BCrypt.Verify(_account.Password, account.Password);
         }
     }
 }

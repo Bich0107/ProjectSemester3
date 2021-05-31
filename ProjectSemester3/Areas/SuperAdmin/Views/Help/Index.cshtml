@@ -1,0 +1,180 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    // setting up data
+    $(document).ready(function () {
+        $(document).on({
+            ajaxStop: function () {
+                $("#loadingOverlay.overlay").removeClass("overlay");
+                $("#loadingOverlay").addClass("d-none");
+            }
+        });
+
+        LoadData();
+
+        $('#changePasswordForm').validate({
+            submitHandler: function (form) {
+                ChangeEmailPassword();
+            }
+        });
+    });
+
+    // get and show data function
+    function LoadData() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: 'loadData',
+            success: function (result) {
+                $("#contactNumber1").val(result.contactNumber1)
+                $("#contactNumber2").val(result.contactNumber2)
+                $("#address").val(result.address)
+                $("#password").val(result.password)
+                $("#email").val(result.email)
+            }
+        })
+
+        ResetUpdateForm();
+    }
+
+    // update data function
+    function SaveTarget() {
+        var contactNumber1 = $("#contactNumber1").val();
+        var contactNumber2 = $("#contactNumber2").val();
+        var address = $("#address").val();
+        var email = $("#email").val();
+
+        var object = {
+            "Id": 1,
+            "ContactNumber1": contactNumber1,
+            "ContactNumber2": contactNumber2,
+            "Address": address,
+            "Email": email
+        }
+
+        $.post("edit", object, function (data) {
+            if (data) {
+                CreateToastSuccess();
+            } else {
+                CreateToastFailed(data);
+            }
+            LoadData();
+        });
+    }
+
+    // post: change email's password
+    function ChangePassword() {
+        var password = $("#confirmNewPassword").val();
+
+        var object = {
+            "Password": password
+        }
+
+        $.post("changeEmailPassword", object, function (data) {
+            if (data) {
+                alert("Success!");
+            } else {
+                alert("Failed. Error: " + data);
+            }
+            LoadData();
+        });
+    }
+
+    // reset password form
+    function ResetPasswordForm() {
+        $('#oldPassword').val("");
+        $('#newPassword').val("");
+        $('#confirmNewPassword').val("");
+
+        // plug-in reset function
+        $("#changePasswordForm").validate().resetForm();
+
+        // fix bootstrap reset error
+        $('#changePasswordForm .form-control').removeClass('is-invalid');
+    }
+</script>
+
+<div class="container">
+    <br />
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="updateForm">
+                        <div class="card card-outline card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Help info</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="contactNumber1">Contact number 1</label>
+                                    <input type="text" id="contactNumber1" name="phoneNumber" class="form-control phoneNumber">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactNumber2">Contact number 2</label>
+                                    <input type="text" id="contactNumber2" class="form-control ignore">
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <textarea id="address" class="form-control address" name="address" rows="4"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="text" id="email" class="form-control email" name="email">
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <input type="button" class="btn btn-secondary" onclick="LoadData()" value="Cancel" />
+                                <input type="submit" value="Save Changes" class="btn btn-success float-right">
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </form>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <form id="changePasswordForm">
+                <div class="card card-outline card-danger">
+                    <div class="card-header">
+                        <h3 class="card-title">Change email password</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="name">Old password</label>
+                            <input type="password" id="oldPassword" name="oldPassword" class="form-control ignore" required>
+                        </div>
+                        <div class="form-group row">
+                            <label for="name">New password</label>
+                            <input type="password" id="newPassword" name="newPassword" class="form-control password">
+                        </div>
+                        <div class="form-group row">
+                            <label for="name">Confirm new password</label>
+                            <input type="password" id="confirmNewPassword" name="confirmPassword" class="form-control confirmPassword">
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="button" value="Reset" class="btn btn-info float-left" onclick="ResetPasswordForm()" />
+                        <input type="submit" value="Save Changes" class="btn btn-success float-right">
+                    </div>
+                </div>
+            </form>
+            <!-- /.card -->
+        </div>
+    </div>
+</div>
