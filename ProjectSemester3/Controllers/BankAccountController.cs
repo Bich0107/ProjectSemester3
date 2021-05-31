@@ -52,14 +52,14 @@ namespace ProjectSemester3.Controllers
             var model = db.Transactions.Where(t => t.BankAccountIdFrom == id || t.BankAccountIdTo == id).ToList();
             if (value.Equals("ten-day"))
             {
-                
+                model.Where(t => t.Time >= t.Time.AddDays(-10)).ToList();
             }else if (value.Equals("one-month"))
             {
-
+                model.Where(t => t.Time >= t.Time.AddDays(-30)).ToList();
             }
             else
             {
-
+                model.Where(t => t.Time >= t.Time.AddDays(-90)).ToList();
             }
             Debug.WriteLine("transaction id: " + id + value);
             return new JsonResult(model);

@@ -1,76 +1,70 @@
-////$(document).ready(function () {
+$(document).ready(function () {
 
-////    $('#sign-up').submit(function (e) {
-////        e.preventDefault();
-////        var name = $('#Name').val();
-////        var idNum = $('#IdNum').val();
-////        var email = $('#Email').val();
-////        var phoneNumber = $('#PhoneNumber').val();
-////        var job = $('#Job').val();
-////        var address = $('#Address').val();
-////        var username = $('#Username').val();
-////        var password = $('#Password1').val();
-////        var confirmPassword = $('#ConfirmPassword').val();
 
-////        $(".error").remove();
+    $('#sign-up').validate({
+        submitHandler: function (form) {
+            AddCustomer();
+        }
+    });
+});
+function AddCustomer() {
+    
+    var name = $("#Name").val();
+    var username = $("#Username").val();
+    var birthday = $("#Birthday").val();
+    var phoneNum = $("#PhoneNumber").val();
+    var email = $("#Email").val();
+    var address = $("#Address").val();
+    var job = $("#Job").val();
+    var gender = $("#Gender").val();
+    var idNum = $("#IdNum").val();
+    var password = $("#newPassword").val();
 
-        
-////        if (name.length < 1) {
-////            $('#Name').after('<span style="color:red;" class="error">This field is required</span>');
-////        }
-////        if (phoneNumber.length < 1) {
-////            $('#PhoneNumber').after('<span class="error">This field is required</span>');
-////        }
-////        if (email.length < 1) {
-////            $('#Email').after('<span style="color:red;" class="error">This field is required</span>');
-////        } else {
-////            var regEx = /^[A-Z0-9][A-Z0-9._%+-]{0,63}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/;
-////            var validEmail = regEx.test(email);
-////            if (!validEmail) {
-////                $('#Email').after('<span style="color:red;" class="error">Enter a valid email</span>');
-////            }
-////        }
-////        if (password.length < 8) {
-////            $('#Password1').after('<span style="color:red" class="error">Password must be at least 8 characters long</span>');
-////        }
-////        if (password != confirmPassword) {
-////            $('#ConfirmPassword').after('<span style="color:red" class="error">Confirm password does not match</span>');
-////        }
-////    });
+    var object = {
+        "Name": name,
+        "Username": username,
+        "Birthday": birthday,
+        "PhoneNumber": phoneNum,
+        "Email": email,
+        "Address": address,
+        "Job": job,
+        "Gender": gender,
+        "IdNum": idNum,
+        "Password": password,
+    }
 
-////    $('form[id=""]').validate({
-////        rules: {
-////            Name: 'required',
-////            IdNum: 'required',
-////            Email: {
-////                required: true,
-////                email: true,
-////            },
-////            PhoneNumber: {
-////                required: true,
-////                number:true,
-////                minlength: 10,
-////                maxlength:11,
-////            },
-////            Password: {
-////                required: true,
-////                minlength: 8,
-////            }
-////        },
-////        messages: {
-////            Name: 'This field is required1</span>',
-////            lname: 'This field is required',
-////            user_email: 'Enter a valid email',
-////            psword: {
-////                minlength: 'Password must be at least 8 characters long'
-////            }
-////        },
-////        submitHandler: function (form) {
-////            form.submit();
-////        }
-////    });
 
-////});
+    $.post("sign-up", object, function (data) {
+        if (data.success) {
+            Swal.fire(
+                'Successfully',
+                data.error,
+                'success'
+            );
+            if (data.result) {
+                window.location = data.url;
+            }
+        } else {
+            Swal.fire(
+                'Opp...',
+                data.error,
+                'error'
+            );
+
+        }
+        LoadData();
+    });
+    function LoadData() {
+       
+        $("#PhoneNumber").val("");
+        $("#Email").val("");
+        $("#Address").val("");
+        $("#IdNum").val("");
+        $("#newPassword").val("");
+        $("#ConfirmPassword").val("");
+    }
+}
+
 $(function () {
     $(".datepicker").datepicker({
         dateFormat: 'dd/mm/yy',//check change

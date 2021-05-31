@@ -59,14 +59,17 @@ function listTransactionByDate() {
         success: function (model) {
             var result = '';
             if (model == '') {
-                result += '<p style="color:red;text-align:center">' + 'No transaction with this account' + '</p>';
+                result += '<tr>';
+                result += '<td>' + ' '+ '</td>';
+                result += '<td class="text-right">' + '<p style="color:red;text-align:center">' + 'No transaction with this account' + '</p>' + '</td>';
+                result += '<td>' + ' ' + '</td>';
+                result += '</tr>';
             } else {
                 for (var i = 0; i < model.length; i++) {
                     result += '<tr>';
                     result += '<td>' + model[i].time + '</td>';
                     result += '<td class="text-right">' + model[i].content + '</td>';
                     result += '<td>' + model[i].amount + '</td>';
-                    /*result += '<td class="text-right">' + model[i].content + '</td>';*/
                     result += '</tr>';
                 };
             }

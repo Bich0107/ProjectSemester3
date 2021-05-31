@@ -21,12 +21,31 @@
         return this.optional(element) || /^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&]).*$/.test(value);
     }, "Password must have at least 8 characters, 1 number, 1 lowercase, 1 uppercase, and 1 special character from @#$%& ");
 
+    $.validator.addMethod("minAge", function (value, element, min) {
+        var today = new Date();
+        var birthDate = new Date(value);
+        var age = today.getFullYear() - birthDate.getFullYear();
+
+        if (age > min + 1) {
+            return true;
+        }
+
+        var m = today.getMonth() - birthDate.getMonth();
+
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        return age >= min;
+    }, "You are not old enough!");
+
     jQuery.extend(jQuery.validator.messages, {
         required: "This field is required.",
         remote: "Please fix this field.",
         email: "Please enter a valid email address.",
         url: "Please enter a valid URL.",
         date: "Please enter a valid date.",
+        minAge: "You must be at least 18 years old!",
         dateISO: "Please enter a valid date (ISO).",
         number: "Please enter a valid number.",
         digits: "Please enter only digits.",
@@ -71,6 +90,10 @@
         },
         date: {
             required: true,
+        },
+        birthday: {
+            required: true,
+            minAge: 18
         },
         phoneNumber: {
             required: true,

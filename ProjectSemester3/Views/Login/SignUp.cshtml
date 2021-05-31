@@ -2,15 +2,11 @@
     ViewData["title"] = "Forfot Password";
     Layout = "_LoginLayout";
 }
-@model ProjectSemester3.Models.AccountObject;
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
-            <form method="post" asp-controller="login" asp-action="signup" class="md-float-material form-material" id="sign-up">
-                <div class="text-center">
-                    <img src="~/assets/images/logo.png" alt="logo.png">
-                </div>
+            <form class="md-float-material form-material" id="sign-up">
                 <div class="auth-box card">
                     <div class="card-block">
                         <div class="row m-b-20">
@@ -20,47 +16,42 @@
                         </div>
                         <div class="form-group form-primary">
                             <label class="md-float-material">Name</label>
-                            <input type="text" asp-for="Name" class="form-control" id="Name" required="">
+                            <input type="text"  class="form-control name" name="name" id="Name">
                             <span class="form-bar"></span>
                         </div>
-                        <div class="form-group form-primary row">
-                            <div class="col-6 col-md-6 col-sm-6">
+                        <div class="row">
+                            <div class=" form-group form-primary col-6 col-md-6 col-sm-6">
                                 <label class="md-float-material" >Birthday</label>
-                                <input type="text" asp-for="Birthday" class="form-control datepicker" id="Birthday" value="01/01/2021" required="">
+                                <input type="date"  class="form-control birthday" name="birthday" id="Birthday" value="01/01/2021" />
                                 <span class="form-bar"></span>
-
                             </div>
-                            <div class="col-6 col-md-6 col-sm-6">
+                            <div class="form-group form-primary col-6 col-md-6 col-sm-6">
                                 <label class="md-float-material">Identity number</label>
-                                <input type="text" asp-for="IdNum" class="form-control" id="IdNum" pattern="[0-9]{9}" required="">
+                                <input type="text"  class="form-control idNum" name="idNum" id="IdNum" />
                                 <span class="form-bar"></span>
-
                             </div>
                         </div>
-                        <div class="form-group form-primary row">
-                            <div class="col-6 col-md-6 col-sm-6">
+                        <div class="row">
+                            <div class="form-group form-primary col-6 col-md-6 col-sm-6">
                                 <label class="md-float-material">Email</label>
-                                <input type="email" asp-for="Email" class="form-control"  required="" id="Email">
+                                <input type="email"  class="form-control email" name="email" placeholder="James123@gmail.com"  id="Email" />
                                 <span class="form-bar"></span>
-
                             </div>
-                            <div class="col-6 col-md-6 col-sm-6">
+                            <div class="form-group form-primary col-6 col-md-6 col-sm-6">
                                 <label class="md-float-material">Phone Number</label>
-                                <input type="text" asp-for="PhoneNumber" class="form-control" required="" id="PhoneNumber" pattern="[0-9]{10}">
+                                <input type="text"  class="form-control phoneNumber" name="phoneNumber" id="PhoneNumber"/>
                                 <span class="form-bar"></span>
-
                             </div>
                         </div>
-                        <div class="form-group form-primary row">
-                            <div class="col-6 col-md-6 col-sm-6">
+                        <div class="row">
+                            <div class="form-group form-primary col-6 col-md-6 col-sm-6">
                                 <label class="md-float-material">Your job</label>
-                                <input type="text" asp-for="Job" class="form-control" value="" required="" id="Job">
+                                <input type="text"  class="form-control job" placeholder="Student" name="job" id="Job" />
                                 <span class="form-bar"></span>
-
                             </div>
-                            <div class="col-6 col-md-6 col-sm-6">
+                            <div class="form-group form-primary col-6 col-md-6 col-sm-6">
                                 <label class="md-float-material">Gender</label>
-                                <select asp-for="Gender" class="form-control">
+                                <select  class="form-control ignore" id="Gender">
                                     <option value="@Gender.Male">@Gender.Male</option>
                                     <option value="@Gender.Female">@Gender.Female</option>
                                     <option value="@Gender.Other">@Gender.Other</option>
@@ -70,13 +61,13 @@
                         </div>
                         <div class="form-group form-primary">
                             <label class="md-float-material">Your Address</label>
-                            <input type="text" asp-for="Address" class="form-control" required="" id="Address">
+                            <input type="text"  class="form-control address" placeholder="Address" name="address" id="Address" />
                             <span class="form-bar"></span>
 
                         </div>
                         <div class="form-group form-primary">
                             <label class="md-float-material">Choose Username</label>
-                            <input type="text" asp-for="Username" class="form-control" required="" id="Username">
+                            <input type="text"  class="form-control username" placeholder="Username" name="username" id="Username" />
                             <span class="form-bar"></span>
 
                         </div>
@@ -84,7 +75,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group form-primary">
                                     <label class="md-float-material">Password</label>
-                                    <input type="password" asp-for="Password" class="form-control" required="" id="Password1" />
+                                    <input type="password"  class="form-control password" name="newPassword"  id="newPassword" />
                                     <span class="form-bar"></span>
 
                                 </div>
@@ -92,7 +83,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group form-primary">
                                     <label class="md-float-material">Confirm Password</label>
-                                    <input type="password" name="confirm-password" class="form-control" required="" id="ConfirmPassword">
+                                    <input type="password" name="confirmPassword" class="form-control confirmPassword"  id="ConfirmPassword" />
                                     <span class="form-bar"></span>
 
                                 </div>
@@ -103,7 +94,7 @@
                         </div>
                         <div class="row m-t-30">
                             <div class="col-md-12">
-                                <input type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20" value="Sign up now"/>
+                                <input type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20" value="Submit"/>
                             </div>
                         </div>
                         <hr />
@@ -122,9 +113,6 @@
     <!-- end of row -->
 </div>
 @section ScriptsBlock
-{
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+{    
     <script src="~/assets/js/script.sign-up.js"></script>
 }

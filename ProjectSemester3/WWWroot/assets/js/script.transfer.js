@@ -66,14 +66,14 @@ function validateForm() {
         alert("Account invalid")
         return false
     }
-    /*if (parseFloat(amount) > parseFloat(balance) || parseFloat(balance) == 0) {
+    if (parseFloat(amount) > parseFloat(balance) || parseFloat(balance) == 0) {
         alert(parseFloat(balance))
         return false
     }
     if (parseFloat(amount) == 0) {
         alert("Please choose amount")
         return false
-    }*/
+    }
     alert("Good chop bro")
     return true;
 }

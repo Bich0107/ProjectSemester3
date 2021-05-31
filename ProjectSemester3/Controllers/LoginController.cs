@@ -203,8 +203,9 @@ namespace ProjectSemester3.Controllers
 
                 var setupInfo = tfa.GenerateSetupCode("Banking Online", username, UserUniqueKey, 100, 100);
 
+                //QR code Image
                 ViewBag.BarcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
-
+                //Manual Key
                 ViewBag.SetupCode = setupInfo.ManualEntryKey;
 
                 return View("Authentication");
@@ -299,15 +300,21 @@ namespace ProjectSemester3.Controllers
                 if (account != null)
                 {
                     Generator generator = new Generator();
+                    var accountFrom = db.Helps.Find(1);
+                    var from = accountFrom.Email;
+                    var password = accountFrom.Password;
+                    var subject = accountFrom.Subject;
+                    var name = db.Settings.Find(1).Title;
+
                     var otp = generator.GenerateOtp();
-                    var body = "This is new password. Now, you can submit this password when you want to login.<br/>" + otp;
+                    var body = "This is new password " + otp +". Now, you can submit this password when you want to login.Please dont't share this password with anyone.";
                     MailHelper mail = new MailHelper();
-                    mail.Send("Admin","tinhoang7901@gmail.com","0347557353",account.Name, 
-                        "tinhoang7901@gmail.com","New Password",body);
+                    mail.Send(name,from,password,account.Name,account.Email,subject,body);
                     account.Password = BCrypt.Net.BCrypt.HashPassword(otp);
                     account.Locked = false;
                     db.SaveChanges();
-                    return RedirectToAction("Login");
+                    ViewBag.resetPasswordSuccess = "Reset password success. Now you need to go back to the login page";
+                    return RedirectToAction("ForgotPassword");
                 }
                 else
                 {
@@ -331,7 +338,6 @@ namespace ProjectSemester3.Controllers
             return View("SignUp");
         }
         [Route("sign-up")]
-        [HttpPost]
         public IActionResult SignUp(AccountObject _accountObj)
         {
 
@@ -359,19 +365,23 @@ namespace ProjectSemester3.Controllers
                         //gui mail xac nhan dang ki thanh cong
                         db.SaveChanges();                        
                     }
-                    return RedirectToAction("Login");
+                    return Json(new
+                    {
+                        success = true,
+                        Error = "Signup successfully.Now you need to go back to the login page",
+                        result = "Redirect",
+                        url = Url.Action("Logout", "Login")
+                    });
                 }
                 else
                 {
-                    ViewBag.signUpFailed = "Some of your information already exists. Please double-check before you sign up";
-                    return View("SignUp");
+                    return Json(new { success = false, Error = "Some of your information already exists. Please double-check before you sign up" });
                 }
             }
             catch (Exception e)
             {
-                ViewBag.signUpFailed = "Invalid";
-                Debug.WriteLine("Signup failed: " + e.Message);
-                return View("SignUp");
+                Debug.WriteLine("Signup Failed: " + e.InnerException.Message);
+                return Json(new { success = false, Error = "Something went wrong. Please try again" });
             }
         }
     }

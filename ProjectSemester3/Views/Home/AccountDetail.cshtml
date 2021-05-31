@@ -50,15 +50,11 @@
                                 </tr>
                                 <tr>
                                     <td>Account open date</td>
-                                    <td class="text-right">@b.CreatedDate</td>
+                                    <td class="text-right">@b.CreatedDate.ToString("dd/MM/yyyy")</td>
                                 </tr>
                                 <tr>
                                     <td>Account expired date</td>
-                                    <td class="text-right">@b.ExpiredDate</td>
-                                </tr>
-                                <tr>
-                                    <td>Lasted transaction date</td>
-                                    <td class="text-right">1/5/2021</td>
+                                    <td class="text-right">@b.ExpiredDate.ToString("dd/MM/yyyy")</td>
                                 </tr>
                             </tbody>
                         </table>
