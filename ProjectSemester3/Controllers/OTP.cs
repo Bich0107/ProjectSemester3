@@ -31,8 +31,8 @@ namespace ProjectSemester3.Controllers
             return View("Index",generator.GenerateNumericString(length));
         }*/
 
-            return Ok(generator.GenerateNumericString(length));
-        }
+        //    return Ok(generator.GenerateNumericString(length));
+        //}
 
         [HttpPost]
         [Route("guid")]

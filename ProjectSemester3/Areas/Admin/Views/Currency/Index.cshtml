@@ -8,11 +8,21 @@
     // setting up data
     $(document).ready(function () {
         $(document).on({
+            ajaxStart: function () {
+                $("#loadingOverlay.overlay").addClass("overlay");
+                $("#loadingOverlay").removeClass("d-none");
+            },
             ajaxStop: function () {
                 $("#loadingOverlay.overlay").removeClass("overlay");
                 $("#loadingOverlay").addClass("d-none");
             }
         });
+
+        // update all currency
+        $.ajax({
+            type: 'POST',
+            url: 'updateAll'
+        })
 
         LoadData();
 
@@ -82,7 +92,6 @@
         var id = $("#E-Id").val();
         var fullname = $("#E-Fullname").val();
         var name = $("#E-Name").val();
-        var exchangeRate = $("#E-ExchangeRate").val();
 
         var object = {
             "Id": id,
@@ -114,7 +123,6 @@
         var object = {
             "Name": name,
             "Fullname": fullname,
-            "ExchangeRate": exchangeRate,
         }
 
         $.post("add", object, function (data) {
@@ -138,7 +146,7 @@
     <br />
     <div class="row">
         <div class="col-12">
-            <div class="card card-primary">
+            <div class="card card-outline card-primary">
                 <div class="card-header">
                     <h3 class="card-title">@ViewBag.tagName</h3>
                     <div class="card-tools">
@@ -184,7 +192,7 @@
                     </table>
                 </div>
                 <!-- Loading -->
-                <div id="loadingOverlay" class="overlay d-none">
+                <div id="loadingOverlay" class="overlay">
                     <i class="fas fa-3x fa-sync-alt fa-spin"></i>
                 </div>
                 <!-- end loading -->
@@ -206,7 +214,7 @@
                         <div class="form-group row">
                             <label for="E-Name" class="col-sm-2 col-form-label">Name</label>
                             <div class="col-sm-10">
-                                <input class="form-control name" name="name" type="text" id="E-Name" />
+                                <input class="form-control ignore" name="name" type="text" id="E-Name" readonly/>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -218,7 +226,7 @@
                         <div class="form-group row">
                             <label for="E-ExchangeRate" class="col-sm-2 col-form-label">Exchange Rate</label>
                             <div class="col-sm-10">
-                                <input class="form-control exchangeRate" name="exchangeRate" type="number" step="0.01" id="E-ExchangeRate" />
+                                <input class="form-control ignore" name="exchangeRate" type="number" id="E-ExchangeRate" readonly />
                             </div>
                         </div>
                     </div>

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->
     <link rel="stylesheet" href="~/plugins/summernote/summernote-bs4.min.css">
-    <!-- toasts -->
+    <!-- toastr -->
     <link rel="stylesheet" href="~/plugins/toastr/toastr.min.css" />
 
     <!-- jQuery 3.5.1 -->
@@ -118,14 +118,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="help" asp-area="admin" asp-controller="help" asp-action="index">
-                                <i class="fas fa-headset nav-icon"></i>
-                                <p>
-                                    Help info
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" id="faq" asp-area="admin" asp-controller="faq" asp-action="index">
                                 <i class="fas fa-info nav-icon"></i>
                                 <p>
@@ -160,6 +152,14 @@
                                     <a class="nav-link" id="staff" asp-area="superadmin" asp-controller="staff" asp-action="index">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Staff</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="help" asp-area="superadmin" asp-controller="help" asp-action="index">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            Help info
+                                        </p>
                                     </a>
                                 </li>
                             </ul>

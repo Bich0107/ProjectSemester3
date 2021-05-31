@@ -229,13 +229,19 @@ namespace ProjectSemester3.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Password)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Subject)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Problem>(entity =>
             {
                 entity.ToTable("Problem");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Answer)
                     .HasMaxLength(250)
@@ -243,12 +249,22 @@ namespace ProjectSemester3.Models
 
                 entity.Property(e => e.AnswerDate).HasColumnType("datetime");
 
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Question)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ReceivedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Sender)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Answerer)
                     .WithMany(p => p.Problems)
