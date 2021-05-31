@@ -343,6 +343,8 @@ namespace ProjectSemester3.Models
             {
                 entity.ToTable("Transaction");
 
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
                 entity.Property(e => e.Amount).HasColumnType("money");
 
                 entity.Property(e => e.BalanceFrom).HasColumnType("money");

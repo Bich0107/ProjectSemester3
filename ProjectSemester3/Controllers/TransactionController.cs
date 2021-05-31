@@ -64,15 +64,16 @@ namespace ProjectSemester3.Controllers
             var bankAccountFrom = db.BankAccounts.FirstOrDefault(b => b.Id == transaction.BankAccountIdFrom);
             var accountTo = db.AccountObjects.FirstOrDefault(a => a.Id == bankAccountTo.UserAccountId);
             var accounForm = db.Helps.Find(1);
-            var nameFrom = "Admin";
+            var nameFrom = db.Settings.Find(1).Title;
             var mailFrom = accounForm.Email;
-            var password = "0347557353";
+            var password = accounForm.Password;
+            var subject = accounForm.Subject;
             var nameTo = accountTo.Name;
             var mailTo = accountTo.Email;
             var otp = new Generator();
             var otpSend = otp.GenerateNumericString(6);
             var mail = new MailHelper();
-            if (mail.Send(nameFrom, mailFrom, password, nameTo, mailTo, "OTP for bankinng Online", "Your OTP " + otpSend))
+            if (mail.Send(nameFrom, mailFrom, password, nameTo, mailTo, subject, "Your OTP " + otpSend))
             {
                 var bankOtp = new BankOtp();
                 bankOtp.Otp = otpSend;
