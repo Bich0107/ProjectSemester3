@@ -62,7 +62,7 @@ namespace ProjectSemester3.Controllers
            
             var bankAccountTo = db.BankAccounts.FirstOrDefault(b => b.Id == transaction.BankAccountIdTo);
             var bankAccountFrom = db.BankAccounts.FirstOrDefault(b => b.Id == transaction.BankAccountIdFrom);
-            var accountTo = db.AccountObjects.FirstOrDefault(a => a.Id == bankAccountTo.UserAccountId);
+            var accountTo = db.AccountObjects.FirstOrDefault(a => a.Id == bankAccountFrom.UserAccountId);
             var accounForm = db.Helps.Find(1);
             var nameFrom = db.Settings.Find(1).Title;
             var mailFrom = accounForm.Email;
@@ -70,6 +70,7 @@ namespace ProjectSemester3.Controllers
             var subject = accounForm.Subject;
             var nameTo = accountTo.Name;
             var mailTo = accountTo.Email;
+            Debug.WriteLine("Mail to: " + mailTo);
             var otp = new Generator();
             var otpSend = otp.GenerateNumericString(6);
             var mail = new MailHelper();
