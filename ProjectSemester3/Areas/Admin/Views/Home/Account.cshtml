@@ -16,16 +16,55 @@
 
         LoadData();
 
-        $('#updateForm').validate({
-            submitHandler: function (form) {
-                ChangeInfo();
-            }
-        });
-
         $('#changePasswordForm').validate({
             submitHandler: function (form) {
                 ChangePassword();
             }
+        });
+
+        $("#isAuthentication").change(function () {
+            if (this.checked) {
+                $.get("authenticate", function (result) {
+                    $("#img").attr("src", result.barcodeImageUrl);
+                    $("#key").val(result.setupCode);
+                    $("#authenticationModal").modal("toggle");
+                });
+            } else {
+                $("#authenticationModal2").modal("toggle");
+            }
+        });
+
+        // turn on authenticate form
+        $("#authenticateForm").submit(function (event) {
+            var code = $("#code").val();
+            $.post("confirmAuthenticate/" + code, function (result) {
+                if (result) {
+                    CreateToastSuccess();
+                } else if (result == false) {
+                    CreateToastFailed("Invalid code");
+                } else {
+                    CreateToastFailed(result);
+                }
+                $("#authenticationModal").modal("toggle");
+            })
+            event.preventDefault();
+        });
+
+        // turn off authenticate form
+        $("#authenticateForm2").submit(function (event) {
+            var code = $("#code2").val();
+
+            $.post("confirmAuthenticate/" + code, function (result) {
+                if (result) {
+                    CreateToastSuccess();
+                } else if (result == false) {
+                    CreateToastFailed("Invalid code");
+                } else {
+                    CreateToastFailed(result);
+                }
+                $("#authenticationModal2").modal("toggle");
+            })
+            event.preventDefault();
         });
     });
 
@@ -42,7 +81,7 @@
             }
         })
 
-        ResetUpdateForm();
+        $('#updateForm').validate().resetForm();
     }
 
     // reset password form
@@ -58,8 +97,8 @@
         $('#changePasswordForm .form-control').removeClass('is-invalid');
     }
 
-    // post: update user's username and whether to enable 2FA Auth -- unfinished
-    function ChangeInfo() {
+    // post: update user's username and whether to enable 2FA Auth
+    function SaveTarget() {
         var username = $("#username").val();
         var authenticated = false;
         if ($('#isAuthentication').is(":checked")) {
@@ -80,9 +119,10 @@
                     body: 'Change username successfully. Now you need to login again.'
                 })
 
+                // logout / return to login page
                 setTimeout(function () {
-                    // return to login base here (trigger logout)
-                    alert("Logout");
+                    var href = $('#logoutLink').attr('href');
+                    window.location.href = href;
                 }, 2000);
 
             } else {
@@ -105,11 +145,11 @@
 
         $.post("changePassword", object, function (data) {
             if (data) {
-                alert("Success!");
+                CreateToastSuccess();
             } else {
-                alert("Failed. Error: " + data);
+                CreateToastFailed(data);
             }
-            LoadData();
+            ResetPasswordForm();
         });
     }
 </script>
@@ -137,8 +177,8 @@
                                 </div>
                                 <div class="form-group mb-0">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="form-check-input" id="isAuthentication">
-                                        <label class="form-check-label ignore" for="isAuthentication">Is authenticated</label>
+                                        <input type="checkbox" class="form-check-input ignore" id="isAuthentication">
+                                        <label class="form-check-label" for="isAuthentication">Is authenticated</label>
                                     </div>
                                 </div>
                             </div>
@@ -190,3 +230,76 @@
     </div>
 </div>
 
+<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Authenticate</h4>
+            </div>
+            <div class="modal-body">
+                <form id="authenticateForm">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-sm-12 text-center">
+                                <img id="img" alt="QR code" class="img-thumbnail" width="300" height="300" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <input class="form-control" type="text" id="key" readonly />
+                                <p>
+                                    Guide: To active the service's 2FA code, you need to install the Google
+                                    Authenticator app in your phone, then you need to scan this image into
+                                    the app or enter the code into the app. Then you can make a new account in the app to receive codes for future actions.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Enter 2FA code</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="code" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="submit" class="btn btn-info float-lg-right" value="Save" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="authenticationModal2" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Authenticate</h4>
+            </div>
+            <div class="modal-body">
+                <form id="authenticateForm2">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <p>
+                                    Guide: Use the code in the Google Authenticator app's account you have created when turn on authentication.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Enter 2FA code</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="code2" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="submit" class="btn btn-info float-lg-right" value="Save" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a id="logoutLink" asp-controller="login" asp-action="logout" class="d-none"></a>

@@ -21,10 +21,11 @@
         // update all currency
         $.ajax({
             type: 'POST',
-            url: 'updateAll'
+            url: 'updateAll',
+            success: function () {
+                LoadData();
+            }
         })
-
-        LoadData();
 
         $("#searchBox").on("keyup", function () {
             var value = $(this).val();

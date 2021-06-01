@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GoogleAuthenticatorService.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectSemester3.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ProjectSemester3.Areas.Admin.Controllers
@@ -11,6 +13,9 @@ namespace ProjectSemester3.Areas.Admin.Controllers
     [Route("admin/home")]
     public class HomeController : Controller
     {
+        //*************Key*********
+        const string key = "test123!@@)(*";
+
         private DatabaseContext db;
 
         public HomeController(DatabaseContext _db)
@@ -104,9 +109,9 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 return BadRequest(e.Message);
             }
         }
-    
+
         [HttpPost]
-        [Route("changePassword")] 
+        [Route("changePassword")]
         public IActionResult EditPassword(AccountObject _accountObj)
         {
             try
@@ -120,6 +125,65 @@ namespace ProjectSemester3.Areas.Admin.Controllers
                 db.SaveChanges();
 
                 return Ok(true);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        //*************Create account, QR code and Key**********
+        [HttpGet]
+        [Route("authenticate")]
+        public IActionResult Authentication()
+        {
+            var username = HttpContext.Session.GetString("username");
+
+            // for testing only
+            username = string.IsNullOrEmpty(username) ? "superAdmin" : username;
+
+            if (username != null)
+            {
+                //using GoogleAuthenticatorService.Core; 
+                TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+
+                var UserUniqueKey = (Convert.ToString(username) + key);
+
+                HttpContext.Session.SetString("UserUniqueKey", UserUniqueKey);
+
+                var setupInfo = tfa.GenerateSetupCode("Banking Online", username, UserUniqueKey, 100, 100);
+
+                //QR code Image
+                var barcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
+                //Manual Key
+                var setupCode = setupInfo.ManualEntryKey;
+
+                return new JsonResult(new { barcodeImageUrl, setupCode });
+            }
+            else
+            {
+                return Ok(false);
+            }
+        }
+
+        //**************check authenticate code**************
+        [Route("confirmAuthenticate/{passcode}")]
+        public IActionResult ProcessAuthentication(string passcode)
+        {
+            try
+            {
+                var token = passcode;
+                var username = (HttpContext.Session.GetString("username"));
+
+                // for testing only
+                username = string.IsNullOrEmpty(username) ? "superAdmin" : username;
+
+                TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+
+                string UserUniqueKey = (Convert.ToString(username) + key);
+
+                bool isValid = tfa.ValidateTwoFactorPIN(UserUniqueKey, token);
+                return Ok(isValid);
             }
             catch (Exception e)
             {
