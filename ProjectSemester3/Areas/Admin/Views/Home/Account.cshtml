@@ -16,21 +16,18 @@
 
         LoadData();
 
+        // set start change event
+        SetCheckBoxChangeEvent();
+
+        // reset change event
+        $('#authenticationModal, #authenticationModal2').on('hidden.bs.modal', function (e) {
+            SetCheckBoxChangeEvent();
+        })
+
+        // set up password validation
         $('#changePasswordForm').validate({
             submitHandler: function (form) {
                 ChangePassword();
-            }
-        });
-
-        $("#isAuthentication").change(function () {
-            if (this.checked) {
-                $.get("authenticate", function (result) {
-                    $("#img").attr("src", result.barcodeImageUrl);
-                    $("#key").val(result.setupCode);
-                    $("#authenticationModal").modal("toggle");
-                });
-            } else {
-                $("#authenticationModal2").modal("toggle");
             }
         });
 
@@ -40,10 +37,13 @@
             $.post("confirmAuthenticate/" + code, function (result) {
                 if (result) {
                     CreateToastSuccess();
+                    $("#isAuthentication").prop('checked', true);
                 } else if (result == false) {
                     CreateToastFailed("Invalid code");
+                    $("#isAuthentication").prop('checked', false);
                 } else {
                     CreateToastFailed(result);
+                    $("#isAuthentication").prop('checked', false);
                 }
                 $("#authenticationModal").modal("toggle");
             })
@@ -57,16 +57,43 @@
             $.post("confirmAuthenticate/" + code, function (result) {
                 if (result) {
                     CreateToastSuccess();
+                    $("#isAuthentication").prop('checked', false);
                 } else if (result == false) {
                     CreateToastFailed("Invalid code");
+                    $("#isAuthentication").prop('checked', true);
                 } else {
                     CreateToastFailed(result);
+                    $("#isAuthentication").prop('checked', true);
                 }
                 $("#authenticationModal2").modal("toggle");
             })
             event.preventDefault();
         });
     });
+
+    // set change event for checkbox
+    function SetCheckBoxChangeEvent() {
+        $("#isAuthentication").one("change", function () {
+            // turn on
+            if (this.checked) {
+                $("#isAuthentication").prop('checked', false);
+
+                $.get("authenticate", function (result) {
+                    $("#img").attr("src", result.barcodeImageUrl);
+                    $("#key").val(result.setupCode);
+                    $("#code").val("");
+
+                    $("#authenticationModal").modal("toggle");
+                });
+                // turn off
+            } else {
+                $("#isAuthentication").prop('checked', true);
+
+                $("#code2").val("");
+                $("#authenticationModal2").modal("toggle");
+            }
+        });
+    }
 
     // get and show data
     function LoadData() {
