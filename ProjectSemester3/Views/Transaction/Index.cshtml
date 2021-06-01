@@ -64,7 +64,7 @@
                                                     <tr>
                                                         <td>transfer amount</td>
                                                         <td class="text-right ">
-                                                            <input asp-for="Amount" class="form-check-input" type="text" id="amount" pattern="[0-9]{0,10}" maxlength="10">
+                                                            <input asp-for="Amount" class="form-check-input" type="number" id="amount" value="0" step="0.01" oninput="this.value = Math.abs(this.value)">
                                                         </td>
                                                     </tr>
                                                     <tr>

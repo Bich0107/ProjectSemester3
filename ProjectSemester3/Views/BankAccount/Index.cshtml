@@ -77,7 +77,6 @@
             </div>
             <div class="button-group mb-3 ml-3 ">
                 <input class="btn btn-primary " type="submit" value="Search" data-toggle="modal" data-target="#updateModal" onclick="listTransaction()" />
-                <input class="btn btn-primary " type="submit" value="Download">
             </div>
         </div>
     </div>
@@ -94,11 +93,11 @@
                         <table class="mb-3 ml-3 ">
                             <tr class="">
                                 <td>Date from </td>
-                                <td><input class="form-control" type="date" placeholder="01/01/2021" name="datetime " id=""></td>
+                                <td><input class="form-control" type="date" placeholder="01/01/2021" name="dateFrom" id="From"></td>
                             </tr>
                             <tr>
                                 <td>Date to</td>
-                                <td><input class="form-control" type="date" value="1/1/2021" name="datetime " id=""></td>
+                                <td><input class="form-control" type="date" value="1/1/2021" name="dateTo" id="To"></td>
                             </tr>
                         </table>
                     </div>
@@ -106,25 +105,25 @@
                         <table class="mb-3 ">
                             <tr>
                                 <td>Amount from</td>
-                                <td><input class="form-control mb-2" type="text" name=" " id=" "></td>
+                                <td><input class="form-control mb-2" type="number" name="min" id="Min" step="0.01" oninput="this.value = Math.abs(this.value)"></td>
                             </tr>
                             <tr>
                                 <td>Amount to</td>
-                                <td><input class="form-control" type="text" name=" " id=" "></td>
+                                <td><input class="form-control" type="number" name="max" id="Max" step="0.01" oninput="this.value = Math.abs(this.value)"></td>
                             </tr>
                         </table>
                     </div>
                 </div>
             </div>
             <div class="button-group mb-3 ml-3 ">
-                <input class="btn btn-primary " type="submit"  value="Search" data-toggle="modal" data-target="#updateModal" onclick="listTransactionByDate()">
-                <input class="btn btn-primary " type="submit" value="Download">
+                <input class="btn btn-primary " type="submit" value="Search" data-toggle="modal" data-target="#updateModal2" onclick="listTransactionByDate()">
             </div>
         </div>
     </div>
 </div>
 <!--modal update-->
 @await Html.PartialAsync($"~/Views/bankAccount/Detail.cshtml")
+@await Html.PartialAsync($"~/Views/bankAccount/Detail2.cshtml")
 @section ScriptsBlock
 {
     <script src="~/assets/js/script.bank-account.js" asp-append-version="true"></script>

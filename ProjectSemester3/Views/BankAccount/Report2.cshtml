@@ -1,0 +1,74 @@
+﻿
+<head>
+    <title>Banking</title>
+
+
+    <link rel="stylesheet" href=https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css> <!-- Bootstrap-Core-CSS -->
+    <link rel="stylesheet" href=https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js /> <!-- Style-CSS -->
+    <link rel="stylesheet" href=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js> <!-- Font-Awesome-Icons-CSS -->
+
+</head>
+
+<body>
+    <div class="offset-xl-2 col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12 padding">
+        <div class="card">
+
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-sm-6">
+
+                        <h3 class="text-dark mb-1">Transaction history</h3>
+                        <div>account number: @ViewBag.bankCode</div>
+                        <div>account name: @ViewBag.name</div>
+                        <div>current balance: @ViewBag.balance @ViewBag.currency</div>
+
+                    </div>
+
+                </div>
+                <div class="table-responsive-sm">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="center">Date</th>
+                                <th class="left">Description</th>
+                                <th>Debit/Credit</th>
+                                <th class="right">balance</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.models != null)
+                            {
+                                @foreach (var m in ViewBag.models)
+                                {
+                                    <tr>
+                                        <td>@m.Time</td>
+                                        <td class="w-100 important">@m.Content</td>
+                                        <td>@m.Amount @ViewBag.currency</td>
+                                        <td>@m.BalanceFrom @ViewBag.currency</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-sm-5">
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    @{Html.BeginForm("ExportToPDF", "Save", FormMethod.Post);
+                        {
+                            <div>
+                                <input type="submit" value="Convert PDF" style="width:150px;height:27px" />
+                            </div>
+                        }
+                        Html.EndForm();
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>

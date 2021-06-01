@@ -57,23 +57,40 @@ function validateForm() {
     var balance = document.getElementById("balance").value;
     var amount = document.getElementById("amount").value;
     var valid = document.getElementById("account-failed").innerHTML;
-    var balance = 0;
+    //var balance = 0;
     if (account == "") {
-        alert("Please choose a account to valid")
+        Swal.fire(
+            'Invalid',
+            'Please choose an account valid',
+            'info'
+        );
         return false;
     }
     if (account != "" && valid != "") {
-        alert("Account invalid")
+        Swal.fire(
+            'Invalid',
+            'Please choose an account valid',
+            'info'
+        );
         return false
     }
     if (parseFloat(amount) > parseFloat(balance) || parseFloat(balance) == 0) {
-        alert(parseFloat(balance))
+        Swal.fire(
+            'Invalid',
+            'Your account balance is not enough to make a transaction',
+            'info'
+        );
         return false
     }
-    if (parseFloat(amount) == 0) {
-        alert("Please choose amount")
+    if (parseFloat(amount) <= 0) {
+        Swal.fire(
+            'Invalid',
+            'Please select the money you want to transfer',
+            'info'
+        );
         return false
     }
-    alert("Good chop bro")
+    
+    
     return true;
 }

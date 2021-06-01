@@ -42,6 +42,7 @@ namespace ProjectSemester3.Controllers
             if(LoginAccount != null)
             {
                 HttpContext.Session.SetString("username", LoginAccount.Username);
+                HttpContext.Session.SetString("name", LoginAccount.Name);
                 HttpContext.Session.SetInt32("position", LoginAccount.PositionId);
                 if (CheckLocked(LoginAccount))
                 {

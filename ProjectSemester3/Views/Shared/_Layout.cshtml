@@ -120,9 +120,9 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="index.html">
+                        @*<a href="index.html">
                             <img class="img-fluid" src="~/assets/images/logo.png" alt="Theme-Logo" />
-                        </a>
+                        </a>*@
                         <a class="mobile-options waves-effect waves-light">
                             <i class="ti-more"></i>
                         </a>
@@ -140,7 +140,7 @@
                             </li>
                         </ul>
                         <ul class="nav-right">
-                            <li class="header-notification">
+                            @*<li class="header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <i class="ti-bell"></i>
                                     <span class="badge bg-c-red"></span>
@@ -181,7 +181,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                            </li>
+                            </li>*@
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="~/assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
@@ -236,7 +236,7 @@
                             </div>
                             <div class="pcoded-navigation-label" data-i18n="nav.category.navigation">&nbsp;</div>
                             <ul class="pcoded-item pcoded-left-item">
-                                <li class="active">
+                                <li id="home">
                                     <a asp-controller="home" asp-action="index" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
                                         <span class="pcoded-mtext" data-i18n="nav.dash.main">Home</span>
@@ -246,14 +246,14 @@
                             </ul>
                             <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Access &amp; Deal</div>
                             <ul class="pcoded-item pcoded-left-item">
-                                <li class="">
+                                <li id="bankaccount">
                                     <a asp-controller="bankaccount" asp-action="index" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-accordion-separated"></i><b>D</b></span>
                                         <span class="pcoded-mtext" data-i18n="nav.dash.main">Account</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>
-                                <li class="">
+                                <li id="transaction">
                                     <a asp-controller="transaction" asp-action="index" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-accordion-separated"></i><b>D</b></span>
                                         <span class="pcoded-mtext" data-i18n="nav.dash.main">Transaction</span>
@@ -263,14 +263,14 @@
                             </ul>
                             <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Help</div>
                             <ul class="pcoded-item pcoded-left-item">
-                                <li class="">
+                                <li id="contact">
                                     <a asp-controller="contact" asp-action="index" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-accordion-separated"></i><b>D</b></span>
                                         <span class="pcoded-mtext" data-i18n="nav.dash.main">Contact</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>
-                                <li class="">
+                                <li id="usermanual">
                                     <a asp-controller="usermanual" asp-action="index" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-accordion-separated"></i><b>D</b></span>
                                         <span class="pcoded-mtext" data-i18n="nav.dash.main">User manual</span>
@@ -464,6 +464,14 @@
     <!-- SweetAlert2 -->
     <script type="text/javascript" src="~/plugins/sweetalert2/sweetalert2.all.min.js"></script>
     @RenderSection("ScriptsBlock", false)
+<script>
+        $(document).ready(function () {
+            // set active tag
+            $("#@ViewData["controller"]").addClass("active");
+            @*$("#@ViewBag.activeParentTag").addClass("active");
+            $("#@ViewBag.activeParentTag" + "List").addClass("menu-open");*@
+        })
+</script>
 
 </body>
 

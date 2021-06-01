@@ -1,0 +1,31 @@
+﻿<!--Modal for update-->
+<div class="modal fade" id="Statement" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <form method="post" asp-controller="transaction" asp-action="statement">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Transacton list</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive ">
+                        <table id="list-bank-account" class="table table-hover" style="width:100%">
+                            <thead class="text-left">
+                                <tr>
+                                    <td>Date</td>
+                                    <td class="w-100 important">Description</td>
+                                    <td>Debit/Credit</td>
+                                    <td>Balance</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-primary" value="Export to PDF" />
+            </div>
+        </form>
+    </div>
+</div>

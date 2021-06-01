@@ -20,13 +20,10 @@ function bankAccountChange() {
             result += '<td class="text-right">' + model.currency.name + '</td>';
             result += '</tr>';
             result += '<td>Account open date</td>';
-            result += '<td class="text-right">' + model.createdDate + '</td>';
+            result += '<td class="text-right">' + GetDate(model.createdDate) + '</td>';
             result += '</tr>';
             result += '<td>Account expired date</td>';
-            result += '<td class="text-right">' + model.expiredDate + '</td>';
-            result += '</tr>';
-            result += '<td>Lasted transaction date</td>';
-            result += '<td class="text-right">' + '11/5/2021' + '</td>';
+            result += '<td class="text-right">' + GetDate(model.expiredDate) + '</td>';
             result += '</tr>';
             console.log(result);
             $('#bank-account-detail tbody').html(result);

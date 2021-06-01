@@ -8,6 +8,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Syncfusion.HtmlConverter;
+using System.IO;
+using Syncfusion.Pdf;
 
 namespace ProjectSemester3.Controllers
 {
@@ -15,10 +19,11 @@ namespace ProjectSemester3.Controllers
     public class TransactionController : Controller
     {
         private DatabaseContext db;
-
-        public TransactionController(DatabaseContext _db)
+        private readonly IHostEnvironment hostingEnvironment;
+        public TransactionController(DatabaseContext _db, IHostEnvironment _hostingEnvironment)
         {
             db = _db;
+            hostingEnvironment = _hostingEnvironment;
         }
         [Route("index")]
         [Route("")]
@@ -74,7 +79,7 @@ namespace ProjectSemester3.Controllers
             var otp = new Generator();
             var otpSend = otp.GenerateNumericString(6);
             var mail = new MailHelper();
-            if (mail.Send(nameFrom, mailFrom, password, nameTo, mailTo, subject, "Your OTP " + otpSend))
+            if (mail.Send(nameFrom, "tinhoang7901@gmail.com", "0347557353", nameTo, mailTo, subject, "Your OTP " + otpSend))
             {
                 var bankOtp = new BankOtp();
                 bankOtp.Otp = otpSend;
@@ -109,6 +114,11 @@ namespace ProjectSemester3.Controllers
                 else
                 {
                     var bankOtp = db.BankOtps.FirstOrDefault(b => b.Otp.Equals(otpCode));
+                    if(bankOtp == null)
+                    {
+                        ViewBag.otpFailed = "OTP Code Wrong";
+                        return View("Step3");
+                    }
                     var diff = timeOtp.Subtract(bankOtp.Date).TotalSeconds;
                     Debug.WriteLine("TotalSeconds: " + diff);
                     if (bankOtp != null && bankOtp.Status == false && diff <= 30)
@@ -159,6 +169,82 @@ namespace ProjectSemester3.Controllers
             ViewBag.bankFrom = db.BankAccounts.Find(transaction.BankAccountIdFrom);
             ViewBag.bankTo = db.BankAccounts.Find(transaction.BankAccountIdTo);
             return View("Success",transaction);
+        }
+        [Route("export-to-pdf")]
+        public IActionResult ExportToPDF()
+        {
+            var id = Request.Form["id"];
+            var value = Request.Form["value"];
+            Debug.WriteLine("export id: " + id + value);
+            //Initialize HTML to PDF converter with Blink rendering engine 
+            HtmlToPdfConverter htmlConverter = new HtmlToPdfConverter(HtmlRenderingEngine.Blink);
+            BlinkConverterSettings settings = new BlinkConverterSettings();
+            //Set the BlinkBinaries folder path 
+            settings.BlinkPath = Path.Combine(hostingEnvironment.ContentRootPath, "BlinkBinariesWindows");
+            //Assign Blink settings to HTML converter
+            htmlConverter.ConverterSettings = settings;
+            //Convert URL to PDF
+            PdfDocument document = htmlConverter.Convert("http://localhost:22418/bank-account/reports/" + id + "/" + value);
+            MemoryStream stream = new MemoryStream();
+            document.Save(stream);
+            return File(stream.ToArray(), System.Net.Mime.MediaTypeNames.Application.Pdf, "ListReport.pdf");
+        }
+        [Route("export-to-pdf-by-date")]
+        public IActionResult ExportToPDFByDate()
+        {
+            var id = Request.Form["id"];
+            var from = Request.Form["from"];
+            var to = Request.Form["to"];
+            var min = Request.Form["min"];
+            var max = Request.Form["max"];
+            
+            //Initialize HTML to PDF converter with Blink rendering engine 
+            HtmlToPdfConverter htmlConverter = new HtmlToPdfConverter(HtmlRenderingEngine.Blink);
+            BlinkConverterSettings settings = new BlinkConverterSettings();
+            //Set the BlinkBinaries folder path 
+            settings.BlinkPath = Path.Combine(hostingEnvironment.ContentRootPath, "BlinkBinariesWindows");
+            //Assign Blink settings to HTML converter
+            htmlConverter.ConverterSettings = settings;
+            //Convert URL to PDF
+            PdfDocument document = htmlConverter.Convert("http://localhost:22418/bank-account/report2s/" + id + "/" + from + "/" + to + "/" + min + "/" + max);
+            MemoryStream stream = new MemoryStream();
+            document.Save(stream);
+            return File(stream.ToArray(), System.Net.Mime.MediaTypeNames.Application.Pdf, "ListReport.pdf");
+        }
+
+        [Route("statement")]
+        public IActionResult Statement()
+        {
+            var id = Request.Form["id"];
+
+            //Initialize HTML to PDF converter with Blink rendering engine 
+            HtmlToPdfConverter htmlConverter = new HtmlToPdfConverter(HtmlRenderingEngine.Blink);
+            BlinkConverterSettings settings = new BlinkConverterSettings();
+            //Set the BlinkBinaries folder path 
+            settings.BlinkPath = Path.Combine(hostingEnvironment.ContentRootPath, "BlinkBinariesWindows");
+            //Assign Blink settings to HTML converter
+            htmlConverter.ConverterSettings = settings;
+            //Convert URL to PDF
+            PdfDocument document = htmlConverter.Convert("http://localhost:22418/home/reports/" + id);
+            MemoryStream stream = new MemoryStream();
+            document.Save(stream);
+            return File(stream.ToArray(), System.Net.Mime.MediaTypeNames.Application.Pdf, "ListReport.pdf");
+        }
+
+        public IActionResult ExportToPDFFile()
+        {
+            //Initialize HTML to PDF converter with Blink rendering engine 
+            HtmlToPdfConverter htmlConverter = new HtmlToPdfConverter(HtmlRenderingEngine.Blink);
+            BlinkConverterSettings settings = new BlinkConverterSettings();
+            //Set the BlinkBinaries folder path 
+            settings.BlinkPath = Path.Combine(hostingEnvironment.ContentRootPath, "BlinkBinariesWindows");
+            //Assign Blink settings to HTML converter
+            htmlConverter.ConverterSettings = settings;
+            //Convert URL to PDF
+            PdfDocument document = htmlConverter.Convert("http://localhost:22418/reports");
+            MemoryStream stream = new MemoryStream();
+            document.Save(stream);
+            return File(stream.ToArray(), System.Net.Mime.MediaTypeNames.Application.Pdf, "Report.pdf");
         }
     }
 }

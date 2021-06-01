@@ -12,33 +12,32 @@
             <div class="card-header">
                 <h2>CONTACT US</h2>
                 <!--<span>Add class of <code>.form-control</code> with <code>&lt;input&gt;</code> tag</span>-->
-                <div class="card-header-right">
-                    Tel: 123456789|123456789 / mail: <a href="mailto: tinhoang7901@gmail.com">tinhoang7901@gmail.com</a>
-                </div>
+
             </div>
             <div class="card-block row">
-                <div class="col-md-4">
+                <div class="col-md-5 mb-2">
                     <form class="form-material">
                         <br />
-                        <span class="primary text-black text-sm">
-                            If you have any questions or queries a member of staff always be happy to help. 
+                        <span class="primary text-black text-sm" style="font-size:14px;">
+                            If you have any questions or queries a member of staff always be happy to help.
                             Feel free to contact us by telephone or email and we will be sure to get back to you as soon as possible
-                        </span>                        
+                        </span>
+                        <br />
                     </form>
                 </div>
-                <div class="col-md-8">
-                    <form class="form-material">                        
+                <div class="col-md-7 mt-2">
+                    <form class="form-material">
                         <div class="form-group form-primary">
-                            <input type="text" name="footer-email" class="form-control" required="">
+                            <input type="text"  class="form-control" id="Subject" />
                             <span class="form-bar"></span>
                             <label class="float-label">Subject</label>
                         </div>
                         <div class="form-group form-primary">
-                            <textarea class="form-control" required=""></textarea>
+                            <textarea class="form-control" required="" id="Question"></textarea>
                             <span class="form-bar"></span>
                             <label class="float-label">Description</label>
                         </div>
-                        <div class="text-center"><input type="submit" name="send" class="btn btn-primary action-button" value="Send" /></div>
+                        <div class="text-center"><input type="submit"  class="btn btn-primary " value="Send" onclick="Save()" /></div>
                     </form>
                 </div>
             </div>
@@ -46,3 +45,7 @@
     </div>
 
 </div>
+@section ScriptsBlock
+{
+    <script src="~/assets/js/script.contact.js"></script>
+}

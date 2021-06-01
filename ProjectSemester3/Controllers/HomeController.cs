@@ -114,7 +114,72 @@ namespace ProjectSemester3.Controllers
                 return RedirectToAction("Login", "Login");
             }
 
-        }        
+        }
+
+        [Route("statement/{id}")]
+        [HttpGet]
+        public IActionResult Statement(Guid id)
+        {
+
+            try
+            {
+                var model = db.Transactions.Where(t => t.BankAccountIdFrom == id || t.BankAccountIdTo == id && t.Time >= t.Time.AddDays(-10)).ToList();
+                var models = new List<Transaction>();
+                if (model != null)
+                {
+                    foreach (var m in model)
+                    {
+                        if (m.BankAccountIdFrom == id)
+                        {
+                            m.Amount = -m.Amount;
+                        }
+                        models.Add(m);
+                    }
+                }
+                model = models;
+                return new JsonResult(model);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("failed:::::::::::: "  + e.InnerException.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
+
+        [Route("reports/{id}")]
+        public IActionResult Report(Guid id)
+        {
+            try
+            {
+                var model = db.Transactions.Where(t => t.BankAccountIdFrom == id || t.BankAccountIdTo == id && t.Time >= t.Time.AddDays(-10)).ToList();
+                var models = new List<Transaction>();
+                if (model != null)
+                {
+                    foreach (var m in model)
+                    {
+                        if (m.BankAccountIdFrom == id)
+                        {
+                            m.Amount = -m.Amount;
+                        }
+                        models.Add(m);
+                    }
+                }
+                var bankAccount = db.BankAccounts.Find(id);
+                ViewBag.bankCode = bankAccount.BankCode;
+                ViewBag.name = bankAccount.UserAccount.Name;
+                ViewBag.balance = bankAccount.Balance;
+                ViewBag.currency = bankAccount.Currency.Name;
+
+
+                ViewBag.models = models;
+                return View("Report");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
     }
 }

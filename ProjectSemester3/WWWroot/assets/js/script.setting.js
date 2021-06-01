@@ -68,7 +68,8 @@ function ChangeAuthenticator() {
             Swal.fire(
                 'Successfully',
                 data.error,
-                'success'
+                'success',
+                '70000'
             );
             $('#updateAuthentication').modal('toggle');
             if (data.result) {             
