@@ -31,6 +31,10 @@ namespace ProjectSemester3.Areas.Admin.Controllers
             // for testing only
             username = string.IsNullOrEmpty(username) ? "superAdmin" : username;
 
+            ViewBag.Title = db.Settings.Find(1).Title;
+            ViewBag.mail = db.Helps.Find(1).Email;
+            ViewBag.phone1 = db.Helps.Find(1).ContactNumber1;
+            ViewBag.phone2 = db.Helps.Find(1).ContactNumber2;
             ViewBag.username = username;
 
             ViewBag.settings = db.Settings.Find(1);

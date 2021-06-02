@@ -67,6 +67,10 @@ namespace ProjectSemester3.Areas.Admin.Controllers
         [Route("index")]
         public IActionResult Index()
         {
+            ViewBag.Title = db.Settings.Find(1).Title;
+            ViewBag.mail = db.Helps.Find(1).Email;
+            ViewBag.phone1 = db.Helps.Find(1).ContactNumber1;
+            ViewBag.phone2 = db.Helps.Find(1).ContactNumber2;
             ViewBag.tagName = "Customer problems";
             ViewBag.activeTag = "customerProb";
 

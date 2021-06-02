@@ -25,7 +25,12 @@ namespace ProjectSemester3.Controllers
         {
             try
             {
+                ViewBag.Title = db.Settings.Find(1).Title;
+                ViewBag.mail = db.Helps.Find(1).Email;
+                ViewBag.phone1 = db.Helps.Find(1).ContactNumber1;
+                ViewBag.phone2 = db.Helps.Find(1).ContactNumber2;
                 var account = db.AccountObjects.FirstOrDefault(a => a.Username.Equals(HttpContext.Session.GetString("username")));
+                ViewBag.name = account.Name;
                 var bankAccounts = db.BankAccounts.Where(b => b.UserAccountId == account.Id).ToList();
                 dynamic model = new ExpandoObject();
                 model.bankAccounts = bankAccounts;

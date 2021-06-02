@@ -35,6 +35,11 @@ namespace ProjectSemester3.Controllers
                 ViewBag.bankAccounts = bankAccounts;
                 ViewBag.banks = db.Banks.ToList();
                 ViewBag.currencies = db.Currencies.ToList();
+                ViewBag.Title = db.Settings.Find(1).Title;
+                ViewBag.mail = db.Helps.Find(1).Email;
+                ViewBag.phone1 = db.Helps.Find(1).ContactNumber1;
+                ViewBag.phone2 = db.Helps.Find(1).ContactNumber2;
+                ViewBag.name = account.Name;
                 return View();
             }
             catch(Exception e)

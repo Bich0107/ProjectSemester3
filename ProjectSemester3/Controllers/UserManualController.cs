@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using ProjectSemester3.Models;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,12 @@ namespace ProjectSemester3.Controllers
         [Route("")]
         public IActionResult Index()
         {
+            ViewBag.Title = db.Settings.Find(1).Title;
+            ViewBag.mail = db.Helps.Find(1).Email;
+            ViewBag.phone1 = db.Helps.Find(1).ContactNumber1;
+            ViewBag.phone2 = db.Helps.Find(1).ContactNumber2;
             ViewBag.faqs = db.Faqs.ToList();
+            ViewBag.name = db.AccountObjects.FirstOrDefault(a => a.Username.Equals(HttpContext.Session.GetString("username"))).Name;
             return View();
         }
     }
