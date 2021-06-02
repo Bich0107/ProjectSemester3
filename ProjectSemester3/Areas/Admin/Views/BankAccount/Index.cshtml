@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = ViewBag.Title;
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -259,8 +259,10 @@
                 </div>
                 <!-- Loading -->
                 <div id="loadingOverlay" class="overlay">
-                    <!-- end loading -->
+                    <i class="fas fa-3x fa-sync-alt fa-spin"></i>
                 </div>
+                <!-- end loading -->
+            </div>
         </div>
     </div>
 </div>
