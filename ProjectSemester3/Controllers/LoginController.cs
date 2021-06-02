@@ -319,7 +319,7 @@ namespace ProjectSemester3.Controllers
                     account.Locked = false;
                     db.SaveChanges();
                     ViewBag.resetPasswordSuccess = "Reset password success. Now you need to go back to the login page";
-                    return RedirectToAction("ForgotPassword");
+                    return View("ForgotPassword");
                 }
                 else
                 {

@@ -128,7 +128,8 @@ namespace ProjectSemester3.Controllers
 
             try
             {
-                var model = db.Transactions.Where(t => t.BankAccountIdFrom == id || t.BankAccountIdTo == id && t.Time >= t.Time.AddDays(-10)).ToList();
+                
+                var model = db.Transactions.Where(t => t.BankAccountIdFrom == id || t.BankAccountIdTo == id).Take(10).ToList();
                 var models = new List<Transaction>();
                 if (model != null)
                 {
@@ -140,8 +141,10 @@ namespace ProjectSemester3.Controllers
                         }
                         models.Add(m);
                     }
+                    model = models;
                 }
-                model = models;
+                
+                Debug.WriteLine("idddddddddđ: " + id);
                 return new JsonResult(model);
             }
             catch (Exception e)
@@ -157,7 +160,7 @@ namespace ProjectSemester3.Controllers
         {
             try
             {
-                var model = db.Transactions.Where(t => t.BankAccountIdFrom == id || t.BankAccountIdTo == id && t.Time >= t.Time.AddDays(-10)).ToList();
+                var model = db.Transactions.Where(t => t.BankAccountIdFrom == id || t.BankAccountIdTo == id).Take(10).ToList();
                 var models = new List<Transaction>();
                 if (model != null)
                 {
@@ -175,6 +178,7 @@ namespace ProjectSemester3.Controllers
                 ViewBag.name = bankAccount.UserAccount.Name;
                 ViewBag.balance = bankAccount.Balance;
                 ViewBag.currency = bankAccount.Currency.Name;
+                ViewBag.id = id;
 
 
                 ViewBag.models = models;

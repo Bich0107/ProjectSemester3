@@ -12,7 +12,7 @@ function bankAccountChange() {
             result += '</tr>';
             result += '<tr>';
             result += '<td>Current Balance</td>';
-            result += '<td class="text-right">' + model.balance;
+            result += '<td class="text-right">' + model.balance + ' ' + model.currency.name;
             result += '<input type="hidden" id="balance" value="' + model.balance + '"/>';
             result += '</td>';
             result += '</tr>';            

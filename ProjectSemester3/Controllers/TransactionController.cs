@@ -50,6 +50,7 @@ namespace ProjectSemester3.Controllers
                 transaction.BankAccountIdTo = bank.Id;
                 ViewBag.bankFrom = db.BankAccounts.Find(transaction.BankAccountIdFrom);
                 ViewBag.bankTo = db.BankAccounts.Find(transaction.BankAccountIdTo);
+                ViewBag.currency = db.BankAccounts.Find(transaction.BankAccountIdFrom).Currency.Name;
                 return View("Step2",transaction);
             }
             catch(Exception e)
@@ -63,6 +64,7 @@ namespace ProjectSemester3.Controllers
         {
             ViewBag.bankFrom = db.BankAccounts.Find(transaction.BankAccountIdFrom);
             ViewBag.bankTo = db.BankAccounts.Find(transaction.BankAccountIdTo);
+            ViewBag.currency = db.BankAccounts.Find(transaction.BankAccountIdFrom).Currency.Name;
             return View("Step2",transaction);
         }
         [Route("step2")]
@@ -84,7 +86,7 @@ namespace ProjectSemester3.Controllers
             var otp = new Generator();
             var otpSend = otp.GenerateNumericString(6);
             var mail = new MailHelper();
-            if (mail.Send(nameFrom, "tinhoang7901@gmail.com", "0347557353", nameTo, mailTo, subject, "Your OTP " + otpSend))
+            if (mail.Send(nameFrom, mailFrom, password, nameTo, mailTo, subject, "Your OTP " + otpSend))
             {
                 var bankOtp = new BankOtp();
                 bankOtp.Otp = otpSend;
@@ -132,13 +134,17 @@ namespace ProjectSemester3.Controllers
                         {
                             var accountFrom = db.BankAccounts.Find(transaction.BankAccountIdFrom);
                             var accountTo = db.BankAccounts.Find(transaction.BankAccountIdTo);
+
+                            var exchangeRateFrom = accountFrom.Currency.ExchangeRate;
+                            var exchangeRateTo = accountTo.Currency.ExchangeRate;
+
                             accountFrom.Balance = accountFrom.Balance - transaction.Amount;
-                            accountTo.Balance = accountTo.Balance + transaction.Amount;
+                            accountTo.Balance = accountTo.Balance + transaction.Amount*(decimal)(exchangeRateFrom/exchangeRateTo);
                             bankOtp.Status = true;
 
                             transaction.Time = DateTime.Parse(DateTime.Now.ToString(("dd/MM/yyyy HH:mm:ss")));
                             transaction.ResultId = 1;
-                            transaction.BalanceFrom = accountFrom.Balance;
+                            transaction.BalanceFrom = accountFrom.Balance;                            
                             transaction.BalanceTo = accountTo.Balance;
 
 

@@ -23,6 +23,7 @@ function listTransaction() {
     resetList();
     var getSelectedValue = document.querySelector(
         'input[name="radio-transaction"]:checked'); 
+    var id = document.getElementById("list-code").value;
     $.ajax({
         type: 'GET',
         url: '/bank-account/quick-search/' + document.getElementById("list-code").value + '/' + getSelectedValue.value,
@@ -44,8 +45,13 @@ function listTransaction() {
                     result += '<tr>';
                     result += '<td>' + model[i].time + '</td>';
                     result += '<td>' + model[i].content + '</td>';
-                    result += '<td>' + model[i].amount + '</td>';
-                    result += '<td class="text-right">' + model[i].balanceFrom + '</td>';                    
+                    if (model[i].bankAccountIdFrom == id) {
+                        result += '<td>' + model[i].amount + '</td>';
+                        result += '<td class="text-right">' + model[i].balanceFrom + '</td>';
+                    } else {
+                        result += '<td>' + model[i].amount + '</td>';
+                        result += '<td class="text-right">' + model[i].balanceTo + '</td>';
+                    }                    
                     result += '</tr>';
                 };
                 result += '<input type="hidden" name="id" value="' + document.getElementById("list-code").value + '"/>';
@@ -97,8 +103,13 @@ function listTransactionByDate() {
                     result += '<tr>';
                     result += '<td>' + model[i].time + '</td>';
                     result += '<td>' + model[i].content + '</td>';
-                    result += '<td>' + model[i].amount + '</td>';
-                    result += '<td class="text-right">' + model[i].balanceFrom + '</td>';
+                    if (model[i].bankAccountIdFrom == id) {
+                        result += '<td>' + model[i].amount + '</td>';
+                        result += '<td class="text-right">' + model[i].balanceFrom + '</td>';
+                    } else {
+                        result += '<td>' + model[i].amount + '</td>';
+                        result += '<td class="text-right">' + model[i].balanceTo + '</td>';
+                    }    
                     result += '</tr>';
                 };
                 result += '<input type="hidden" name="id" value="' + document.getElementById("list-code").value + '"/>';

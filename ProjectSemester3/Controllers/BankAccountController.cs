@@ -45,18 +45,23 @@ namespace ProjectSemester3.Controllers
         {
             try
             {
+                var date = DateTime.Now;
                 var model = db.Transactions.Where(t => t.BankAccountIdFrom == id || t.BankAccountIdTo == id).ToList();
                 if (value.Equals("ten-day"))
                 {
-                    model.Where(t => t.Time >= t.Time.AddDays(-10)).ToList();
+                    TimeSpan aInterval = new TimeSpan(10,0,0,0);
+                    model.Where(t => t.Time.CompareTo(date.Subtract(aInterval)) >= 0).ToList();
+                    Debug.WriteLine("subtractTime: " + date.Subtract(aInterval));
                 }
                 else if (value.Equals("one-month"))
                 {
-                    model.Where(t => t.Time >= t.Time.AddDays(-30)).ToList();
+                    TimeSpan aInterval = new TimeSpan(30, 0, 0, 0);
+                    model.Where(t => t.Time.CompareTo(date.Subtract(aInterval)) >= 0).ToList();
                 }
                 else if (value.Equals("three-months"))
                 {
-                    model.Where(t => t.Time >= t.Time.AddDays(-90)).ToList();
+                    TimeSpan aInterval = new TimeSpan(90, 0, 0, 0);
+                    model.Where(t => t.Time.CompareTo(date.Subtract(aInterval)) >= 0).ToList();
                 }
                 else
                 {
@@ -80,7 +85,7 @@ namespace ProjectSemester3.Controllers
                 ViewBag.name = bankAccount.UserAccount.Name;
                 ViewBag.balance = bankAccount.Balance;
                 ViewBag.currency = bankAccount.Currency.Name;
-
+                ViewBag.id = id;
 
                 ViewBag.models = models;
                 return View("Report");
@@ -99,16 +104,16 @@ namespace ProjectSemester3.Controllers
                 if (max == 0)
                 {
                     model = model.Where(t =>
-                        t.Time >= DateTime.Parse(from.ToString("yyyy/MM/dd"))
-                        && t.Time <= DateTime.Parse(to.ToString("yyyy/MM/dd"))
+                        DateTime.Compare(t.Time, from) >= 0
+                        && DateTime.Compare(t.Time, to) <= 0
                         && t.Amount >= min
                     ).ToList();
                 }
                 else
                 {
                     model = model.Where(t =>
-                        t.Time >= from
-                        && t.Time <= to
+                        DateTime.Compare(t.Time,from) >= 0
+                        && DateTime.Compare(t.Time,to) <= 0
                         && t.Amount >= min
                         && t.Amount <= max
                     ).ToList();
@@ -130,7 +135,7 @@ namespace ProjectSemester3.Controllers
                 ViewBag.name = bankAccount.UserAccount.Name;
                 ViewBag.balance = bankAccount.Balance;
                 ViewBag.currency = bankAccount.Currency.Name;
-
+                ViewBag.id = id;
 
                 ViewBag.models = models;
                 return View("Report2");
@@ -176,18 +181,21 @@ namespace ProjectSemester3.Controllers
 
             try
             {
+                var date = DateTime.Now;
                 var model = db.Transactions.Where(t => t.BankAccountIdFrom == id || t.BankAccountIdTo == id).ToList();
                 if (value.Equals("ten-day"))
                 {
-                    model.Where(t => t.Time >= t.Time.AddDays(-10)).ToList();
+                    model.Take(10).ToList();
                 }
                 else if (value.Equals("one-month"))
                 {
-                    model.Where(t => t.Time >= t.Time.AddDays(-30)).ToList();
+                    TimeSpan aInterval = new TimeSpan(30, 0, 0, 0);
+                    model.Where(t => DateTime.Compare(t.Time, date.Subtract(aInterval)) >= 0).ToList();
                 }
                 else if (value.Equals("three-months"))
                 {
-                    model.Where(t => t.Time >= t.Time.AddDays(-90)).ToList();
+                    TimeSpan aInterval = new TimeSpan(90, 0, 0, 0);
+                    model.Where(t => DateTime.Compare(t.Time, date.Subtract(aInterval)) >= 0).ToList();
                 }
                 else
                 {
@@ -227,16 +235,16 @@ namespace ProjectSemester3.Controllers
                 if (max == 0)
                 {
                     model = model.Where(t =>
-                        t.Time >= DateTime.Parse(from.ToString("yyyy/MM/dd"))
-                        && t.Time <= DateTime.Parse(to.ToString("yyyy/MM/dd"))
+                        DateTime.Compare(t.Time, from) >= 0
+                        && DateTime.Compare(t.Time, to) <= 0
                         && t.Amount >= min
                     ).ToList();
                 }
                 else
                 {
                     model = model.Where(t =>
-                        t.Time >= from
-                        && t.Time <= to
+                        DateTime.Compare(t.Time, from) >= 0
+                        && DateTime.Compare(t.Time, to) <= 0
                         && t.Amount >= min
                         && t.Amount <= max
                     ).ToList();

@@ -41,12 +41,19 @@
                             {
                                 @foreach (var m in ViewBag.models)
                                 {
-                                    <tr>
-                                        <td>@m.Time</td>
-                                        <td class="w-100 important">@m.Content</td>
-                                        <td>@m.Amount @ViewBag.currency</td>
-                                        <td>@m.BalanceFrom @ViewBag.currency</td>
-                                    </tr>
+                            <tr>
+                                <td>@m.Time</td>
+                                <td class="w-50 important">@m.Content</td>
+                                <td>@m.Amount @ViewBag.currency</td>
+                                @if (m.BankAccountIdFrom == ViewBag.id)
+                                {
+                                    <td>@m.BalanceFrom @ViewBag.currency</td>
+                                }
+                                else
+                                {
+                                    <td>@m.BalanceTo @ViewBag.currency</td>
+                                }
+                            </tr>
                                 }
                             }
                         </tbody>
