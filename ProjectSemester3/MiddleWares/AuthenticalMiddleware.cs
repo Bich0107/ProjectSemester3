@@ -25,6 +25,9 @@ namespace ProjectSemester3.MiddleWares
                 && !path.Value.Equals("/account/login") 
                 && !path.Value.Equals("/account/forgot-password")
                 && !path.Value.Equals("/account/sign-up")
+                && !path.Value.StartsWith("/home/reports")
+                && !path.Value.StartsWith("/bank-account/reports")
+                && !path.Value.StartsWith("/bank-account/report2s")
                 && httpContext.Session.GetString("username") == null)
             {
                 if (httpContext.Session.GetString("username") == null)

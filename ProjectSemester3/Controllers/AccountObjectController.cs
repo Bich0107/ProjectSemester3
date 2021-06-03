@@ -38,9 +38,14 @@ namespace ProjectSemester3.Controllers
         {
             try
             {
+                ViewBag.Title = db.Settings.Find(1).Title;
+                ViewBag.mail = db.Helps.Find(1).Email;
+                ViewBag.phone1 = db.Helps.Find(1).ContactNumber1;
+                ViewBag.phone2 = db.Helps.Find(1).ContactNumber2;
                 var username = HttpContext.Session.GetString("username");
                 var account = db.AccountObjects.FirstOrDefault(a => a.Username.Equals(HttpContext.Session.GetString("username")));
-                if(account != null)
+                ViewBag.name = account.Name;
+                if (account != null)
                 {
                     TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
 

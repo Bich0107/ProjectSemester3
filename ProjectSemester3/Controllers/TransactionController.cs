@@ -45,6 +45,12 @@ namespace ProjectSemester3.Controllers
         {
             try
             {
+                ViewBag.Title = db.Settings.Find(1).Title;
+                ViewBag.mail = db.Helps.Find(1).Email;
+                ViewBag.phone1 = db.Helps.Find(1).ContactNumber1;
+                ViewBag.phone2 = db.Helps.Find(1).ContactNumber2;
+                var account = db.AccountObjects.FirstOrDefault(a => a.Username.Equals(HttpContext.Session.GetString("username")));
+                ViewBag.name = account.Name;
                 var bankCode = Request.Form["bankto"];
                 var bank = db.BankAccounts.FirstOrDefault(b => b.BankCode.Equals(bankCode));
                 transaction.BankAccountIdTo = bank.Id;
@@ -62,6 +68,12 @@ namespace ProjectSemester3.Controllers
         [Route("step2")]
         public IActionResult Step2(Transaction transaction)
         {
+            ViewBag.Title = db.Settings.Find(1).Title;
+            ViewBag.mail = db.Helps.Find(1).Email;
+            ViewBag.phone1 = db.Helps.Find(1).ContactNumber1;
+            ViewBag.phone2 = db.Helps.Find(1).ContactNumber2;
+            var account = db.AccountObjects.FirstOrDefault(a => a.Username.Equals(HttpContext.Session.GetString("username")));
+            ViewBag.name = account.Name;
             ViewBag.bankFrom = db.BankAccounts.Find(transaction.BankAccountIdFrom);
             ViewBag.bankTo = db.BankAccounts.Find(transaction.BankAccountIdTo);
             ViewBag.currency = db.BankAccounts.Find(transaction.BankAccountIdFrom).Currency.Name;
@@ -71,7 +83,12 @@ namespace ProjectSemester3.Controllers
         [HttpPost]
         public IActionResult Step22(Transaction transaction)
         {
-           
+            ViewBag.Title = db.Settings.Find(1).Title;
+            ViewBag.mail = db.Helps.Find(1).Email;
+            ViewBag.phone1 = db.Helps.Find(1).ContactNumber1;
+            ViewBag.phone2 = db.Helps.Find(1).ContactNumber2;
+            var account = db.AccountObjects.FirstOrDefault(a => a.Username.Equals(HttpContext.Session.GetString("username")));
+            ViewBag.name = account.Name;
             var bankAccountTo = db.BankAccounts.FirstOrDefault(b => b.Id == transaction.BankAccountIdTo);
             var bankAccountFrom = db.BankAccounts.FirstOrDefault(b => b.Id == transaction.BankAccountIdFrom);
             var accountTo = db.AccountObjects.FirstOrDefault(a => a.Id == bankAccountFrom.UserAccountId);
@@ -102,6 +119,12 @@ namespace ProjectSemester3.Controllers
         [Route("step3")]
         public IActionResult Step3(Transaction transaction)
         {
+            ViewBag.Title = db.Settings.Find(1).Title;
+            ViewBag.mail = db.Helps.Find(1).Email;
+            ViewBag.phone1 = db.Helps.Find(1).ContactNumber1;
+            ViewBag.phone2 = db.Helps.Find(1).ContactNumber2;
+            var account = db.AccountObjects.FirstOrDefault(a => a.Username.Equals(HttpContext.Session.GetString("username")));
+            ViewBag.name = account.Name;
             return View("Step3",transaction);
         }
         [Route("step3")]
@@ -111,6 +134,12 @@ namespace ProjectSemester3.Controllers
             
             try
             {
+                ViewBag.Title = db.Settings.Find(1).Title;
+                ViewBag.mail = db.Helps.Find(1).Email;
+                ViewBag.phone1 = db.Helps.Find(1).ContactNumber1;
+                ViewBag.phone2 = db.Helps.Find(1).ContactNumber2;
+                var account = db.AccountObjects.FirstOrDefault(a => a.Username.Equals(HttpContext.Session.GetString("username")));
+                ViewBag.name = account.Name;
                 var otpCode = Request.Form["otp"];
                 var timeOtp = DateTime.Parse(DateTime.Now.ToString(("dd/MM/yyyy HH:mm:ss")));
                 if (otpCode == "")
@@ -177,6 +206,12 @@ namespace ProjectSemester3.Controllers
         [Route("success")]
         public IActionResult Success(Transaction transaction)
         {
+            ViewBag.Title = db.Settings.Find(1).Title;
+            ViewBag.mail = db.Helps.Find(1).Email;
+            ViewBag.phone1 = db.Helps.Find(1).ContactNumber1;
+            ViewBag.phone2 = db.Helps.Find(1).ContactNumber2;
+            var account = db.AccountObjects.FirstOrDefault(a => a.Username.Equals(HttpContext.Session.GetString("username")));
+            ViewBag.name = account.Name;
             ViewBag.bankFrom = db.BankAccounts.Find(transaction.BankAccountIdFrom);
             ViewBag.bankTo = db.BankAccounts.Find(transaction.BankAccountIdTo);
             return View("Success",transaction);

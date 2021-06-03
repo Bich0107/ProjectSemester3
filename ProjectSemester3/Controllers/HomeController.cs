@@ -104,7 +104,13 @@ namespace ProjectSemester3.Controllers
         {
             try
             {
+                ViewBag.Title = db.Settings.Find(1).Title;
+                ViewBag.mail = db.Helps.Find(1).Email;
+                ViewBag.phone1 = db.Helps.Find(1).ContactNumber1;
+                ViewBag.phone2 = db.Helps.Find(1).ContactNumber2;
+                var username = HttpContext.Session.GetString("username");               
                 account = db.AccountObjects.SingleOrDefault(x => x.Username.Equals(HttpContext.Session.GetString("username")));
+                ViewBag.name = account.Name;
                 bankAccounts = db.BankAccounts.Where(b => b.UserAccountId == account.Id).ToList();
                 var guidId = Guid.Parse(id);
                 var bankAccount = bankAccounts.Find(b => b.Id == guidId);
